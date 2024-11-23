@@ -3,46 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Test Page</title>
+    <meta name="description" content="Welcome to the Albert Yeh Lab, dedicated to cutting-edge research in immunology and oncology.">
+    <title>Albert Yeh Lab</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            line-height: 1.6;
             margin: 0;
             padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .container {
-            text-align: center;
-            background: white;
-            padding: 20px;
-            border: 1px solid #ddd;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h1 {
+            background-color: #f4f4f9;
             color: #333;
         }
-        p {
-            color: #666;
+        header {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 20px 10px;
+            text-align: center;
         }
-        .status {
+        nav {
+            text-align: center;
+            margin: 10px 0;
+        }
+        nav a {
+            text-decoration: none;
+            margin: 0 15px;
+            color: #0056b3;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #0056b3;
+            color: #fff;
             margin-top: 20px;
-            padding: 10px;
-            color: white;
-            background-color: green;
-            border-radius: 4px;
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Albert Yeh Lab</h1>
+        <p>Advancing Research in Immunology and Oncology</p>
+    </header>
+
+    <nav>
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#team">Team</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
     <div class="container">
-        <h1>Website Test Page</h1>
-        <p>If you are seeing this page, your website is working!</p>
-        <div class="status">Status: Online</div>
+        <section id="about">
+            <h2>About Us</h2>
+            <p>Welcome to the Albert Yeh Lab, where we are dedicated to exploring innovative solutions in immunology and oncology. Our mission is to translate cutting-edge science into meaningful advancements for patient care.</p>
+        </section>
+
+        <section id="research">
+            <h2>Our Research</h2>
+            <p>Our lab focuses on understanding T-cell responses, microbiome interactions, and the mechanisms driving post-transplant complications like graft-versus-host disease (GVHD). We combine murine models with computational immunology to uncover novel therapeutic targets.</p>
+        </section>
+
+        <section id="team">
+            <h2>Meet the Team</h2>
+            <p>Our diverse team of researchers and collaborators bring together expertise in molecular biology, computational modeling, and clinical sciences.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Email: <a href="mailto:ayeh@fredhutch.org">ayeh@fredhutch.org</a></p>
+            <p>Address: Fred Hutchinson Cancer Center, Seattle, WA</p>
+        </section>
     </div>
+
+    <footer>
+        <p>&copy; 2024 Albert Yeh Lab. All Rights Reserved.</p>
+    </footer>
 </body>
 </html>
