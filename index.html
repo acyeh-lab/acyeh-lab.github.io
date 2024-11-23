@@ -41,6 +41,37 @@
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        #carousel {
+            position: relative;
+            max-width: 100%;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        #carousel img {
+            width: 100%;
+            display: none;
+        }
+        #carousel img.active {
+            display: block;
+        }
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+        .carousel-controls button {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
         footer {
             text-align: center;
             padding: 10px 0;
@@ -79,6 +110,19 @@
             </ul>
         </section>
 
+        <section id="carousel">
+            <h2>Research Highlights</h2>
+            <div id="carousel">
+                <img src="https://github.com/acyeh-lab/acyeh-lab.github.io/blob/main/Immunity2024_Graphical_Abstract.png" alt="Research Image 1" class="active">
+                <img src="https://github.com/acyeh-lab/acyeh-lab.github.io/blob/main/Immunity2024_Graphical_Abstract.png" alt="Research Image 2">
+                <img src="https://github.com/acyeh-lab/acyeh-lab.github.io/blob/main/Immunity2024_Graphical_Abstract.png" alt="Research Image 3">
+                <div class="carousel-controls">
+                    <button id="prev">❮</button>
+                    <button id="next">❯</button>
+                </div>
+            </div>
+        </section>
+
         <section id="team">
             <h2>Meet the Team</h2>
             <p>Our diverse team of researchers and collaborators bring together expertise in molecular biology, computational modeling, and clinical sciences.</p>
@@ -94,6 +138,33 @@
     <footer>
         <p>&copy; 2024 Albert Yeh Lab. All Rights Reserved.</p>
     </footer>
+
+    <script>
+        const images = document.querySelectorAll("#carousel img");
+        const prevButton = document.getElementById("prev");
+        const nextButton = document.getElementById("next");
+        let current = 0;
+
+        function showImage(index) {
+            images.forEach((img, i) => img.classList.toggle("active", i === index));
+        }
+
+        prevButton.addEventListener("click", () => {
+            current = (current - 1 + images.length) % images.length;
+            showImage(current);
+        });
+
+        nextButton.addEventListener("click", () => {
+            current = (current + 1) % images.length;
+            showImage(current);
+        });
+
+        // Automatic cycling every 10 seconds
+        setInterval(() => {
+            current = (current + 1) % images.length;
+            showImage(current);
+        }, 10000);
+    </script>
 </body>
 </html>
 
