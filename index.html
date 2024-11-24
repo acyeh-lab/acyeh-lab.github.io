@@ -1,232 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Welcome to the Albert Yeh Lab, dedicated to improving our understanding of the adaptive immune response in stem cell transplant biology.">
-    <title>Albert Yeh Lab</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background: url('https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/Hutch_BG.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #333;
-        }
-        /*header {
-            background-color: #0056b3;
-            color: #fff;
-            padding: 20px 10px;
-            text-align: center;
-        }*/
+	<meta charset="utf-8"/>
+	<title>Albert Yeh Lab</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<!-- Customized Bootstrap + Font Awesome + Solarized -->
+	<link href="/css/style.css" rel="stylesheet" media="screen">
 
-        header {
-            background: linear-gradient(to right, #0056b3, #4a90e2); /* Gradient background */
-            color: white; /* Make text white for good contrast */
-            text-align: center;
-            padding: 50px 20px; /* Add space for a prominent banner */
-            font-family: 'Poppins', sans-serif; /* Use a modern Google Font */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
-        }
-        header h1 {
-            font-size: 3rem; /* Large title font size */
-            margin: 0;
-            font-weight: bold; /* Make the title bold */
-            letter-spacing: 2px; /* Add letter spacing for emphasis */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow for text */
-        }
-        header p {
-            font-size: 1.25rem; /* Subtitle font size */
-            margin: 10px 0 0;
-            font-style: italic; /* Optional: Add a sleek italic style */
-        }
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/images/favicon.png"/>	
+		
+	<!-- Google Analytics -->	
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        section h2 {
-            background-color: rgba(0, 86, 179, 0.9); /* Bold semi-transparent background */
-            color: white; /* Make text stand out */
-            padding: 10px 15px; /* Add space around text */
-            text-transform: uppercase; /* Optional: Make text all caps for emphasis */
-            font-weight: bold;
-            border-radius: 5px; /* Rounded corners */
-            margin-top: 20px;
-            text-align: center; /* Center the section titles */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
-        }
-        nav {
-            text-align: center;
-            margin: 10px 0;
-        }
-        nav a {
-            text-decoration: none;
-            margin: 0 15px;
-            color: #ffffff; /*#0056b3;*/
-            font-weight: bold;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        #carousel {
-            position: relative;
-            max-width: 100%;
-            margin: 20px auto;
-            overflow: hidden;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        #carousel img {
-            width: 100%;
-            display: none;
-        }
-        #carousel img.active {
-            display: block;
-        }
-        .carousel-controls {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-        }
-        .carousel-controls button {
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        footer {
-            text-align: center;
-            padding: 10px 0;
-            background-color: #0056b3;
-            color: #fff;
-            margin-top: 20px;
-        }
-        .social-links {
-            margin-top: 20px;
-        }
-        .social-links a {
-            margin: 0 10px;
-            text-decoration: none;
-        }
-        .social-links img { height: 24px;
-        }
-    </style>
+		ga('create', 'UA-XXXXXXXXX-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+			
 </head>
+
 <body>
-    <header>
-        <h1>Albert Yeh Lab</h1>
-        <p>Decoding the Adaptive Immune System in Stem Cell Transplantation</p>
-    </header>
 
-    <nav>
-        <a href="#about">About</a>
-        <a href="#research">Research</a>
-        <a href="#team">Team</a>
-        <a href="#contact">Contact</a>
-    </nav>
-    
-    <div class="container">
-        <section id="about">
-            <h2>About Us</h2>
-            <p>Welcome to the Albert Yeh Lab, where we are dedicated to understanding the biology of stem cell transplantation.</p>
-        </section>
+	<div id="header">
+		<nav class="navbar navbar-expand-md navbar-light bg-navbar">
+			<div class="container">
+				<a class="navbar-brand" href="/">
+					<img src="/images/logo.svg" alt="Albert Yeh Lab" height="40">
+				</a>
+				
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav nav-pills ml-auto">
+						<li class="nav-link">
+							<a class="mx-1" href="/papers/">Papers</a>
+						</li>
+						<li class="nav-link">
+							<a class="mx-1" href="/projects/">Projects</a>
+						</li>
+						<li class="nav-link">
+							<a class="mx-1" href="/team/">Team</a>
+						</li>
+						<li class="nav-link">
+							<a class="mx-1" href="/contact/">Contact</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
 
-        <section id="research">
-            <h2>Our Research</h2>
-            <p>Our lab focuses on understanding T-cell responses, microbiome interactions, and the mechanisms driving graft-versus-host disease (GVHD). We utilize a combination of murine models and computational approaches to study the adaptive immune system.</p>
-            <h3>Recent Publications</h3>
-            <ul>
-                <li><a href="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/(2024%20Immunity)%20Microbiota%20dictate%20T%20cell%20clonal%20selection%20to%20augment%20GVHD%20after%20stem%20cell%20transplant.pdf" target="_blank">(2024 Immunity) Microbiota dictate T cell clonal selection to augment GVHD after stem cell transplant</a></li>
-                <li><a href="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/(2021%20Blood)%20CMV%20exposure%20drives%20long%20term%20CD57%20CD4%20memory%20T-cell%20inflation%20following%20allo%20SCT.pdf" target="_blank">(2021 Blood) CMV exposure drives long-term CD57 CD4 memory T-cell inflation following allo SCT</a></li>
-            </ul>
-            <p>For a complete list of references, visit my <a href="https://orcid.org/0000-0003-3455-7360" target="_blank">ORCID page</a>.</p>
-        </section>
+	<div class="container mt-4">
+		<div class="bigspacer"></div>
 
-        <section id="carousel">
-            <h2>Research Highlights</h2>
-            <div id="carousel">
-                <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/Immunity2024_Graphical_Abstract.png" alt="Graphical Abstract" class="active">
-                <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/Immunity2024_FIg7J.png" alt="Figure 7J">
-                <div class="carousel-controls">
-                    <button id="prev">❮</button>
-                    <button id="next">❯</button>
-                </div>
-            </div>
-        </section>
+		<div class="row">
+			<div class="col-lg-12">
+				<object class="pull-left biglogo" data="/images/logo.svg" type="image/svg+xml"></object>
+				<div class="bigtitle logobox" style="display:table-cell; vertical-align:middle">
+					Albert Yeh Lab
+				</div>
+			</div>				
+		</div>
 
-        
-        <section id="news">
-            <h2>News</h2>
-            <ul>
-                <li><a href="https://www.fredhutch.org/en/news/center-news/2024/06/yeh-hill-microbiota-directed-T-cells-GVHD.html" target="_blank">Secret to tamping down GVHD may lie in microbial genetics</a></li>
-            </ul>
-        </section>
+		<div class="hugespacer"></div>
 
-        <section id="team">
-            <h2>Meet the Team</h2>
-            <p>We are recruiting researchers interested in working in a collaborative environment utilizing preclinical systems, molecular biology, computational immunology, and clinical sciences.</p>
-        </section>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="smallhead">
+					The Albert Yeh Lab at Fred Hutchinson Cancer Center uses mathematical models and computational tools to decode adaptive immunity and develop innovative therapies for post-transplant complications like GVHD.
+				</div>
+			</div>				
+		</div>
 
-        <section id="contact">
-            <h2>Contact Us</h2>
-            <p>Email: <a href="mailto:ayeh@fredhutch.org">ayeh@fredhutch.org</a></p>
-            <p>Address: 1100 Fairview Ave N. S2-204; Seattle, WA 98109</p>
-            <div class="social-links">
-                <a href="https://twitter.com/AlbertCYeh" target="blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg" alt="X" style="height: 24px;">
-                </a>
-                <a href="https://www.researchgate.net/profile/Albert-Yeh-3" target="blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/ResearchGate_icon_SVG.svg" alt="ResearchGate" style="height: 24px;">
-                </a>
-                <a href="https://www.fredhutch.org/en/provider-directory/albert-c-yeh.html" target="blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Fred_Hutch_updated_logo.svg" alt="FredHutch" style="height: 24px;">
-                </a>
-            </div>
-        </section>        
-    </div>
+		<div class="hugespacer"></div>
 
-    <footer>
-        <p>&copy; 2024 Albert Yeh Lab. All Rights Reserved.</p>
-    </footer>
+		<hr class="featurette-divider">
+		<div class="col-lg-12">
+			<div class="head">
+				<a href="/papers/">
+					Recent Papers
+				</a>
+			</div>
+			<div class="bigspacer"></div>
+			<div class="col-lg-12 reduced-gutter">
+				<div class="pad-left">		
+					<div class="note">
+						<i class="fa fa-file-text-o fa-fw"></i>
+						<a class="off" href="https://github.com/acyeh-lab/acyeh-lab.github.io/blob/main/(2024%20Immunity)%20Microbiota%20dictate%20T%20cell%20clonal%20selection%20to%20augment%20GVHD%20after%20stem%20cell%20transplant.pdf" target="_blank">
+							Microbiota dictate T cell clonal selection to augment GVHD after stem cell transplant (2024, Immunity)
+						</a>
+					</div>
+					<div class="smallspacer"></div>
+					<div class="smallnote">
+						Posted 10 Jun 2024
+					</div>
+					<div class="spacer"></div>	
 
-    <script>
-        const images = document.querySelectorAll("#carousel img");
-        const prevButton = document.getElementById("prev");
-        const nextButton = document.getElementById("next");
-        let current = 0;
+					<div class="note">
+						<i class="fa fa-file-text-o fa-fw"></i>
+						<a class="off" href="https://github.com/acyeh-lab/acyeh-lab.github.io/blob/main/(2021%20Blood)%20CMV%20exposure%20drives%20long%20term%20CD57%20CD4%20memory%20T-cell%20inflation%20following%20allo%20SCT.pdf" target="_blank">
+							CMV exposure drives long-term CD57 CD4 memory T-cell inflation following allo SCT (2021, Blood)
+						</a>
+					</div>
+					<div class="smallspacer"></div>
+					<div class="smallnote">
+						Posted 24 May 2024
+					</div>
+					<div class="spacer"></div>				
+				</div>
+			</div>
+			<div class="bigspacer"></div>		
+		</div>
 
-        function showImage(index) {
-            images.forEach((img, i) => img.classList.toggle("active", i === index));
-        }
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="head">
+					Misc
+				</div>
+				<div class="spacer"></div>
+			</div>
+		</div>
 
-        prevButton.addEventListener("click", () => {
-            current = (current - 1 + images.length) % images.length;
-            showImage(current);
-        });
+		<div class="row">
+			<div class="col-lg-12 reduced-gutter">
+				<div class="pad-left">
+					<ul class="list-inline">
+						<li class="footernav list-inline-item">
+							<i class="fa fa-angle-right"></i> <a class="off" href="/misc/join/">Join</a>
+						</li>
+						<li class="footernav list-inline-item">
+							<i class="fa fa-angle-right"></i> <a class="off" href="/misc/contact/">Contact</a>
+						</li>
+						<li class="footernav list-inline-item">
+							<i class="fa fa-angle-right"></i> <a class="off" href="/misc/about/">About</a>
+						</li>
+						<li class="footernav list-inline-item">
+							<i class="fa fa-angle-right"></i> <a class="off" href="/talks/">Talks</a>
+						</li>
+					</ul>
+				</div>
+				<div class="spacer"></div>
+			</div>
+		</div>
+	</div>
 
-        nextButton.addEventListener("click", () => {
-            current = (current + 1) % images.length;
-            showImage(current);
-        });
+	<div id="footer"><span style="display:none">foo</span></div>
 
-        // Automatic cycling every 10 seconds
-        setInterval(() => {
-            current = (current + 1) % images.length;
-            showImage(current);
-        }, 10000);
-    </script>
 </body>
 </html>
 
