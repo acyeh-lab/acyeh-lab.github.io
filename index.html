@@ -59,12 +59,15 @@
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
-        social-links  {
-            text-align: center;
-            margin: 0 15px;
+        .social-links {
+            display: flex;
+            justify-content: center; /* Centers the links horizontally */
+            gap: 15px; /* Adds space between icons */
+            margin-top: 20px; /* Adds spacing above the social links section */
         }
-
+        .social-links a img {
+            height: 30px;
+        }        
         footer {
             text-align: center;
             padding: 10px 0;
@@ -90,33 +93,25 @@
     <div class="container">
         <h2>Welcome to the Albert Yeh Lab</h2>
         <p>Our mission is to leverage creative computational and experimental approaches to understand the adaptive immune system in the context of transplant and cellular therapies.</p>
-    <div class="social-links">
-        <!-- X (formerly Twitter) -->
-        <a href="https://twitter.com/AlbertCYeh" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg" alt="X" style="height: 30px; margin: 0 10px;">
-        </a>
-    </div>
-        
-    <div class="social-links">
-        <!-- ResearchGate -->
-        <a href="https://www.researchgate.net/profile/Albert-Yeh-3" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/ResearchGate_icon_SVG.svg" alt="ResearchGate" style="height: 30px; margin: 0 10px;">
-        </a>
-    </div>    
-
-    <div class="social-links">
-        <!-- LinkedIn -->
-        <a href="https://www.linkedin.com/in/your-profile" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Linkedin_icon.svg" alt="LinkedIn" style="height: 30px; margin: 0 10px;">
-        </a>
-    </div>
-        
-    <div class="social-links">        
-        <!-- Fred Hutch -->
-        <a href="https://www.fredhutch.org/en/provider-directory/albert-c-yeh.html" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Fred_Hutch_updated_logo.svg" alt="FredHutch" style="height: 30px; margin: 0 10px;">
-        </a>
-    </div>
+   
+        <div class="social-links">
+            <!-- X (formerly Twitter) -->
+            <a href="https://twitter.com/AlbertCYeh" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg" alt="X" style="height: 30px; margin: 0 10px;">
+            </a>
+            <!-- ResearchGate -->
+            <a href="https://www.researchgate.net/profile/Albert-Yeh-3" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/ResearchGate_icon_SVG.svg" alt="ResearchGate" style="height: 30px; margin: 0 10px;">
+            </a>
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/in/your-profile" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Linkedin_icon.svg" alt="LinkedIn" style="height: 30px; margin: 0 10px;">
+            </a>
+            <!-- Fred Hutch -->
+            <a href="https://www.fredhutch.org/en/provider-directory/albert-c-yeh.html" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Fred_Hutch_updated_logo.svg" alt="FredHutch" style="height: 30px; margin: 0 10px;">
+            </a>
+        </div>
     
     </div>
 
