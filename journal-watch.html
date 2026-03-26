@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Watch - Albert Yeh Lab</title>
+    <style>
+        body { font-family: 'Roboto', sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
+        header { background-color: #0056b3; color: #fff; padding: 20px 10px; text-align: center; }
+        header h1 {
+            font-size: 48px;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        header h2 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: 400;
+        }
+        nav { text-align: center; margin: 10px 0; background-color: #fff; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
+        nav a:hover { text-decoration: underline; }
+        .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
+
+        /* Journal Watch specific styles */
+        .digest-nav {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            padding: 14px 0; justify-content: center;
+            border-bottom: 1px solid #e0e0e0; margin-bottom: 16px;
+        }
+        .jtab {
+            border: none; border-radius: 20px; padding: 7px 16px;
+            font-size: 0.85em; cursor: pointer; font-weight: 500;
+            background: var(--bg); color: var(--accent);
+            transition: all 0.2s; font-family: 'Roboto', sans-serif;
+        }
+        .jtab:hover { filter: brightness(0.95); }
+        .jtab.active { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .badge { display: inline-block; background: rgba(255,255,255,0.3); border-radius: 10px; padding: 0 7px; margin-left: 4px; font-size: 0.8em; }
+        .jtab:not(.active) .badge { background: rgba(0,0,0,0.08); }
+        .show-all-btn {
+            border: 2px dashed #999; border-radius: 20px; padding: 7px 16px;
+            font-size: 0.85em; cursor: pointer; font-weight: 500;
+            background: transparent; color: #666; transition: all 0.2s;
+            font-family: 'Roboto', sans-serif;
+        }
+        .show-all-btn:hover { border-color: #333; color: #333; }
+        .show-all-btn.active { border-style: solid; background: #333; color: #fff; }
+
+        .journal-section { display: none; }
+        .journal-section.active { display: block; }
+
+        .card {
+            background: #f9f9f9; border-radius: 8px; margin-bottom: 8px;
+            border-left: 4px solid var(--accent);
+            overflow: hidden; transition: box-shadow 0.2s;
+        }
+        .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .card-header {
+            padding: 12px 16px; cursor: pointer;
+            position: relative;
+        }
+        .card-title { font-weight: 600; font-size: 0.93em; padding-right: 24px; }
+        .card-meta { font-size: 0.8em; color: #777; margin-top: 2px; }
+        .card-meta .authors { margin-right: 12px; }
+        .chevron {
+            position: absolute; right: 14px; top: 14px;
+            font-size: 0.7em; color: #aaa; transition: transform 0.25s;
+        }
+        .card.open .chevron { transform: rotate(180deg); }
+        .card-body {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            padding: 0 16px;
+        }
+        .card.open .card-body { max-height: 600px; padding: 0 16px 16px; }
+        .card-body p { font-size: 0.9em; color: #555; margin-bottom: 10px; line-height: 1.6; }
+        .read-link { font-size: 0.85em; font-weight: 600; text-decoration: none; color: #0056b3; }
+        .read-link:hover { text-decoration: underline; }
+        .updated { text-align: center; font-size: 0.85em; color: #999; margin-bottom: 16px; }
+        .no-articles { text-align: center; color: #999; padding: 40px 0; font-style: italic; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Albert Yeh Lab</h1>
+        <h2>Journal Watch — Latest Articles from Top Journals</h2>
+    </header>
+
+    <nav>
+        <a href="index.html">Main Page</a>
+        <a href="publications.html">Publications</a>
+        <a href="projects.html">Projects</a>
+        <a href="tools.html">Tools</a>
+        <a href="team.html">Team</a>
+        <a href="journal-watch.html">Journal Watch</a>
+    </nav>
+
+    <div class="container">
+        <div class="updated" id="updated"></div>
+        <div class="digest-nav" id="digest-nav"></div>
+        <div id="digest-content"><div class="no-articles">Loading digest...</div></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Albert Yeh Lab. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+    // Journal color scheme
+    const COLORS = {
+        "Science":            {accent:"#d32f2f", bg:"#ffebee"},
+        "Nature":             {accent:"#1565c0", bg:"#e3f2fd"},
+        "Cell":               {accent:"#2e7d32", bg:"#e8f5e9"},
+        "NEJM":               {accent:"#6a1b9a", bg:"#f3e5f5"},
+        "Science_Immunology": {accent:"#e65100", bg:"#fff3e0"},
+        "Nature_Immunology":  {accent:"#00838f", bg:"#e0f7fa"},
+        "Immunity":           {accent:"#4527a0", bg:"#ede7f6"},
+        "Blood":              {accent:"#b71c1c", bg:"#ffcdd2"},
+        "Journal_of_Clinical_Oncology": {accent:"#0277bd", bg:"#e1f5fe"},
+        "Lancet":             {accent:"#c62828", bg:"#fce4ec"},
+    };
+    const DEFAULT_COLOR = {accent:"#455a64", bg:"#eceff1"};
+
+    function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+    // Load digest data from embedded JSON
+    function render(data) {
+        const nav = document.getElementById('digest-nav');
+        const content = document.getElementById('digest-content');
+        const updated = document.getElementById('updated');
+
+        if (!data || !data.articles || data.articles.length === 0) {
+            content.innerHTML = '<div class="no-articles">No articles available yet. Check back after the next daily digest runs.</div>';
+            return;
+        }
+
+        updated.textContent = 'Last updated: ' + (data.date || 'unknown');
+
+        // Group by journal
+        const journals = [];
+        const byJournal = {};
+        data.articles.forEach(a => {
+            if (!byJournal[a.journal]) { byJournal[a.journal] = []; journals.push(a.journal); }
+            byJournal[a.journal].push(a);
+        });
+
+        // Build nav
+        let navHtml = '';
+        journals.forEach((j, i) => {
+            const c = COLORS[j] || DEFAULT_COLOR;
+            const display = j.replace(/_/g, ' ');
+            const active = i === 0 ? 'active' : '';
+            navHtml += `<button class="jtab ${active}" data-journal="${j}" style="--accent:${c.accent};--bg:${c.bg}">${esc(display)} <span class="badge">${byJournal[j].length}</span></button>`;
+        });
+        navHtml += '<button class="show-all-btn" onclick="showAll(this)">All Journals</button>';
+        nav.innerHTML = navHtml;
+
+        // Build sections
+        let sectionsHtml = '';
+        journals.forEach((j, i) => {
+            const c = COLORS[j] || DEFAULT_COLOR;
+            const active = i === 0 ? 'active' : '';
+            let cards = '';
+            byJournal[j].forEach(a => {
+                const authorsHtml = a.authors ? `<span class="authors">${esc(a.authors)}</span>` : '';
+                const dateStr = a.published && a.published !== 'unknown' ? a.published.slice(0,10) : '';
+                cards += `
+                <div class="card" style="--accent:${c.accent}">
+                  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+                    <div class="card-title">${esc(a.title)}</div>
+                    <div class="card-meta">${authorsHtml}<span class="date">${dateStr}</span></div>
+                    <span class="chevron">&#9660;</span>
+                  </div>
+                  <div class="card-body">
+                    <p>${a.summary ? esc(a.summary) : 'No abstract available in RSS feed.'}</p>
+                    <a href="${esc(a.link)}" target="_blank" class="read-link">Read full article &rarr;</a>
+                  </div>
+                </div>`;
+            });
+            sectionsHtml += `<div class="journal-section ${active}" id="section-${j}">${cards}</div>`;
+        });
+        content.innerHTML = sectionsHtml;
+
+        // Tab click handlers
+        document.querySelectorAll('.jtab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.jtab').forEach(t => t.classList.remove('active'));
+                document.querySelector('.show-all-btn').classList.remove('active');
+                tab.classList.add('active');
+                const j = tab.dataset.journal;
+                document.querySelectorAll('.journal-section').forEach(s => {
+                    s.classList.toggle('active', s.id === 'section-' + j);
+                });
+            });
+        });
+    }
+
+    function showAll(btn) {
+        document.querySelectorAll('.jtab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.journal-section').forEach(s => s.classList.add('active'));
+    }
+
+    // Load the digest JSON
+    fetch('journal-watch-data.json')
+        .then(r => r.json())
+        .then(render)
+        .catch(() => {
+            document.getElementById('digest-content').innerHTML =
+                '<div class="no-articles">Could not load digest data.</div>';
+        });
+    </script>
+</body>
+</html>
