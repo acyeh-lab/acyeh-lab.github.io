@@ -8,28 +8,49 @@
     <style>
         body { font-family: 'Roboto', sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
         header { background-color: #0056b3; color: #fff; padding: 20px 10px; text-align: center; }
-        header h1 {
-            font-size: 48px;
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-        header h2 {
-            font-size: 24px;
-            margin: 0;
-            font-weight: 400;
-        }
+        header h1 { font-size: 48px; margin: 0; font-weight: 700; letter-spacing: 2px; }
+        header h2 { font-size: 24px; margin: 0; font-weight: 400; }
         nav { text-align: center; margin: 10px 0; background-color: #fff; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
         nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
         nav a:hover { text-decoration: underline; }
         .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
         footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
 
-        /* Journal Watch specific styles */
+        /* Controls bar */
+        .controls {
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 12px;
+        }
+        .search-box {
+            flex: 1 1 250px; padding: 8px 14px; border: 1px solid #ccc; border-radius: 20px;
+            font-size: 0.9em; font-family: 'Roboto', sans-serif; outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box:focus { border-color: #0056b3; }
+        .date-input {
+            padding: 7px 10px; border: 1px solid #ccc; border-radius: 8px;
+            font-size: 0.85em; font-family: 'Roboto', sans-serif;
+        }
+        .date-label { font-size: 0.8em; color: #777; }
+        .reset-btn {
+            padding: 7px 14px; border: 1px solid #ccc; border-radius: 8px;
+            background: #fff; cursor: pointer; font-size: 0.85em;
+            font-family: 'Roboto', sans-serif; color: #666;
+        }
+        .reset-btn:hover { background: #f0f0f0; }
+
+        /* Stats */
+        .stats {
+            text-align: center; font-size: 0.85em; color: #777;
+            padding: 8px 0; margin-bottom: 8px;
+        }
+        .stats strong { color: #333; }
+
+        /* Journal tabs */
         .digest-nav {
             display: flex; flex-wrap: wrap; gap: 6px;
-            padding: 14px 0; justify-content: center;
-            border-bottom: 1px solid #e0e0e0; margin-bottom: 16px;
+            padding: 10px 0; justify-content: center;
+            margin-bottom: 12px;
         }
         .jtab {
             border: none; border-radius: 20px; padding: 7px 16px;
@@ -50,19 +71,15 @@
         .show-all-btn:hover { border-color: #333; color: #333; }
         .show-all-btn.active { border-style: solid; background: #333; color: #fff; }
 
-        .journal-section { display: none; }
-        .journal-section.active { display: block; }
-
+        /* Cards */
         .card {
             background: #f9f9f9; border-radius: 8px; margin-bottom: 8px;
             border-left: 4px solid var(--accent);
             overflow: hidden; transition: box-shadow 0.2s;
         }
+        .card.hidden { display: none; }
         .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .card-header {
-            padding: 12px 16px; cursor: pointer;
-            position: relative;
-        }
+        .card-header { padding: 12px 16px; cursor: pointer; position: relative; }
         .card-title { font-weight: 600; font-size: 0.93em; padding-right: 24px; }
         .card-meta { font-size: 0.8em; color: #777; margin-top: 2px; }
         .card-meta .authors { margin-right: 12px; }
@@ -80,14 +97,22 @@
         .card-body p { font-size: 0.9em; color: #555; margin-bottom: 10px; line-height: 1.6; }
         .read-link { font-size: 0.85em; font-weight: 600; text-decoration: none; color: #0056b3; }
         .read-link:hover { text-decoration: underline; }
-        .updated { text-align: center; font-size: 0.85em; color: #999; margin-bottom: 16px; }
         .no-articles { text-align: center; color: #999; padding: 40px 0; font-style: italic; }
+
+        /* Load more */
+        .load-more {
+            display: block; margin: 16px auto; padding: 10px 28px;
+            border: 2px solid #0056b3; border-radius: 8px; background: #fff;
+            color: #0056b3; font-weight: 600; font-size: 0.9em; cursor: pointer;
+            font-family: 'Roboto', sans-serif; transition: all 0.2s;
+        }
+        .load-more:hover { background: #0056b3; color: #fff; }
     </style>
 </head>
 <body>
     <header>
         <h1>Albert Yeh Lab</h1>
-        <h2>Journal Watch — Latest Articles from Top Journals</h2>
+        <h2>Journal Watch — Article Archive</h2>
     </header>
 
     <nav>
@@ -100,9 +125,18 @@
     </nav>
 
     <div class="container">
-        <div class="updated" id="updated"></div>
+        <div class="controls">
+            <input type="text" class="search-box" id="search" placeholder="Search titles, authors, abstracts...">
+            <span class="date-label">From</span>
+            <input type="date" class="date-input" id="date-from">
+            <span class="date-label">To</span>
+            <input type="date" class="date-input" id="date-to">
+            <button class="reset-btn" onclick="resetFilters()">Reset</button>
+        </div>
+        <div class="stats" id="stats"></div>
         <div class="digest-nav" id="digest-nav"></div>
-        <div id="digest-content"><div class="no-articles">Loading digest...</div></div>
+        <div id="digest-content"><div class="no-articles">Loading archive...</div></div>
+        <button class="load-more" id="load-more" style="display:none" onclick="loadMore()">Load more articles</button>
     </div>
 
     <footer>
@@ -110,7 +144,6 @@
     </footer>
 
     <script>
-    // Journal color scheme
     const COLORS = {
         "Science":            {accent:"#d32f2f", bg:"#ffebee"},
         "Nature":             {accent:"#1565c0", bg:"#e3f2fd"},
@@ -124,94 +157,196 @@
         "Lancet":             {accent:"#c62828", bg:"#fce4ec"},
     };
     const DEFAULT_COLOR = {accent:"#455a64", bg:"#eceff1"};
+    const PAGE_SIZE = 50;
+
+    let allArticles = [];
+    let filtered = [];
+    let displayCount = PAGE_SIZE;
+    let activeJournal = null; // null = all
 
     function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
 
-    // Load digest data from embedded JSON
-    function render(data) {
-        const nav = document.getElementById('digest-nav');
-        const content = document.getElementById('digest-content');
-        const updated = document.getElementById('updated');
+    function getDate(a) {
+        const p = a.published || '';
+        return p !== 'unknown' ? p.slice(0,10) : '';
+    }
 
-        if (!data || !data.articles || data.articles.length === 0) {
-            content.innerHTML = '<div class="no-articles">No articles available yet. Check back after the next daily digest runs.</div>';
+    function applyFilters() {
+        const query = document.getElementById('search').value.toLowerCase().trim();
+        const from = document.getElementById('date-from').value;
+        const to = document.getElementById('date-to').value;
+
+        filtered = allArticles.filter(a => {
+            // Journal filter
+            if (activeJournal && a.journal !== activeJournal) return false;
+            // Date filter
+            const d = getDate(a);
+            if (from && d && d < from) return false;
+            if (to && d && d > to) return false;
+            // Text search
+            if (query) {
+                const hay = (a.title + ' ' + a.authors + ' ' + a.summary + ' ' + a.journal.replace(/_/g,' ')).toLowerCase();
+                // Support multiple terms (all must match)
+                const terms = query.split(/\s+/);
+                for (const t of terms) {
+                    if (!hay.includes(t)) return false;
+                }
+            }
+            return true;
+        });
+
+        displayCount = PAGE_SIZE;
+        renderCards();
+        updateStats();
+    }
+
+    function updateStats() {
+        const stats = document.getElementById('stats');
+        const total = allArticles.length;
+        const shown = filtered.length;
+        const dateRange = getDateRange();
+        let text = `<strong>${shown}</strong> article${shown!==1?'s':''} shown`;
+        if (shown < total) text += ` of <strong>${total}</strong> total`;
+        if (dateRange) text += ` &mdash; ${dateRange}`;
+        stats.innerHTML = text;
+    }
+
+    function getDateRange() {
+        if (filtered.length === 0) return '';
+        const dates = filtered.map(a => getDate(a)).filter(d => d).sort();
+        if (dates.length === 0) return '';
+        return dates[0] + ' to ' + dates[dates.length-1];
+    }
+
+    function buildNav() {
+        const nav = document.getElementById('digest-nav');
+        // Count per journal from current filtered set (but before journal filter)
+        const query = document.getElementById('search').value.toLowerCase().trim();
+        const from = document.getElementById('date-from').value;
+        const to = document.getElementById('date-to').value;
+
+        // Get articles matching search+date but NOT journal filter
+        const base = allArticles.filter(a => {
+            const d = getDate(a);
+            if (from && d && d < from) return false;
+            if (to && d && d > to) return false;
+            if (query) {
+                const hay = (a.title + ' ' + a.authors + ' ' + a.summary + ' ' + a.journal.replace(/_/g,' ')).toLowerCase();
+                const terms = query.split(/\s+/);
+                for (const t of terms) { if (!hay.includes(t)) return false; }
+            }
+            return true;
+        });
+
+        const counts = {};
+        const journals = [];
+        base.forEach(a => {
+            if (!counts[a.journal]) { counts[a.journal] = 0; journals.push(a.journal); }
+            counts[a.journal]++;
+        });
+
+        let html = '';
+        journals.forEach(j => {
+            const c = COLORS[j] || DEFAULT_COLOR;
+            const display = j.replace(/_/g, ' ');
+            const active = activeJournal === j ? 'active' : '';
+            html += `<button class="jtab ${active}" data-journal="${j}" style="--accent:${c.accent};--bg:${c.bg}" onclick="filterJournal('${j}', this)">${esc(display)} <span class="badge">${counts[j]}</span></button>`;
+        });
+        const allActive = !activeJournal ? 'active' : '';
+        html += `<button class="show-all-btn ${allActive}" onclick="filterJournal(null, this)">All Journals <span style="font-size:0.85em">(${base.length})</span></button>`;
+        nav.innerHTML = html;
+    }
+
+    function filterJournal(journal, btn) {
+        activeJournal = journal;
+        // Update button states
+        document.querySelectorAll('.jtab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.show-all-btn').forEach(t => t.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        applyFilters();
+        buildNav();
+    }
+
+    function renderCards() {
+        const content = document.getElementById('digest-content');
+        const loadMoreBtn = document.getElementById('load-more');
+
+        if (filtered.length === 0) {
+            content.innerHTML = '<div class="no-articles">No articles match your filters.</div>';
+            loadMoreBtn.style.display = 'none';
             return;
         }
 
-        updated.textContent = 'Last updated: ' + (data.date || 'unknown');
-
-        // Group by journal
-        const journals = [];
-        const byJournal = {};
-        data.articles.forEach(a => {
-            if (!byJournal[a.journal]) { byJournal[a.journal] = []; journals.push(a.journal); }
-            byJournal[a.journal].push(a);
+        const toShow = filtered.slice(0, displayCount);
+        let html = '';
+        toShow.forEach(a => {
+            const c = COLORS[a.journal] || DEFAULT_COLOR;
+            const authorsHtml = a.authors ? `<span class="authors">${esc(a.authors)}</span>` : '';
+            const dateStr = getDate(a);
+            const journalDisplay = a.journal.replace(/_/g, ' ');
+            html += `
+            <div class="card" style="--accent:${c.accent}">
+              <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+                <div class="card-title">${esc(a.title)}</div>
+                <div class="card-meta">
+                  ${authorsHtml}
+                  <span style="color:${c.accent};font-weight:500;">${esc(journalDisplay)}</span>
+                  <span class="date">${dateStr}</span>
+                </div>
+                <span class="chevron">&#9660;</span>
+              </div>
+              <div class="card-body">
+                <p>${a.summary ? esc(a.summary) : 'No abstract available in RSS feed.'}</p>
+                <a href="${esc(a.link)}" target="_blank" class="read-link">Read full article &rarr;</a>
+              </div>
+            </div>`;
         });
+        content.innerHTML = html;
 
-        // Build nav
-        let navHtml = '';
-        journals.forEach((j, i) => {
-            const c = COLORS[j] || DEFAULT_COLOR;
-            const display = j.replace(/_/g, ' ');
-            const active = i === 0 ? 'active' : '';
-            navHtml += `<button class="jtab ${active}" data-journal="${j}" style="--accent:${c.accent};--bg:${c.bg}">${esc(display)} <span class="badge">${byJournal[j].length}</span></button>`;
-        });
-        navHtml += '<button class="show-all-btn" onclick="showAll(this)">All Journals</button>';
-        nav.innerHTML = navHtml;
-
-        // Build sections
-        let sectionsHtml = '';
-        journals.forEach((j, i) => {
-            const c = COLORS[j] || DEFAULT_COLOR;
-            const active = i === 0 ? 'active' : '';
-            let cards = '';
-            byJournal[j].forEach(a => {
-                const authorsHtml = a.authors ? `<span class="authors">${esc(a.authors)}</span>` : '';
-                const dateStr = a.published && a.published !== 'unknown' ? a.published.slice(0,10) : '';
-                cards += `
-                <div class="card" style="--accent:${c.accent}">
-                  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
-                    <div class="card-title">${esc(a.title)}</div>
-                    <div class="card-meta">${authorsHtml}<span class="date">${dateStr}</span></div>
-                    <span class="chevron">&#9660;</span>
-                  </div>
-                  <div class="card-body">
-                    <p>${a.summary ? esc(a.summary) : 'No abstract available in RSS feed.'}</p>
-                    <a href="${esc(a.link)}" target="_blank" class="read-link">Read full article &rarr;</a>
-                  </div>
-                </div>`;
-            });
-            sectionsHtml += `<div class="journal-section ${active}" id="section-${j}">${cards}</div>`;
-        });
-        content.innerHTML = sectionsHtml;
-
-        // Tab click handlers
-        document.querySelectorAll('.jtab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.jtab').forEach(t => t.classList.remove('active'));
-                document.querySelector('.show-all-btn').classList.remove('active');
-                tab.classList.add('active');
-                const j = tab.dataset.journal;
-                document.querySelectorAll('.journal-section').forEach(s => {
-                    s.classList.toggle('active', s.id === 'section-' + j);
-                });
-            });
-        });
+        if (displayCount < filtered.length) {
+            loadMoreBtn.style.display = 'block';
+            loadMoreBtn.textContent = `Load more (${displayCount} of ${filtered.length} shown)`;
+        } else {
+            loadMoreBtn.style.display = 'none';
+        }
     }
 
-    function showAll(btn) {
-        document.querySelectorAll('.jtab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.journal-section').forEach(s => s.classList.add('active'));
+    function loadMore() {
+        displayCount += PAGE_SIZE;
+        renderCards();
     }
 
-    // Load the digest JSON
+    function resetFilters() {
+        document.getElementById('search').value = '';
+        document.getElementById('date-from').value = '';
+        document.getElementById('date-to').value = '';
+        activeJournal = null;
+        applyFilters();
+        buildNav();
+    }
+
+    // Debounced search
+    let searchTimeout;
+    document.getElementById('search').addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => { applyFilters(); buildNav(); }, 250);
+    });
+    document.getElementById('date-from').addEventListener('change', () => { applyFilters(); buildNav(); });
+    document.getElementById('date-to').addEventListener('change', () => { applyFilters(); buildNav(); });
+
+    // Load data
     fetch('journal-watch-data.json')
         .then(r => r.json())
-        .then(render)
+        .then(data => {
+            allArticles = data.articles || [];
+            filtered = allArticles;
+            buildNav();
+            renderCards();
+            updateStats();
+        })
         .catch(() => {
             document.getElementById('digest-content').innerHTML =
-                '<div class="no-articles">Could not load digest data.</div>';
+                '<div class="no-articles">Could not load archive data.</div>';
         });
     </script>
 </body>
