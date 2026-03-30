@@ -403,6 +403,43 @@
         meta.lastSyncedSnapshot = JSON.stringify(data);
     }
 
+    /* ===== Project ordering ===== */
+    const ORDER_KEY = 'ayeh-lab-project-order';
+
+    function getProjectOrder() {
+        const names = Object.keys(data.projects);
+        try {
+            const saved = JSON.parse(localStorage.getItem(ORDER_KEY) || '[]');
+            // Keep saved order for projects that still exist, append new ones at end
+            const ordered = saved.filter(n => names.includes(n));
+            for (const n of names) {
+                if (!ordered.includes(n)) ordered.push(n);
+            }
+            return ordered;
+        } catch(e) { return names; }
+    }
+
+    function saveProjectOrder(order) {
+        localStorage.setItem(ORDER_KEY, JSON.stringify(order));
+    }
+
+    function moveProject(projectName, direction) {
+        const order = getProjectOrder();
+        const idx = order.indexOf(projectName);
+        if (idx === -1) return;
+        const newIdx = idx + direction;
+        if (newIdx < 0 || newIdx >= order.length) return;
+        // Swap
+        [order[idx], order[newIdx]] = [order[newIdx], order[idx]];
+        // Reorder the data.projects object to match
+        const reordered = {};
+        for (const n of order) { reordered[n] = data.projects[n]; }
+        data.projects = reordered;
+        saveProjectOrder(order);
+        saveLocal();
+        render();
+    }
+
     function nextId() {
         let maxId = 0;
         for (const p of Object.values(data.projects)) {
@@ -904,8 +941,10 @@
 
         let html = '';
         let totalOpen = 0;
+        const orderedNames = getProjectOrder();
 
-        for (const pn of projectNames) {
+        for (let pi = 0; pi < orderedNames.length; pi++) {
+            const pn = orderedNames[pi];
             const proj = data.projects[pn];
             const filtered = getFilteredTasks(proj.tasks);
             const sorted = sortTasks(filtered);
@@ -923,6 +962,8 @@
             if (proj.description) html += '<span class="project-desc">— ' + esc(proj.description) + '</span>';
             html += '<span class="project-count' + (hasOverdue ? ' has-overdue' : '') + '">' + openCount + ' open</span>';
             html += '<div class="project-actions">';
+            if (pi > 0) html += '<button class="btn-icon" onclick="event.stopPropagation();moveProject(\'' + esc(pn).replace(/'/g, "\\'") + '\',-1)" title="Move up">&#9650;</button>';
+            if (pi < orderedNames.length - 1) html += '<button class="btn-icon" onclick="event.stopPropagation();moveProject(\'' + esc(pn).replace(/'/g, "\\'") + '\',1)" title="Move down">&#9660;</button>';
             html += '<button class="btn-icon" onclick="showEditProject(\'' + esc(pn).replace(/'/g, "\\'") + '\')" title="Edit project">&#9998;</button>';
             html += '</div>';
             html += '</div>';
