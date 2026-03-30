@@ -1038,6 +1038,12 @@
     function renderTaskDetail(task, projectName) {
         let html = '';
 
+        // Edit description
+        html += '<div class="edit-row" style="margin-bottom:10px;">';
+        html += '<label style="font-size:0.82em;color:#666;">Name:</label>';
+        html += '<input type="text" class="edit-input" style="flex:1;" value="' + esc(task.description).replace(/"/g, '&quot;') + '" onkeydown="if(event.key===\'Enter\')updateTaskField(' + task.id + ',\'description\',this.value)" onblur="if(this.value.trim()&&this.value.trim()!==\'' + esc(task.description).replace(/'/g, "\\'").replace(/"/g, '&quot;') + '\')updateTaskField(' + task.id + ',\'description\',this.value)">';
+        html += '</div>';
+
         // Notes
         if (task.notes && task.notes.length > 0) {
             html += '<div class="task-notes">';
