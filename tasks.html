@@ -275,7 +275,8 @@
         <div class="sync-bar">
             <div class="sync-status" id="sync-status"></div>
             <button class="btn btn-small btn-secondary" onclick="syncFromServer()" title="Pull latest from server">Refresh</button>
-            <button class="btn btn-small btn-primary" onclick="exportChanges()" id="export-btn" style="display:none" title="Send changes back to server via email">Sync Changes</button>
+            <button class="btn btn-small btn-primary" onclick="pushChanges()" id="export-btn" style="display:none" title="Push changes to server">Sync Changes</button>
+            <button class="btn btn-small btn-secondary" onclick="showSetupToken()" id="setup-btn" title="Configure sync">&#9881;</button>
         </div>
 
         <!-- Content -->
@@ -489,53 +490,80 @@
         }
     }
 
-    /* ===== Export changes via email ===== */
-    function exportChanges() {
-        if (meta.pendingChanges.length === 0) {
-            toast('No changes to sync');
-            return;
+    /* ===== Push changes via GitHub API ===== */
+    const GH_REPO = 'acyeh-lab/acyeh-lab.github.io';
+    const GH_FILE = 'tasks-data.json';
+    const TOKEN_KEY = 'ayeh-lab-gh-token';
+
+    function getToken() { return localStorage.getItem(TOKEN_KEY); }
+
+    function showSetupToken() {
+        const current = getToken();
+        const msg = current
+            ? 'GitHub token is set. Enter a new one to replace, or leave blank to keep current:'
+            : 'To enable one-click sync, enter a GitHub Personal Access Token.\n\nCreate one at: github.com/settings/tokens\nScope needed: Contents read/write on acyeh-lab.github.io\n\nPaste token:';
+        const token = prompt(msg);
+        if (token === null) return; // cancelled
+        if (token.trim()) {
+            localStorage.setItem(TOKEN_KEY, token.trim());
+            toast('Token saved');
+        }
+    }
+
+    async function pushChanges() {
+        const token = getToken();
+        if (!token) {
+            showSetupToken();
+            if (!getToken()) return;
         }
 
-        const lines = [];
-        for (const c of meta.pendingChanges) {
-            switch(c.type) {
-                case 'complete':
-                    lines.push('Done #' + c.taskId);
-                    break;
-                case 'add':
-                    let line = c.project + ': ' + c.description;
-                    if (c.due) line += ' (due ' + c.due + ')';
-                    lines.push(line);
-                    break;
-                case 'note':
-                    lines.push('Note #' + c.taskId + ': ' + c.text);
-                    break;
-                case 'new-project':
-                    lines.push('New project: ' + c.name + (c.description ? ' -- ' + c.description : ''));
-                    break;
-                case 'reopen':
-                    lines.push(c.project + ': ' + c.description);
-                    break;
+        const btn = document.getElementById('export-btn');
+        btn.textContent = 'Syncing...';
+        btn.disabled = true;
+
+        try {
+            // Get current file SHA (required for updates)
+            const getResp = await fetch('https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE, {
+                headers: { 'Authorization': 'token ' + getToken(), 'Accept': 'application/vnd.github.v3+json' }
+            });
+            if (!getResp.ok) throw new Error('Could not read repo (check token permissions)');
+            const fileInfo = await getResp.json();
+
+            // Push updated data
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2) + '\n')));
+            const putResp = await fetch('https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'token ' + getToken(),
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: 'Update tasks from web — ' + new Date().toISOString().slice(0, 10),
+                    content: content,
+                    sha: fileInfo.sha,
+                    committer: { name: 'web-sync', email: 'ayeh@fredhutch.org' }
+                })
+            });
+
+            if (!putResp.ok) {
+                const err = await putResp.json();
+                throw new Error(err.message || 'Push failed');
             }
+
+            // Success — clear pending
+            meta.pendingChanges = [];
+            meta.lastServerSync = new Date().toISOString();
+            saveLocal();
+            render();
+            toast('Changes synced to server');
+        } catch(e) {
+            toast('Sync failed: ' + e.message);
+            console.error('Push error:', e);
+        } finally {
+            btn.textContent = 'Sync Changes';
+            btn.disabled = false;
         }
-
-        if (lines.length === 0) {
-            toast('No exportable changes');
-            return;
-        }
-
-        const body = lines.join('\n');
-        const subject = encodeURIComponent('Re: [Task Tracker] Updates from web');
-        const bodyEnc = encodeURIComponent(body);
-        window.location.href = 'mailto:' + REPLY_EMAIL + '?subject=' + subject + '&body=' + bodyEnc;
-
-        // Clear pending after export
-        setTimeout(() => {
-            if (confirm('Did the email send successfully? Click OK to clear pending changes.')) {
-                meta.pendingChanges = [];
-                saveLocal();
-            }
-        }, 2000);
     }
 
     /* ===== CRUD operations ===== */
