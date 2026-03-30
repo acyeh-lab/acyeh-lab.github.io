@@ -245,6 +245,7 @@
             <input type="text" class="search-box" id="search" placeholder="Search tasks...">
             <button class="btn btn-primary" onclick="showNewTaskModal()">+ New Task</button>
             <button class="btn btn-secondary" onclick="showNewProjectModal()">+ Project</button>
+            <button class="btn btn-secondary" onclick="undo()" id="undo-btn" style="display:none" title="Undo last change (Ctrl+Z)">&#8630; Undo</button>
         </div>
 
         <!-- Filters -->
@@ -375,6 +376,8 @@
     let data = { projects: {}, completed_log: [] };
     let meta = { lastServerSync: null, pendingChanges: [] };
     let openTaskId = null;  // currently expanded task
+    let undoStack = [];     // snapshots for undo
+    const MAX_UNDO = 20;
 
     function loadLocal() {
         try {
@@ -406,6 +409,25 @@
     }
 
     function today() { return new Date().toISOString().slice(0, 10); }
+
+    /* ===== Undo ===== */
+    function snapshot() {
+        undoStack.push({
+            data: JSON.stringify(data),
+            meta: JSON.stringify(meta)
+        });
+        if (undoStack.length > MAX_UNDO) undoStack.shift();
+    }
+
+    function undo() {
+        if (undoStack.length === 0) { toast('Nothing to undo'); return; }
+        const prev = undoStack.pop();
+        data = JSON.parse(prev.data);
+        meta = JSON.parse(prev.meta);
+        saveLocal();
+        render();
+        toast('Undone');
+    }
 
     /* ===== Server sync ===== */
     async function syncFromServer() {
@@ -518,6 +540,7 @@
 
     /* ===== CRUD operations ===== */
     function completeTask(taskId) {
+        snapshot();
         for (const [pn, p] of Object.entries(data.projects)) {
             const idx = p.tasks.findIndex(t => t.id === taskId);
             if (idx !== -1) {
@@ -534,6 +557,7 @@
     }
 
     function reopenTask(taskId) {
+        snapshot();
         // Check in projects first (tasks marked done but still in project)
         for (const [pn, p] of Object.entries(data.projects)) {
             const task = p.tasks.find(t => t.id === taskId);
@@ -565,6 +589,7 @@
 
     function addTaskQuick(projectName, description) {
         if (!description.trim()) return;
+        snapshot();
         const task = {
             id: nextId(),
             description: description.trim(),
@@ -582,6 +607,7 @@
 
     function addNote(taskId, text) {
         if (!text.trim()) return;
+        snapshot();
         for (const p of Object.values(data.projects)) {
             const task = p.tasks.find(t => t.id === taskId);
             if (task) {
@@ -596,6 +622,7 @@
     }
 
     function updateTaskField(taskId, field, value) {
+        snapshot();
         for (const p of Object.values(data.projects)) {
             const task = p.tasks.find(t => t.id === taskId);
             if (task) {
@@ -611,8 +638,24 @@
         }
     }
 
+    function cyclePriority(taskId) {
+        const cycle = { high: 'medium', medium: 'low', low: 'high' };
+        for (const p of Object.values(data.projects)) {
+            const task = p.tasks.find(t => t.id === taskId);
+            if (task) {
+                snapshot();
+                task.priority = cycle[task.priority] || 'medium';
+                saveLocal();
+                render();
+                toast('Priority: ' + task.priority);
+                return;
+            }
+        }
+    }
+
     function deleteTask(taskId) {
         if (!confirm('Delete this task?')) return;
+        snapshot();
         for (const p of Object.values(data.projects)) {
             const idx = p.tasks.findIndex(t => t.id === taskId);
             if (idx !== -1) {
@@ -626,6 +669,7 @@
     }
 
     function moveTask(taskId, newProject) {
+        snapshot();
         for (const [pn, p] of Object.entries(data.projects)) {
             const idx = p.tasks.findIndex(t => t.id === taskId);
             if (idx !== -1) {
@@ -654,6 +698,7 @@
         const desc = document.getElementById('project-desc').value.trim();
         if (!name) { toast('Enter a project name'); return; }
         if (data.projects[name]) { toast('Project already exists'); return; }
+        snapshot();
         data.projects[name] = { description: desc, tasks: [] };
         addPending({ type: 'new-project', name: name, description: desc });
         closeModal('modal-project');
@@ -676,6 +721,7 @@
         const newDesc = document.getElementById('edit-project-desc').value.trim();
         if (!newName) { toast('Enter a project name'); return; }
         if (newName !== origName && data.projects[newName]) { toast('Project name already exists'); return; }
+        snapshot();
         if (newName !== origName) {
             data.projects[newName] = data.projects[origName];
             delete data.projects[origName];
@@ -695,6 +741,7 @@
         } else {
             if (!confirm('Delete project "' + name + '"?')) return;
         }
+        snapshot();
         delete data.projects[name];
         closeModal('modal-edit-project');
         saveLocal();
@@ -725,6 +772,7 @@
         const priority = document.getElementById('task-priority').value;
         const due = document.getElementById('task-due').value;
         if (!desc) { toast('Enter a task description'); return; }
+        snapshot();
         const task = {
             id: nextId(),
             description: desc,
@@ -850,7 +898,7 @@
                 html += '<div class="task-main">';
                 html += '<div class="task-desc' + (isDone ? ' done-text' : '') + '" onclick="toggleTaskDetail(' + task.id + ')">' + esc(task.description) + '</div>';
                 html += '<div class="task-meta">';
-                html += '<span class="badge badge-' + task.priority + '">' + task.priority + '</span>';
+                html += '<span class="badge badge-' + task.priority + '" style="cursor:pointer;" onclick="event.stopPropagation();cyclePriority(' + task.id + ')" title="Click to change priority">' + task.priority + '</span>';
                 html += dueBadge(task.due);
                 if (task.notes && task.notes.length > 0) html += '<span style="color:#aaa;font-size:0.75em;">&#128221; ' + task.notes.length + '</span>';
                 html += '<span class="badge badge-id">#' + task.id + '</span>';
@@ -878,6 +926,7 @@
 
         content.innerHTML = html;
         updateExportBtn();
+        updateUndoBtn();
 
         // Restore focus to quick-add if needed
         if (openTaskId) {
@@ -983,6 +1032,10 @@
         btn.style.display = meta.pendingChanges.length > 0 ? '' : 'none';
     }
 
+    function updateUndoBtn() {
+        document.getElementById('undo-btn').style.display = undoStack.length > 0 ? '' : 'none';
+    }
+
     // Search debounce
     let searchTimeout;
     document.getElementById('search').addEventListener('input', () => {
@@ -997,10 +1050,16 @@
         });
     });
 
-    // Close modals on Escape
+    // Close modals on Escape, Ctrl+Z for undo
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
             document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+        }
+        if (e.key === 'z' && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
+            const tag = document.activeElement.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+            e.preventDefault();
+            undo();
         }
     });
 
