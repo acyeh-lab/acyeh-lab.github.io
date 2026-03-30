@@ -196,6 +196,14 @@
           "priority": "medium",
           "created": "2026-03-30",
           "notes": []
+        },
+        {
+          "id": 23,
+          "description": "Ask cascadia about yellow card for route 691 on Tuesday",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
         }
       ]
     },
@@ -221,6 +229,19 @@
         {
           "id": 22,
           "description": "Immune co-culture assay development - DC + LPS?  B-splenocytes + LPS?  XRT?",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
+        }
+      ]
+    },
+    "Spatial-VDJ": {
+      "description": "Using singular genomics dataset",
+      "tasks": [
+        {
+          "id": 24,
+          "description": "Ask Josh about 5' sequences and extracting BCR data using TRUST4",
           "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
