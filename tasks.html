@@ -685,6 +685,24 @@
         }
     }
 
+    function deleteCompleted(taskId) {
+        snapshot();
+        // Remove from completed_log
+        const clIdx = (data.completed_log || []).findIndex(t => t.id === taskId);
+        if (clIdx !== -1) {
+            data.completed_log.splice(clIdx, 1);
+            saveLocal(); render(); toast('Removed from history'); return;
+        }
+        // Remove done task from projects
+        for (const p of Object.values(data.projects)) {
+            const idx = p.tasks.findIndex(t => t.id === taskId && t.status === 'done');
+            if (idx !== -1) {
+                p.tasks.splice(idx, 1);
+                saveLocal(); render(); toast('Removed from history'); return;
+            }
+        }
+    }
+
     function deleteTask(taskId) {
         if (!confirm('Delete this task?')) return;
         snapshot();
@@ -997,6 +1015,7 @@
                 html += '<span class="badge badge-id">#' + t.id + '</span>';
                 html += '</div>';
                 html += '</div>';
+                html += '<button class="btn-icon" onclick="deleteCompleted(' + t.id + ')" title="Delete permanently" style="color:#ccc;font-size:0.85em;">&#10005;</button>';
                 html += '</div>';
             }
 
