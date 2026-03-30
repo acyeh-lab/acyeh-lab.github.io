@@ -94,7 +94,12 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-03-30",
+              "text": "Validating EPCAM stain as CD138 also stains GI columnar epithelium"
+            }
+          ]
         }
       ]
     },
