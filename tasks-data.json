@@ -29,19 +29,19 @@
         {
           "id": 11,
           "description": "Submit CCSG profile today!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-30",
-          "notes": []
+          "notes": [],
+          "completed": "2026-03-30"
         },
         {
           "id": 12,
           "description": "test",
-          "status": "done",
+          "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": [],
-          "completed": "2026-03-30"
+          "notes": []
         }
       ]
     },
@@ -140,11 +140,10 @@
         {
           "id": 13,
           "description": "make fuso probe!",
-          "status": "done",
+          "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": [],
-          "completed": "2026-03-30"
+          "notes": []
         },
         {
           "id": 14,
