@@ -1,0 +1,131 @@
+{
+  "projects": {
+    "Microbiome-TCR": {
+      "description": "Conserved bacterial genomic sequences as potential TCR binders",
+      "tasks": []
+    },
+    "Admin": {
+      "description": "Reviews, service, and administrative tasks",
+      "tasks": [
+        {
+          "id": 9,
+          "description": "Review TCT article",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-29",
+          "notes": [],
+          "due": "2026-04-12"
+        },
+        {
+          "id": 10,
+          "description": "ASH review",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-29",
+          "notes": [
+            {
+              "date": "2026-03-29",
+              "text": "Due by noon on 4/12."
+            }
+          ],
+          "due": "2026-04-12"
+        }
+      ]
+    },
+    "Plasma Cell GVHD": {
+      "description": "Plasma cell biology in GVHD using murine transplant model",
+      "tasks": [
+        {
+          "id": 1,
+          "description": "Design/validate plasma cell flow panel",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-03-26",
+          "notes": [
+            {
+              "date": "2026-03-26",
+              "text": "Murine transplant performed 2026-03-26. Will update details later."
+            }
+          ],
+          "due": "2026-04-09"
+        },
+        {
+          "id": 2,
+          "description": "Come up with B-cell panel",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-26",
+          "notes": []
+        },
+        {
+          "id": 3,
+          "description": "Takedown #1 \u2014 mouse organ harvest (day 14 post-transplant)",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-26",
+          "notes": [],
+          "due": "2026-04-09"
+        },
+        {
+          "id": 4,
+          "description": "Takedown #2 \u2014 mouse organ harvest (day 28 post-transplant)",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-26",
+          "notes": [],
+          "due": "2026-04-23"
+        }
+      ]
+    },
+    "Spatial Microbiome": {
+      "description": "Spatial microbiome project",
+      "tasks": [
+        {
+          "id": 5,
+          "description": "Pick up paraffin block for Akkermansia",
+          "status": "done",
+          "priority": "high",
+          "created": "2026-03-26",
+          "completed": "2026-03-29",
+          "notes": []
+        },
+        {
+          "id": 8,
+          "description": "Pick tissue for EH",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-03-29",
+          "notes": [],
+          "due": "2026-03-30"
+        },
+        {
+          "id": 6,
+          "description": "Design colibactin probes for spatial imaging",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-03-27",
+          "notes": [
+            {
+              "date": "2026-03-27",
+              "text": "Part of CCSG grant. Design probes targeting colibactin biosynthetic genes."
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "description": "Design additional bacterial probes (CCSG grant)",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-03-27",
+          "notes": [
+            {
+              "date": "2026-03-27",
+              "text": "Part of CCSG grant. Expand probe panel beyond current bacterial targets."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "completed_log": []
+}
