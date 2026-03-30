@@ -198,6 +198,35 @@
           "notes": []
         }
       ]
+    },
+    "Bacterial Engineering": {
+      "description": "Work with Adonai",
+      "tasks": [
+        {
+          "id": 20,
+          "description": "Complete MBP-CBir1/Tea/SFB plasmid sequences and troubleshoot sequence mismatch",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
+        },
+        {
+          "id": 21,
+          "description": "WB of new plasmids, compare with control MBP vector",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
+        },
+        {
+          "id": 22,
+          "description": "Immune co-culture assay development - DC + LPS?  B-splenocytes + LPS?  XRT?",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
+        }
+      ]
     }
   },
   "completed_log": []
