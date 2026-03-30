@@ -29,6 +29,23 @@
             }
           ],
           "due": "2026-04-12"
+        },
+        {
+          "id": 11,
+          "description": "Submit CCSG profile today!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-03-30",
+          "notes": []
+        },
+        {
+          "id": 12,
+          "description": "test",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": [],
+          "completed": "2026-03-30"
         }
       ]
     },
@@ -59,7 +76,7 @@
         },
         {
           "id": 3,
-          "description": "Takedown #1 \u2014 mouse organ harvest (day 14 post-transplant)",
+          "description": "Takedown #1 — mouse organ harvest (day 14 post-transplant)",
           "status": "open",
           "priority": "medium",
           "created": "2026-03-26",
@@ -68,7 +85,7 @@
         },
         {
           "id": 4,
-          "description": "Takedown #2 \u2014 mouse organ harvest (day 28 post-transplant)",
+          "description": "Takedown #2 — mouse organ harvest (day 28 post-transplant)",
           "status": "open",
           "priority": "medium",
           "created": "2026-03-26",
@@ -123,6 +140,23 @@
               "text": "Part of CCSG grant. Expand probe panel beyond current bacterial targets."
             }
           ]
+        },
+        {
+          "id": 13,
+          "description": "make fuso probe!",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": [],
+          "completed": "2026-03-30"
+        },
+        {
+          "id": 14,
+          "description": "make fuso probe",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
         }
       ]
     }
