@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant Watch - Albert Yeh Lab</title>
+    <style>
+        body { font-family: 'Roboto', sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
+        header { background-color: #0056b3; color: #fff; padding: 20px 10px; text-align: center; }
+        header h1 { font-size: 48px; margin: 0; font-weight: 700; letter-spacing: 2px; }
+        header h2 { font-size: 24px; margin: 0; font-weight: 400; }
+        nav { text-align: center; margin: 10px 0; background-color: #fff; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
+        nav a:hover { text-decoration: underline; }
+        .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
+
+        /* Summary stats bar */
+        .summary-bar {
+            display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+            padding: 14px 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 12px;
+        }
+        .stat-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 20px; font-size: 0.85em;
+            background: #f5f5f5; color: #555;
+        }
+        .stat-chip strong { color: #333; font-size: 1.1em; }
+        .stat-chip.high { background: #ffebee; color: #c62828; }
+        .stat-chip.medium { background: #fff3e0; color: #ef6c00; }
+        .stat-chip.low { background: #e8f5e9; color: #558b2f; }
+        .stat-chip.urgent { background: #ffcdd2; color: #b71c1c; }
+        .stat-chip.upcoming { background: #ffe0b2; color: #e65100; }
+
+        /* Controls bar */
+        .controls {
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 12px;
+        }
+        .search-box {
+            flex: 1 1 250px; padding: 8px 14px; border: 1px solid #ccc; border-radius: 20px;
+            font-size: 0.9em; font-family: 'Roboto', sans-serif; outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box:focus { border-color: #0056b3; }
+        .date-input {
+            padding: 7px 10px; border: 1px solid #ccc; border-radius: 8px;
+            font-size: 0.85em; font-family: 'Roboto', sans-serif;
+        }
+        .date-label { font-size: 0.8em; color: #777; }
+        .reset-btn {
+            padding: 7px 14px; border: 1px solid #ccc; border-radius: 8px;
+            background: #fff; cursor: pointer; font-size: 0.85em;
+            font-family: 'Roboto', sans-serif; color: #666;
+        }
+        .reset-btn:hover { background: #f0f0f0; }
+
+        /* Sort dropdown */
+        .sort-select {
+            padding: 7px 10px; border: 1px solid #ccc; border-radius: 8px;
+            font-size: 0.85em; font-family: 'Roboto', sans-serif;
+            background: #fff; color: #555; cursor: pointer;
+        }
+
+        /* Stats */
+        .stats {
+            text-align: center; font-size: 0.85em; color: #777;
+            padding: 8px 0; margin-bottom: 8px;
+        }
+        .stats strong { color: #333; }
+
+        /* Category tabs */
+        .digest-nav {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            padding: 10px 0; justify-content: center;
+            margin-bottom: 8px;
+        }
+        .jtab {
+            border: none; border-radius: 20px; padding: 7px 16px;
+            font-size: 0.85em; cursor: pointer; font-weight: 500;
+            background: var(--bg); color: var(--accent);
+            transition: all 0.2s; font-family: 'Roboto', sans-serif;
+        }
+        .jtab:hover { filter: brightness(0.95); }
+        .jtab.active { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .badge { display: inline-block; background: rgba(255,255,255,0.3); border-radius: 10px; padding: 0 7px; margin-left: 4px; font-size: 0.8em; }
+        .jtab:not(.active) .badge { background: rgba(0,0,0,0.08); }
+        .show-all-btn {
+            border: 2px dashed #999; border-radius: 20px; padding: 7px 16px;
+            font-size: 0.85em; cursor: pointer; font-weight: 500;
+            background: transparent; color: #666; transition: all 0.2s;
+            font-family: 'Roboto', sans-serif;
+        }
+        .show-all-btn:hover { border-color: #333; color: #333; }
+        .show-all-btn.active { border-style: solid; background: #333; color: #fff; }
+
+        /* Relevance filter buttons */
+        .relevance-nav {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            padding: 6px 0 10px; justify-content: center;
+            border-bottom: 1px solid #e0e0e0; margin-bottom: 12px;
+        }
+        .rtab {
+            border: none; border-radius: 14px; padding: 5px 14px;
+            font-size: 0.8em; cursor: pointer; font-weight: 500;
+            transition: all 0.2s; font-family: 'Roboto', sans-serif;
+        }
+        .rtab:hover { filter: brightness(0.92); }
+        .rtab.active { color: #fff; box-shadow: 0 1px 6px rgba(0,0,0,0.15); }
+        .rtab[data-rel="high"] { background: #ffebee; color: #c62828; }
+        .rtab[data-rel="high"].active { background: #c62828; color: #fff; }
+        .rtab[data-rel="medium"] { background: #fff3e0; color: #ef6c00; }
+        .rtab[data-rel="medium"].active { background: #ef6c00; color: #fff; }
+        .rtab[data-rel="low"] { background: #e8f5e9; color: #558b2f; }
+        .rtab[data-rel="low"].active { background: #558b2f; color: #fff; }
+        .rtab-all {
+            border: 1px dashed #999; border-radius: 14px; padding: 5px 14px;
+            font-size: 0.8em; cursor: pointer; font-weight: 500;
+            background: transparent; color: #666; transition: all 0.2s;
+            font-family: 'Roboto', sans-serif;
+        }
+        .rtab-all:hover { border-color: #333; color: #333; }
+        .rtab-all.active { border-style: solid; background: #555; color: #fff; }
+
+        /* Cards */
+        .card {
+            background: #f9f9f9; border-radius: 8px; margin-bottom: 8px;
+            border-left: 4px solid var(--accent);
+            overflow: hidden; transition: box-shadow 0.2s;
+        }
+        .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .card-header { padding: 12px 16px; cursor: pointer; position: relative; }
+        .card-title { font-weight: 600; font-size: 0.93em; padding-right: 24px; display: flex; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+        .card-title-text { flex: 1; min-width: 200px; }
+        .card-meta { font-size: 0.8em; color: #777; margin-top: 4px; }
+        .chevron {
+            position: absolute; right: 14px; top: 14px;
+            font-size: 0.7em; color: #aaa; transition: transform 0.25s;
+        }
+        .card.open .chevron { transform: rotate(180deg); }
+        .card-body {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            padding: 0 16px;
+        }
+        .card.open .card-body { max-height: 800px; padding: 0 16px 16px; }
+        .card-body p { font-size: 0.9em; color: #555; margin-bottom: 10px; line-height: 1.6; }
+        .card-dates { font-size: 0.85em; color: #666; margin-bottom: 10px; }
+        .card-dates strong { color: #444; }
+        .view-link {
+            display: inline-block; padding: 6px 16px; border-radius: 6px;
+            font-size: 0.85em; font-weight: 600; text-decoration: none;
+            color: #fff; background: #0056b3; transition: background 0.2s;
+        }
+        .view-link:hover { background: #003d80; }
+
+        /* Badges */
+        .relevance-badge {
+            display: inline-block; border-radius: 10px; padding: 2px 10px;
+            font-size: 0.75em; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; white-space: nowrap;
+        }
+        .relevance-badge.high { background: #ffcdd2; color: #c62828; }
+        .relevance-badge.medium { background: #ffe0b2; color: #ef6c00; }
+        .relevance-badge.low { background: #dcedc8; color: #558b2f; }
+        .deadline-badge {
+            display: inline-block; border-radius: 10px; padding: 2px 10px;
+            font-size: 0.72em; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; white-space: nowrap;
+        }
+        .deadline-badge.closing-soon { background: #f44336; color: #fff; }
+        .deadline-badge.upcoming { background: #ff9800; color: #fff; }
+
+        .no-articles { text-align: center; color: #999; padding: 40px 0; font-style: italic; }
+
+        /* Load more */
+        .load-more {
+            display: block; margin: 16px auto; padding: 10px 28px;
+            border: 2px solid #0056b3; border-radius: 8px; background: #fff;
+            color: #0056b3; font-weight: 600; font-size: 0.9em; cursor: pointer;
+            font-family: 'Roboto', sans-serif; transition: all 0.2s;
+        }
+        .load-more:hover { background: #0056b3; color: #fff; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Albert Yeh Lab</h1>
+        <h2>Grant Watch Archive</h2>
+    </header>
+
+    <nav>
+        <a href="index.html">Main Page</a>
+        <a href="publications.html">Publications</a>
+        <a href="projects.html">Projects</a>
+        <a href="tools.html">Tools</a>
+        <a href="team.html">Team</a>
+        <a href="journal-watch.html">Journal Watch</a>
+    </nav>
+
+    <div class="container">
+        <div class="summary-bar" id="summary-bar"></div>
+        <div class="controls">
+            <input type="text" class="search-box" id="search" placeholder="Search titles, descriptions, agencies...">
+            <span class="date-label">Deadline from</span>
+            <input type="date" class="date-input" id="date-from">
+            <span class="date-label">to</span>
+            <input type="date" class="date-input" id="date-to">
+            <select class="sort-select" id="sort-select">
+                <option value="relevance">Sort: Relevance</option>
+                <option value="deadline">Sort: Deadline (soonest)</option>
+                <option value="posted">Sort: Posted (newest)</option>
+            </select>
+            <button class="reset-btn" onclick="resetFilters()">Reset</button>
+        </div>
+        <div class="digest-nav" id="digest-nav"></div>
+        <div class="relevance-nav" id="relevance-nav"></div>
+        <div class="stats" id="stats"></div>
+        <div id="grant-content"><div class="no-articles">Loading grant data...</div></div>
+        <button class="load-more" id="load-more" style="display:none" onclick="loadMore()">Load more grants</button>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Albert Yeh Lab. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+    const CATEGORY_COLORS = {
+        "Federal Grants":                {accent:"#1565c0", bg:"#e3f2fd"},
+        "Hematology & Transplant":       {accent:"#b71c1c", bg:"#ffcdd2"},
+        "Cancer Foundations":            {accent:"#6a1b9a", bg:"#f3e5f5"},
+        "Immunotherapy & Immunology":    {accent:"#00838f", bg:"#e0f7fa"},
+        "GI & Microbiome":              {accent:"#2e7d32", bg:"#e8f5e9"},
+        "Career Development":           {accent:"#e65100", bg:"#fff3e0"},
+    };
+    const DEFAULT_COLOR = {accent:"#455a64", bg:"#eceff1"};
+    const PAGE_SIZE = 50;
+    const TODAY = new Date(2026, 2, 30); // 2026-03-30
+    const THREE_MONTHS = new Date(TODAY); THREE_MONTHS.setMonth(THREE_MONTHS.getMonth() + 3);
+    const SIX_MONTHS = new Date(TODAY); SIX_MONTHS.setMonth(SIX_MONTHS.getMonth() + 6);
+
+    let allGrants = [];
+    let filtered = [];
+    let displayCount = PAGE_SIZE;
+    let activeCategory = null;
+    let activeRelevance = null;
+
+    function esc(s) {
+        if (s == null) return '';
+        const d = document.createElement('div');
+        d.textContent = String(s);
+        return d.innerHTML;
+    }
+
+    /** Parse MM/DD/YYYY to a Date object, or null */
+    function parseDate(str) {
+        if (!str) return null;
+        const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (!m) return null;
+        return new Date(parseInt(m[3]), parseInt(m[1]) - 1, parseInt(m[2]));
+    }
+
+    /** Convert MM/DD/YYYY to YYYY-MM-DD for comparison with date inputs */
+    function toIso(str) {
+        const d = parseDate(str);
+        if (!d) return '';
+        return d.toISOString().slice(0, 10);
+    }
+
+    function getUrgency(grant) {
+        const d = parseDate(grant.close_date);
+        if (!d) return null;
+        if (d <= THREE_MONTHS) return 'closing-soon';
+        if (d <= SIX_MONTHS) return 'upcoming';
+        return null;
+    }
+
+    function sortGrants(arr) {
+        const mode = document.getElementById('sort-select').value;
+        const sorted = arr.slice();
+        if (mode === 'relevance') {
+            sorted.sort((a, b) => (b.relevance_score || 0) - (a.relevance_score || 0));
+        } else if (mode === 'deadline') {
+            sorted.sort((a, b) => {
+                const da = parseDate(a.close_date);
+                const db = parseDate(b.close_date);
+                if (!da && !db) return 0;
+                if (!da) return 1;
+                if (!db) return -1;
+                return da - db;
+            });
+        } else if (mode === 'posted') {
+            sorted.sort((a, b) => {
+                const da = parseDate(a.open_date);
+                const db = parseDate(b.open_date);
+                if (!da && !db) return 0;
+                if (!da) return 1;
+                if (!db) return -1;
+                return db - da;
+            });
+        }
+        return sorted;
+    }
+
+    function applyFilters() {
+        const query = document.getElementById('search').value.toLowerCase().trim();
+        const from = document.getElementById('date-from').value;
+        const to = document.getElementById('date-to').value;
+
+        filtered = allGrants.filter(g => {
+            if (activeCategory && g.category !== activeCategory) return false;
+            if (activeRelevance && g.relevance !== activeRelevance) return false;
+            // Date range on close_date
+            const iso = toIso(g.close_date);
+            if (from && iso && iso < from) return false;
+            if (to && iso && iso > to) return false;
+            // Text search
+            if (query) {
+                const hay = ((g.title || '') + ' ' + (g.description || '') + ' ' + (g.agency || '') + ' ' + (g.number || '') + ' ' + (g.source || '')).toLowerCase();
+                const terms = query.split(/\s+/);
+                for (const t of terms) {
+                    if (!hay.includes(t)) return false;
+                }
+            }
+            return true;
+        });
+
+        filtered = sortGrants(filtered);
+        displayCount = PAGE_SIZE;
+        renderCards();
+        updateStats();
+    }
+
+    function updateSummaryBar() {
+        const bar = document.getElementById('summary-bar');
+        const total = allGrants.length;
+        const high = allGrants.filter(g => g.relevance === 'high').length;
+        const medium = allGrants.filter(g => g.relevance === 'medium').length;
+        const low = allGrants.filter(g => g.relevance === 'low').length;
+        const closingSoon = allGrants.filter(g => getUrgency(g) === 'closing-soon').length;
+        const upcoming = allGrants.filter(g => {
+            const u = getUrgency(g);
+            return u === 'closing-soon' || u === 'upcoming';
+        }).length;
+
+        bar.innerHTML =
+            `<span class="stat-chip"><strong>${total}</strong> Total Grants</span>` +
+            `<span class="stat-chip high"><strong>${high}</strong> High Relevance</span>` +
+            `<span class="stat-chip medium"><strong>${medium}</strong> Medium</span>` +
+            `<span class="stat-chip low"><strong>${low}</strong> Low</span>` +
+            `<span class="stat-chip urgent"><strong>${closingSoon}</strong> Due &le;3 months</span>` +
+            `<span class="stat-chip upcoming"><strong>${upcoming}</strong> Due &le;6 months</span>`;
+    }
+
+    function updateStats() {
+        const stats = document.getElementById('stats');
+        const total = allGrants.length;
+        const shown = filtered.length;
+        let text = `<strong>${shown}</strong> grant${shown !== 1 ? 's' : ''} shown`;
+        if (shown < total) text += ` of <strong>${total}</strong> total`;
+        stats.innerHTML = text;
+    }
+
+    function buildCategoryNav() {
+        const nav = document.getElementById('digest-nav');
+        const query = document.getElementById('search').value.toLowerCase().trim();
+        const from = document.getElementById('date-from').value;
+        const to = document.getElementById('date-to').value;
+
+        // Count per category before category filter
+        const base = allGrants.filter(g => {
+            if (activeRelevance && g.relevance !== activeRelevance) return false;
+            const iso = toIso(g.close_date);
+            if (from && iso && iso < from) return false;
+            if (to && iso && iso > to) return false;
+            if (query) {
+                const hay = ((g.title || '') + ' ' + (g.description || '') + ' ' + (g.agency || '') + ' ' + (g.number || '') + ' ' + (g.source || '')).toLowerCase();
+                const terms = query.split(/\s+/);
+                for (const t of terms) { if (!hay.includes(t)) return false; }
+            }
+            return true;
+        });
+
+        const counts = {};
+        const categories = [];
+        base.forEach(g => {
+            const cat = g.category || 'Other';
+            if (!counts[cat]) { counts[cat] = 0; categories.push(cat); }
+            counts[cat]++;
+        });
+
+        // Sort categories by the order defined in CATEGORY_COLORS, then others
+        const catOrder = Object.keys(CATEGORY_COLORS);
+        categories.sort((a, b) => {
+            const ia = catOrder.indexOf(a);
+            const ib = catOrder.indexOf(b);
+            return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+        });
+
+        let html = '';
+        categories.forEach(cat => {
+            const c = CATEGORY_COLORS[cat] || DEFAULT_COLOR;
+            const active = activeCategory === cat ? 'active' : '';
+            html += `<button class="jtab ${active}" data-cat="${esc(cat)}" style="--accent:${c.accent};--bg:${c.bg}" onclick="filterCategory(this.dataset.cat, this)">${esc(cat)} <span class="badge">${counts[cat]}</span></button>`;
+        });
+        const allActive = !activeCategory ? 'active' : '';
+        html += `<button class="show-all-btn ${allActive}" onclick="filterCategory(null, this)">All <span style="font-size:0.85em">(${base.length})</span></button>`;
+        nav.innerHTML = html;
+    }
+
+    function buildRelevanceNav() {
+        const nav = document.getElementById('relevance-nav');
+        const levels = ['high', 'medium', 'low'];
+        const labels = {high: 'High', medium: 'Medium', low: 'Low'};
+
+        let html = '';
+        const allActive = !activeRelevance ? 'active' : '';
+        html += `<button class="rtab-all ${allActive}" onclick="filterRelevance(null)">All Relevance</button>`;
+        levels.forEach(r => {
+            const active = activeRelevance === r ? 'active' : '';
+            html += `<button class="rtab ${active}" data-rel="${r}" onclick="filterRelevance('${r}')">${labels[r]}</button>`;
+        });
+        nav.innerHTML = html;
+    }
+
+    function filterCategory(cat, btn) {
+        activeCategory = cat;
+        applyFilters();
+        buildCategoryNav();
+    }
+
+    function filterRelevance(rel) {
+        activeRelevance = rel;
+        buildRelevanceNav();
+        applyFilters();
+        buildCategoryNav();
+    }
+
+    function renderCards() {
+        const content = document.getElementById('grant-content');
+        const loadMoreBtn = document.getElementById('load-more');
+
+        if (filtered.length === 0) {
+            content.innerHTML = '<div class="no-articles">No grants match your filters.</div>';
+            loadMoreBtn.style.display = 'none';
+            return;
+        }
+
+        const toShow = filtered.slice(0, displayCount);
+        let html = '';
+        toShow.forEach(g => {
+            const c = CATEGORY_COLORS[g.category] || DEFAULT_COLOR;
+            const urgency = getUrgency(g);
+
+            // Badges
+            let badges = '';
+            if (g.relevance) {
+                badges += `<span class="relevance-badge ${esc(g.relevance)}">${esc(g.relevance)}</span>`;
+            }
+            if (urgency === 'closing-soon') {
+                badges += ` <span class="deadline-badge closing-soon">Closing Soon</span>`;
+            } else if (urgency === 'upcoming') {
+                badges += ` <span class="deadline-badge upcoming">Upcoming Deadline</span>`;
+            }
+
+            // Meta line
+            const metaParts = [];
+            if (g.agency) metaParts.push(esc(g.agency));
+            if (g.source) metaParts.push(esc(g.source));
+            if (g.number) metaParts.push(esc(g.number));
+            if (g.status) metaParts.push(esc(g.status));
+            const metaHtml = metaParts.join(' &middot; ');
+
+            // Dates for expanded body
+            let datesHtml = '';
+            if (g.open_date || g.close_date) {
+                datesHtml = '<div class="card-dates">';
+                if (g.open_date) datesHtml += `<strong>Opens:</strong> ${esc(g.open_date)}`;
+                if (g.open_date && g.close_date) datesHtml += ' &nbsp;&mdash;&nbsp; ';
+                if (g.close_date) datesHtml += `<strong>Closes:</strong> ${esc(g.close_date)}`;
+                datesHtml += '</div>';
+            }
+
+            // Link
+            let linkHtml = '';
+            if (g.link) {
+                linkHtml = `<a href="${esc(g.link)}" target="_blank" rel="noopener noreferrer" class="view-link">View Opportunity &rarr;</a>`;
+            }
+
+            html += `
+            <div class="card" style="--accent:${c.accent}">
+              <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+                <div class="card-title">
+                  <span class="card-title-text">${esc(g.title)}</span>
+                  ${badges}
+                </div>
+                <div class="card-meta">${metaHtml}</div>
+                <span class="chevron">&#9660;</span>
+              </div>
+              <div class="card-body">
+                ${datesHtml}
+                <p>${g.description ? esc(g.description) : 'No description available.'}</p>
+                ${linkHtml}
+              </div>
+            </div>`;
+        });
+        content.innerHTML = html;
+
+        if (displayCount < filtered.length) {
+            loadMoreBtn.style.display = 'block';
+            loadMoreBtn.textContent = `Load more (${Math.min(displayCount, filtered.length)} of ${filtered.length} shown)`;
+        } else {
+            loadMoreBtn.style.display = 'none';
+        }
+    }
+
+    function loadMore() {
+        displayCount += PAGE_SIZE;
+        renderCards();
+    }
+
+    function resetFilters() {
+        document.getElementById('search').value = '';
+        document.getElementById('date-from').value = '';
+        document.getElementById('date-to').value = '';
+        document.getElementById('sort-select').value = 'relevance';
+        activeCategory = null;
+        activeRelevance = null;
+        buildRelevanceNav();
+        applyFilters();
+        buildCategoryNav();
+    }
+
+    // Debounced search
+    let searchTimeout;
+    document.getElementById('search').addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => { applyFilters(); buildCategoryNav(); }, 250);
+    });
+    document.getElementById('date-from').addEventListener('change', () => { applyFilters(); buildCategoryNav(); });
+    document.getElementById('date-to').addEventListener('change', () => { applyFilters(); buildCategoryNav(); });
+    document.getElementById('sort-select').addEventListener('change', () => { applyFilters(); });
+
+    // Load data
+    fetch('grants-data.json')
+        .then(r => r.json())
+        .then(data => {
+            allGrants = data.grants || [];
+            // Default sort by relevance score
+            allGrants.sort((a, b) => (b.relevance_score || 0) - (a.relevance_score || 0));
+            filtered = allGrants.slice();
+            updateSummaryBar();
+            buildCategoryNav();
+            buildRelevanceNav();
+            renderCards();
+            updateStats();
+        })
+        .catch(() => {
+            document.getElementById('grant-content').innerHTML =
+                '<div class="no-articles">Could not load grant data.</div>';
+        });
+    </script>
+</body>
+</html>
