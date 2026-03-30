@@ -375,7 +375,7 @@
     const REPLY_EMAIL = 'acyeh85@gmail.com';
 
     let data = { projects: {}, completed_log: [] };
-    let meta = { lastServerSync: null, pendingChanges: [] };
+    let meta = { lastServerSync: null, lastSyncedSnapshot: null };
     let openTaskId = null;  // currently expanded task
     let undoStack = [];     // snapshots for undo
     const MAX_UNDO = 20;
@@ -395,9 +395,12 @@
         updateSyncStatus();
     }
 
-    function addPending(action) {
-        action.timestamp = new Date().toISOString();
-        meta.pendingChanges.push(action);
+    function hasLocalChanges() {
+        return JSON.stringify(data) !== meta.lastSyncedSnapshot;
+    }
+
+    function markSynced() {
+        meta.lastSyncedSnapshot = JSON.stringify(data);
     }
 
     function nextId() {
@@ -437,6 +440,7 @@
             if (!resp.ok) throw new Error('Not found');
             const serverData = await resp.json();
             mergeServerData(serverData);
+            markSynced();
             meta.lastServerSync = new Date().toISOString();
             saveLocal();
             render();
@@ -551,8 +555,8 @@
                 throw new Error(err.message || 'Push failed');
             }
 
-            // Success — clear pending
-            meta.pendingChanges = [];
+            // Success — mark as synced
+            markSynced();
             meta.lastServerSync = new Date().toISOString();
             saveLocal();
             render();
@@ -575,7 +579,7 @@
                 const task = p.tasks[idx];
                 task.status = 'done';
                 task.completed = today();
-                addPending({ type: 'complete', taskId: taskId });
+
                 saveLocal();
                 render();
                 toast('Task completed');
@@ -608,7 +612,7 @@
             delete task.project;
             if (!data.projects[proj]) data.projects[proj] = { description: '', tasks: [] };
             data.projects[proj].tasks.push(task);
-            addPending({ type: 'reopen', project: proj, description: task.description, taskId: task.id });
+
             saveLocal();
             render();
             toast('Task reopened');
@@ -627,7 +631,7 @@
             notes: []
         };
         data.projects[projectName].tasks.push(task);
-        addPending({ type: 'add', project: projectName, description: task.description });
+
         saveLocal();
         render();
         toast('Task added');
@@ -640,7 +644,7 @@
             const task = p.tasks.find(t => t.id === taskId);
             if (task) {
                 task.notes.push({ date: today(), text: text.trim() });
-                addPending({ type: 'note', taskId: taskId, text: text.trim() });
+
                 saveLocal();
                 render();
                 toast('Note added');
@@ -728,7 +732,7 @@
         if (data.projects[name]) { toast('Project already exists'); return; }
         snapshot();
         data.projects[name] = { description: desc, tasks: [] };
-        addPending({ type: 'new-project', name: name, description: desc });
+
         closeModal('modal-project');
         saveLocal();
         render();
@@ -811,7 +815,7 @@
         };
         if (due) task.due = due;
         data.projects[proj].tasks.push(task);
-        addPending({ type: 'add', project: proj, description: desc, due: due || null });
+
         closeModal('modal-task');
         saveLocal();
         render();
@@ -1041,7 +1045,7 @@
 
     function updateSyncStatus() {
         const el = document.getElementById('sync-status');
-        const pending = meta.pendingChanges.length;
+        const changed = hasLocalChanges();
         let html = '';
         if (meta.lastServerSync) {
             const d = new Date(meta.lastServerSync);
@@ -1049,15 +1053,15 @@
         } else {
             html += '<span class="sync-indicator sync-yellow"></span>Not yet synced';
         }
-        if (pending > 0) {
-            html += ' &middot; <strong>' + pending + '</strong> pending change' + (pending > 1 ? 's' : '');
+        if (changed) {
+            html += ' &middot; <strong>Unsaved changes</strong>';
         }
         el.innerHTML = html;
     }
 
     function updateExportBtn() {
         const btn = document.getElementById('export-btn');
-        btn.style.display = meta.pendingChanges.length > 0 ? '' : 'none';
+        btn.style.display = hasLocalChanges() ? '' : 'none';
     }
 
     function updateUndoBtn() {
