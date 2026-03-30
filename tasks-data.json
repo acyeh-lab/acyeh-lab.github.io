@@ -38,10 +38,11 @@
         {
           "id": 12,
           "description": "test",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": []
+          "notes": [],
+          "completed": "2026-03-30"
         }
       ]
     },
@@ -140,10 +141,11 @@
         {
           "id": 13,
           "description": "make fuso probe!",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": []
+          "notes": [],
+          "completed": "2026-03-30"
         },
         {
           "id": 14,
