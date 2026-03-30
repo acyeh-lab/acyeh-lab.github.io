@@ -644,7 +644,7 @@
             const task = p.tasks.find(t => t.id === taskId);
             if (task) {
                 task.notes.push({ date: today(), text: text.trim() });
-
+                openTaskId = null;
                 saveLocal();
                 render();
                 toast('Note added');
@@ -663,6 +663,7 @@
                 } else {
                     task[field] = value;
                 }
+                openTaskId = null;
                 saveLocal();
                 render();
                 return;
@@ -728,6 +729,7 @@
                     data.projects[newProject] = { description: '', tasks: [] };
                 }
                 data.projects[newProject].tasks.push(task);
+                openTaskId = null;
                 saveLocal();
                 render();
                 toast('Moved to ' + newProject);
