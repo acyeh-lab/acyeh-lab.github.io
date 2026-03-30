@@ -956,6 +956,53 @@
             html += '</div>'; // project-section
         }
 
+        // Completed History section
+        const allDone = [];
+        // From completed_log
+        for (const t of (data.completed_log || [])) {
+            allDone.push({ task: t, project: t.project || 'Unknown' });
+        }
+        // From projects (status=done)
+        for (const [pn, p] of Object.entries(data.projects)) {
+            for (const t of p.tasks) {
+                if (t.status === 'done') {
+                    allDone.push({ task: t, project: pn });
+                }
+            }
+        }
+
+        if (allDone.length > 0) {
+            // Sort by completion date, newest first
+            allDone.sort((a, b) => (b.task.completed || b.task.completed_date || '').localeCompare(a.task.completed || a.task.completed_date || ''));
+
+            const histCollapsed = localStorage.getItem('proj-collapse-__history') === '1';
+            html += '<div class="project-section' + (histCollapsed ? ' collapsed' : '') + '" data-project="__history">';
+            html += '<div class="project-header" onclick="toggleProject(this)" style="background:#f0faf0;">';
+            html += '<span class="project-chevron">&#9660;</span>';
+            html += '<span class="project-name" style="color:#2e7d32;">Completed History</span>';
+            html += '<span class="project-count" style="background:#e8f5e9;color:#2e7d32;">' + allDone.length + ' done</span>';
+            html += '</div>';
+            html += '<div class="project-body">';
+
+            for (const entry of allDone) {
+                const t = entry.task;
+                const completedDate = t.completed || t.completed_date || '';
+                html += '<div class="task-row done">';
+                html += '<div class="task-checkbox checked" onclick="reopenTask(' + t.id + ')"></div>';
+                html += '<div class="task-main">';
+                html += '<div class="task-desc done-text">' + esc(t.description) + '</div>';
+                html += '<div class="task-meta">';
+                html += '<span class="badge" style="background:#e8f5e9;color:#2e7d32;">' + esc(entry.project) + '</span>';
+                if (completedDate) html += '<span style="color:#aaa;font-size:0.75em;">Completed ' + esc(completedDate) + '</span>';
+                html += '<span class="badge badge-id">#' + t.id + '</span>';
+                html += '</div>';
+                html += '</div>';
+                html += '</div>';
+            }
+
+            html += '</div></div>';
+        }
+
         content.innerHTML = html;
         updateExportBtn();
         updateUndoBtn();
