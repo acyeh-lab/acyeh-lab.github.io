@@ -1,9 +1,5 @@
 {
   "projects": {
-    "Microbiome-TCR": {
-      "description": "Conserved bacterial genomic sequences as potential TCR binders",
-      "tasks": []
-    },
     "Admin": {
       "description": "Reviews, service, and administrative tasks",
       "tasks": [
@@ -153,6 +149,19 @@
         {
           "id": 14,
           "description": "make fuso probe",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
+        }
+      ]
+    },
+    "Bleakley CD56 / NKG7": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 15,
+          "description": "NKG7 transplant on 4/2! Make sure to stain for CD56 and m09 tet",
           "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
