@@ -45,6 +45,76 @@
         }
       ]
     },
+    "Spatial Microbiome": {
+      "description": "Spatial microbiome project",
+      "tasks": [
+        {
+          "id": 5,
+          "description": "Pick up paraffin block for Akkermansia",
+          "status": "done",
+          "priority": "high",
+          "created": "2026-03-26",
+          "completed": "2026-03-29",
+          "notes": []
+        },
+        {
+          "id": 8,
+          "description": "Pick tissue for EH",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-03-29",
+          "notes": [],
+          "due": "2026-03-30"
+        },
+        {
+          "id": 6,
+          "description": "Design colibactin probes for spatial imaging",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-03-27",
+          "notes": [
+            {
+              "date": "2026-03-27",
+              "text": "Part of CCSG grant. Design probes targeting colibactin biosynthetic genes."
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "description": "Design additional bacterial probes (CCSG grant)",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-03-27",
+          "notes": [
+            {
+              "date": "2026-03-27",
+              "text": "Part of CCSG grant. Expand probe panel beyond current bacterial targets."
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "description": "make fuso probe",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
+        }
+      ]
+    },
+    "Spatial-VDJ": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 24,
+          "description": "Ask Josh about 5' sequences and extracting BCR data using TRUST4",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
+        }
+      ]
+    },
     "Plasma Cell GVHD": {
       "description": "Plasma cell biology in GVHD using murine transplant model",
       "tasks": [
@@ -100,63 +170,6 @@
               "text": "Validating EPCAM stain as CD138 also stains GI columnar epithelium"
             }
           ]
-        }
-      ]
-    },
-    "Spatial Microbiome": {
-      "description": "Spatial microbiome project",
-      "tasks": [
-        {
-          "id": 5,
-          "description": "Pick up paraffin block for Akkermansia",
-          "status": "done",
-          "priority": "high",
-          "created": "2026-03-26",
-          "completed": "2026-03-29",
-          "notes": []
-        },
-        {
-          "id": 8,
-          "description": "Pick tissue for EH",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-03-29",
-          "notes": [],
-          "due": "2026-03-30"
-        },
-        {
-          "id": 6,
-          "description": "Design colibactin probes for spatial imaging",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-03-27",
-          "notes": [
-            {
-              "date": "2026-03-27",
-              "text": "Part of CCSG grant. Design probes targeting colibactin biosynthetic genes."
-            }
-          ]
-        },
-        {
-          "id": 7,
-          "description": "Design additional bacterial probes (CCSG grant)",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-03-27",
-          "notes": [
-            {
-              "date": "2026-03-27",
-              "text": "Part of CCSG grant. Expand probe panel beyond current bacterial targets."
-            }
-          ]
-        },
-        {
-          "id": 14,
-          "description": "make fuso probe",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-03-30",
-          "notes": []
         }
       ]
     },
@@ -229,19 +242,6 @@
         {
           "id": 22,
           "description": "Immune co-culture assay development - DC + LPS?  B-splenocytes + LPS?  XRT?",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-03-30",
-          "notes": []
-        }
-      ]
-    },
-    "Spatial-VDJ": {
-      "description": "Using singular genomics dataset",
-      "tasks": [
-        {
-          "id": 24,
-          "description": "Ask Josh about 5' sequences and extracting BCR data using TRUST4",
           "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
