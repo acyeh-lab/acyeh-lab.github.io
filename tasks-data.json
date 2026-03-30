@@ -34,6 +34,14 @@
           "created": "2026-03-30",
           "notes": [],
           "completed": "2026-03-30"
+        },
+        {
+          "id": 19,
+          "description": "ASH interview with Shawn Gates - week of 4/20",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
         }
       ]
     },
@@ -79,6 +87,14 @@
           "created": "2026-03-26",
           "notes": [],
           "due": "2026-04-23"
+        },
+        {
+          "id": 17,
+          "description": "check vectra panel by Stephanie!",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
         }
       ]
     },
@@ -154,7 +170,29 @@
     },
     "Markey-Alex Manuscript": {
       "description": "Update data/figs",
-      "tasks": []
+      "tasks": [
+        {
+          "id": 18,
+          "description": "make sure figures are good",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
+        }
+      ]
+    },
+    "Personal": {
+      "description": "Non-work related stuff",
+      "tasks": [
+        {
+          "id": 16,
+          "description": "E-mail Tamer and connect with Alex",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
+        }
+      ]
     }
   },
   "completed_log": []
