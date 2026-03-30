@@ -34,15 +34,6 @@
           "created": "2026-03-30",
           "notes": [],
           "completed": "2026-03-30"
-        },
-        {
-          "id": 12,
-          "description": "test",
-          "status": "done",
-          "priority": "medium",
-          "created": "2026-03-30",
-          "notes": [],
-          "completed": "2026-03-30"
         }
       ]
     },
@@ -137,15 +128,6 @@
               "text": "Part of CCSG grant. Expand probe panel beyond current bacterial targets."
             }
           ]
-        },
-        {
-          "id": 13,
-          "description": "make fuso probe!",
-          "status": "done",
-          "priority": "medium",
-          "created": "2026-03-30",
-          "notes": [],
-          "completed": "2026-03-30"
         },
         {
           "id": 14,
