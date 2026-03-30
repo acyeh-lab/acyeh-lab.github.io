@@ -174,6 +174,68 @@
 
         .no-articles { text-align: center; color: #999; padding: 40px 0; font-style: italic; }
 
+        /* Status tracking */
+        .status-row {
+            display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+            margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e0e0e0;
+        }
+        .status-btn {
+            padding: 4px 12px; border-radius: 14px; font-size: 0.78em; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; font-family: 'Roboto', sans-serif;
+            border: 1.5px solid transparent;
+        }
+        .status-btn[data-s="interested"] { background: #e3f2fd; color: #1565c0; border-color: #bbdefb; }
+        .status-btn[data-s="interested"].active { background: #1565c0; color: #fff; }
+        .status-btn[data-s="applied"] { background: #e8f5e9; color: #2e7d32; border-color: #c8e6c9; }
+        .status-btn[data-s="applied"].active { background: #2e7d32; color: #fff; }
+        .status-btn[data-s="skipped"] { background: #f5f5f5; color: #999; border-color: #e0e0e0; }
+        .status-btn[data-s="skipped"].active { background: #999; color: #fff; }
+        .status-btn:hover { filter: brightness(0.92); }
+        .status-note-row { display: flex; gap: 6px; margin-top: 6px; }
+        .status-note-input {
+            flex: 1; padding: 5px 10px; border: 1px solid #ddd; border-radius: 8px;
+            font-size: 0.82em; font-family: 'Roboto', sans-serif;
+        }
+        .status-notes { margin-top: 6px; }
+        .status-note-item {
+            font-size: 0.8em; color: #666; padding: 3px 0;
+            border-bottom: 1px dotted #eee;
+        }
+        .status-note-date { color: #aaa; margin-right: 6px; }
+        .card-status-indicator {
+            display: inline-block; border-radius: 10px; padding: 2px 10px;
+            font-size: 0.72em; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; white-space: nowrap;
+        }
+        .card-status-indicator.interested { background: #e3f2fd; color: #1565c0; }
+        .card-status-indicator.applied { background: #e8f5e9; color: #2e7d32; }
+        .card-status-indicator.skipped { background: #f5f5f5; color: #999; }
+
+        /* Status filter nav */
+        .status-nav {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            padding: 6px 0 10px; justify-content: center;
+        }
+        .stab {
+            border: 1.5px solid transparent; border-radius: 14px; padding: 5px 14px;
+            font-size: 0.8em; cursor: pointer; font-weight: 500;
+            transition: all 0.2s; font-family: 'Roboto', sans-serif;
+        }
+        .stab[data-s="interested"] { background: #e3f2fd; color: #1565c0; border-color: #bbdefb; }
+        .stab[data-s="interested"].active { background: #1565c0; color: #fff; }
+        .stab[data-s="applied"] { background: #e8f5e9; color: #2e7d32; border-color: #c8e6c9; }
+        .stab[data-s="applied"].active { background: #2e7d32; color: #fff; }
+        .stab[data-s="skipped"] { background: #f5f5f5; color: #999; border-color: #e0e0e0; }
+        .stab[data-s="skipped"].active { background: #999; color: #fff; }
+        .stab-all {
+            border: 1px dashed #999; border-radius: 14px; padding: 5px 14px;
+            font-size: 0.8em; cursor: pointer; font-weight: 500;
+            background: transparent; color: #666; transition: all 0.2s;
+            font-family: 'Roboto', sans-serif;
+        }
+        .stab-all:hover { border-color: #333; color: #333; }
+        .stab-all.active { border-style: solid; background: #555; color: #fff; }
+
         /* Load more */
         .load-more {
             display: block; margin: 16px auto; padding: 10px 28px;
@@ -216,6 +278,7 @@
         </div>
         <div class="digest-nav" id="digest-nav"></div>
         <div class="relevance-nav" id="relevance-nav"></div>
+        <div class="status-nav" id="status-nav"></div>
         <div class="stats" id="stats"></div>
         <div id="grant-content"><div class="no-articles">Loading grant data...</div></div>
         <button class="load-more" id="load-more" style="display:none" onclick="loadMore()">Load more grants</button>
@@ -236,7 +299,8 @@
     };
     const DEFAULT_COLOR = {accent:"#455a64", bg:"#eceff1"};
     const PAGE_SIZE = 50;
-    const TODAY = new Date(2026, 2, 30); // 2026-03-30
+    const TODAY = new Date();
+    TODAY.setHours(0,0,0,0);
     const THREE_MONTHS = new Date(TODAY); THREE_MONTHS.setMonth(THREE_MONTHS.getMonth() + 3);
     const SIX_MONTHS = new Date(TODAY); SIX_MONTHS.setMonth(SIX_MONTHS.getMonth() + 6);
 
@@ -245,6 +309,84 @@
     let displayCount = PAGE_SIZE;
     let activeCategory = null;
     let activeRelevance = null;
+    let activeStatus = null; // null=all, 'interested', 'applied', 'skipped', 'unmarked'
+
+    /* ===== Status tracking (localStorage) ===== */
+    const STATUS_KEY = 'ayeh-lab-grant-status';
+    let grantStatus = {}; // { grantId: { status: 'interested'|'applied'|'skipped', notes: [{date,text}], updated: iso } }
+
+    function loadStatus() {
+        try {
+            const raw = localStorage.getItem(STATUS_KEY);
+            if (raw) grantStatus = JSON.parse(raw);
+        } catch(e) {}
+    }
+
+    function saveStatus() {
+        localStorage.setItem(STATUS_KEY, JSON.stringify(grantStatus));
+    }
+
+    function setGrantStatus(grantId, status) {
+        if (!grantStatus[grantId]) grantStatus[grantId] = { status: null, notes: [] };
+        const current = grantStatus[grantId].status;
+        // Toggle off if clicking same status
+        grantStatus[grantId].status = (current === status) ? null : status;
+        grantStatus[grantId].updated = new Date().toISOString();
+        // Clean up if no status and no notes
+        if (!grantStatus[grantId].status && grantStatus[grantId].notes.length === 0) {
+            delete grantStatus[grantId];
+        }
+        saveStatus();
+        renderCards();
+        buildStatusNav();
+        updateSummaryBar();
+    }
+
+    function addGrantNote(grantId, text) {
+        if (!text.trim()) return;
+        if (!grantStatus[grantId]) grantStatus[grantId] = { status: null, notes: [] };
+        grantStatus[grantId].notes.push({ date: new Date().toISOString().slice(0,10), text: text.trim() });
+        grantStatus[grantId].updated = new Date().toISOString();
+        saveStatus();
+        renderCards();
+    }
+
+    function getGrantStatus(grantId) {
+        return grantStatus[grantId] || null;
+    }
+
+    function buildStatusNav() {
+        const nav = document.getElementById('status-nav');
+        const counts = { interested: 0, applied: 0, skipped: 0 };
+        for (const s of Object.values(grantStatus)) {
+            if (s.status && counts.hasOwnProperty(s.status)) counts[s.status]++;
+        }
+        const total = counts.interested + counts.applied + counts.skipped;
+        if (total === 0 && !activeStatus) {
+            nav.innerHTML = '';
+            return;
+        }
+        const labels = { interested: 'Interested', applied: 'Applied', skipped: 'Skipped' };
+        let html = '';
+        const allActive = !activeStatus ? 'active' : '';
+        html += `<button class="stab-all ${allActive}" onclick="filterStatus(null)">All</button>`;
+        for (const s of ['interested', 'applied', 'skipped']) {
+            if (counts[s] > 0 || activeStatus === s) {
+                const active = activeStatus === s ? 'active' : '';
+                html += `<button class="stab ${active}" data-s="${s}" onclick="filterStatus('${s}')">${labels[s]} <span style="font-size:0.85em">(${counts[s]})</span></button>`;
+            }
+        }
+        const unmarkedActive = activeStatus === 'unmarked' ? 'active' : '';
+        html += `<button class="stab-all ${unmarkedActive}" onclick="filterStatus('unmarked')">Unmarked</button>`;
+        nav.innerHTML = html;
+    }
+
+    function filterStatus(status) {
+        activeStatus = status;
+        applyFilters();
+        buildStatusNav();
+        buildCategoryNav();
+    }
 
     function esc(s) {
         if (s == null) return '';
@@ -311,6 +453,15 @@
         filtered = allGrants.filter(g => {
             if (activeCategory && g.category !== activeCategory) return false;
             if (activeRelevance && g.relevance !== activeRelevance) return false;
+            // Status filter
+            if (activeStatus) {
+                const gs = getGrantStatus(g.id);
+                if (activeStatus === 'unmarked') {
+                    if (gs && gs.status) return false;
+                } else {
+                    if (!gs || gs.status !== activeStatus) return false;
+                }
+            }
             // Date range on close_date
             const iso = toIso(g.close_date);
             if (from && iso && iso < from) return false;
@@ -344,13 +495,18 @@
             return u === 'closing-soon' || u === 'upcoming';
         }).length;
 
+        const interested = Object.values(grantStatus).filter(s => s.status === 'interested').length;
+        const applied = Object.values(grantStatus).filter(s => s.status === 'applied').length;
+
         bar.innerHTML =
             `<span class="stat-chip"><strong>${total}</strong> Total Grants</span>` +
             `<span class="stat-chip high"><strong>${high}</strong> High Relevance</span>` +
             `<span class="stat-chip medium"><strong>${medium}</strong> Medium</span>` +
             `<span class="stat-chip low"><strong>${low}</strong> Low</span>` +
             `<span class="stat-chip urgent"><strong>${closingSoon}</strong> Due &le;3 months</span>` +
-            `<span class="stat-chip upcoming"><strong>${upcoming}</strong> Due &le;6 months</span>`;
+            `<span class="stat-chip upcoming"><strong>${upcoming}</strong> Due &le;6 months</span>` +
+            (interested > 0 ? `<span class="stat-chip" style="background:#e3f2fd;color:#1565c0;"><strong>${interested}</strong> Interested</span>` : '') +
+            (applied > 0 ? `<span class="stat-chip" style="background:#e8f5e9;color:#2e7d32;"><strong>${applied}</strong> Applied</span>` : '');
     }
 
     function updateStats() {
@@ -453,8 +609,15 @@
             const c = CATEGORY_COLORS[g.category] || DEFAULT_COLOR;
             const urgency = getUrgency(g);
 
+            const gs = getGrantStatus(g.id);
+            const gStatus = gs ? gs.status : null;
+
             // Badges
             let badges = '';
+            if (gStatus) {
+                const sLabels = { interested: 'Interested', applied: 'Applied', skipped: 'Skipped' };
+                badges += `<span class="card-status-indicator ${gStatus}">${sLabels[gStatus]}</span>`;
+            }
             if (g.relevance) {
                 badges += `<span class="relevance-badge ${esc(g.relevance)}">${esc(g.relevance)}</span>`;
             }
@@ -488,6 +651,27 @@
                 linkHtml = `<a href="${esc(g.link)}" target="_blank" rel="noopener noreferrer" class="view-link">View Opportunity &rarr;</a>`;
             }
 
+            // Status controls
+            let statusHtml = '<div class="status-row">';
+            statusHtml += '<span style="font-size:0.78em;color:#888;margin-right:4px;">Mark:</span>';
+            for (const s of ['interested', 'applied', 'skipped']) {
+                const sLabel = { interested: 'Interested', applied: 'Applied', skipped: 'Skipped' }[s];
+                const active = gStatus === s ? 'active' : '';
+                statusHtml += `<button class="status-btn ${active}" data-s="${s}" onclick="event.stopPropagation();setGrantStatus('${g.id}','${s}')">${sLabel}</button>`;
+            }
+            statusHtml += '</div>';
+
+            // Notes
+            let notesHtml = '';
+            if (gs && gs.notes && gs.notes.length > 0) {
+                notesHtml += '<div class="status-notes">';
+                for (const n of gs.notes) {
+                    notesHtml += `<div class="status-note-item"><span class="status-note-date">${esc(n.date)}</span>${esc(n.text)}</div>`;
+                }
+                notesHtml += '</div>';
+            }
+            notesHtml += `<div class="status-note-row"><input type="text" class="status-note-input" placeholder="Add a note..." onkeydown="if(event.key==='Enter'){event.stopPropagation();addGrantNote('${g.id}',this.value);this.value='';}"><button class="status-btn" data-s="interested" style="background:#f5f5f5;color:#666;border-color:#ddd;" onclick="event.stopPropagation();var inp=this.previousElementSibling;addGrantNote('${g.id}',inp.value);inp.value='';">Add</button></div>`;
+
             html += `
             <div class="card" style="--accent:${c.accent}">
               <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
@@ -502,6 +686,8 @@
                 ${datesHtml}
                 <p>${g.description ? esc(g.description) : 'No description available.'}</p>
                 ${linkHtml}
+                ${statusHtml}
+                ${notesHtml}
               </div>
             </div>`;
         });
@@ -527,7 +713,9 @@
         document.getElementById('sort-select').value = 'relevance';
         activeCategory = null;
         activeRelevance = null;
+        activeStatus = null;
         buildRelevanceNav();
+        buildStatusNav();
         applyFilters();
         buildCategoryNav();
     }
@@ -543,6 +731,7 @@
     document.getElementById('sort-select').addEventListener('change', () => { applyFilters(); });
 
     // Load data
+    loadStatus();
     fetch('grants-data.json')
         .then(r => r.json())
         .then(data => {
@@ -553,6 +742,7 @@
             updateSummaryBar();
             buildCategoryNav();
             buildRelevanceNav();
+            buildStatusNav();
             renderCards();
             updateStats();
         })
