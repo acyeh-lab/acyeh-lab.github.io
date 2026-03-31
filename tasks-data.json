@@ -144,7 +144,7 @@
           "id": 3,
           "description": "Takedown #1 — mouse organ harvest (day 14 post-transplant)",
           "status": "open",
-          "priority": "medium",
+          "priority": "high",
           "created": "2026-03-26",
           "notes": [],
           "due": "2026-04-09"
