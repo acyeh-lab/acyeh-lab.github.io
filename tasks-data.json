@@ -252,6 +252,27 @@
           "notes": []
         }
       ]
+    },
+    "Cardiac CMV": {
+      "description": "clinical dataset + murine TTE",
+      "tasks": [
+        {
+          "id": 27,
+          "description": "follow-up with Kevin Ng",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-31",
+          "notes": []
+        },
+        {
+          "id": 28,
+          "description": "Follow-up Elena cardiac U/S",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-31",
+          "notes": []
+        }
+      ]
     }
   },
   "completed_log": []
