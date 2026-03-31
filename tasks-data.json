@@ -42,6 +42,14 @@
           "priority": "medium",
           "created": "2026-03-30",
           "notes": []
+        },
+        {
+          "id": 25,
+          "description": "Follow-up with Stephanie re: biostats person / cGVHD ML project",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-31",
+          "notes": []
         }
       ]
     },
@@ -67,21 +75,8 @@
           "due": "2026-03-30"
         },
         {
-          "id": 6,
-          "description": "Design colibactin probes for spatial imaging",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-03-27",
-          "notes": [
-            {
-              "date": "2026-03-27",
-              "text": "Part of CCSG grant. Design probes targeting colibactin biosynthetic genes."
-            }
-          ]
-        },
-        {
           "id": 7,
-          "description": "Design additional bacterial probes (CCSG grant), including colibactin genes",
+          "description": "Design additional bacterial probes (CCSG grant), including colibactin probes.  Reach out to 10x",
           "status": "open",
           "priority": "high",
           "created": "2026-03-27",
@@ -99,19 +94,6 @@
           "priority": "medium",
           "created": "2026-03-30",
           "notes": []
-        },
-        {
-          "id": 26,
-          "description": "Results: Compare B.fragilis severe vs. no GVHD?",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-03-31",
-          "notes": [
-            {
-              "date": "2026-03-31",
-              "text": "(3022/3027 mod-severe vs. 3081/3132/3045)"
-            }
-          ]
         }
       ]
     },
@@ -124,6 +106,14 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
+          "notes": []
+        },
+        {
+          "id": 26,
+          "description": "Look at immcantation",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-31",
           "notes": []
         }
       ]
@@ -195,7 +185,8 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": []
+          "notes": [],
+          "due": "2026-04-02"
         }
       ]
     },
@@ -217,7 +208,7 @@
       "tasks": [
         {
           "id": 16,
-          "description": "E-mail Tamer and connect with Alex - emailed tamer, waiting for response",
+          "description": "E-mail Tamer and connect with Alex",
           "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
@@ -225,18 +216,10 @@
         },
         {
           "id": 23,
-          "description": "Ask cascadia about yellow card for route 691 on Tuesday - filled application, just need to confirm",
+          "description": "Ask cascadia about yellow card for route 691 on Tuesday",
           "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": []
-        },
-        {
-          "id": 25,
-          "description": "E-mail Sebastian about manuscript - waiting to hear back",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-03-31",
           "notes": []
         }
       ]
