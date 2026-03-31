@@ -81,7 +81,7 @@
         },
         {
           "id": 7,
-          "description": "Design additional bacterial probes (CCSG grant)",
+          "description": "Design additional bacterial probes (CCSG grant), including colibactin genes",
           "status": "open",
           "priority": "high",
           "created": "2026-03-27",
@@ -204,7 +204,7 @@
       "tasks": [
         {
           "id": 16,
-          "description": "E-mail Tamer and connect with Alex",
+          "description": "E-mail Tamer and connect with Alex - emailed tamer, waiting for response",
           "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
@@ -212,10 +212,18 @@
         },
         {
           "id": 23,
-          "description": "Ask cascadia about yellow card for route 691 on Tuesday",
+          "description": "Ask cascadia about yellow card for route 691 on Tuesday - filled application, just need to confirm",
           "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
+          "notes": []
+        },
+        {
+          "id": 25,
+          "description": "E-mail Sebastian about manuscript - waiting to hear back",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-31",
           "notes": []
         }
       ]
