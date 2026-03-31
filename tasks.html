@@ -690,6 +690,33 @@
         }
     }
 
+    function editNote(taskId, noteIdx, text) {
+        for (const p of Object.values(data.projects)) {
+            const task = p.tasks.find(t => t.id === taskId);
+            if (task && task.notes[noteIdx]) {
+                if (task.notes[noteIdx].text === text.trim()) return; // no change
+                snapshot();
+                task.notes[noteIdx].text = text.trim();
+                saveLocal();
+                return;
+            }
+        }
+    }
+
+    function deleteNote(taskId, noteIdx) {
+        snapshot();
+        for (const p of Object.values(data.projects)) {
+            const task = p.tasks.find(t => t.id === taskId);
+            if (task && task.notes[noteIdx] !== undefined) {
+                task.notes.splice(noteIdx, 1);
+                saveLocal();
+                render();
+                toast('Note deleted');
+                return;
+            }
+        }
+    }
+
     function updateTaskField(taskId, field, value) {
         snapshot();
         for (const p of Object.values(data.projects)) {
@@ -1088,8 +1115,13 @@
         // Notes
         if (task.notes && task.notes.length > 0) {
             html += '<div class="task-notes">';
-            for (const n of task.notes) {
-                html += '<div class="task-note"><span class="task-note-date">' + esc(n.date) + '</span>' + esc(n.text) + '</div>';
+            for (let ni = 0; ni < task.notes.length; ni++) {
+                const n = task.notes[ni];
+                html += '<div class="task-note" style="display:flex;align-items:center;gap:6px;">';
+                html += '<span class="task-note-date">' + esc(n.date) + '</span>';
+                html += '<input type="text" class="note-input" style="flex:1;padding:3px 8px;font-size:0.9em;" value="' + esc(n.text).replace(/"/g, '&quot;') + '" onkeydown="if(event.key===\'Enter\')editNote(' + task.id + ',' + ni + ',this.value)" onblur="editNote(' + task.id + ',' + ni + ',this.value)">';
+                html += '<button class="btn-icon" onclick="deleteNote(' + task.id + ',' + ni + ')" title="Delete note" style="color:#ccc;font-size:0.8em;padding:2px;">&#10005;</button>';
+                html += '</div>';
             }
             html += '</div>';
         }
