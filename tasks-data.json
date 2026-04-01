@@ -270,6 +270,19 @@
         }
       ]
     },
+    "Lee cGVHD model": {
+      "description": "Extension of Gandelman 2019 - Hematologica",
+      "tasks": [
+        {
+          "id": 30,
+          "description": "Talk with Arunima about project",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-01",
+          "notes": []
+        }
+      ]
+    },
     "Markey-Alex Manuscript": {
       "description": "Update data/figs",
       "tasks": [
