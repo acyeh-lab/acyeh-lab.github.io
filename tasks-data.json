@@ -124,6 +124,19 @@
           "priority": "medium",
           "created": "2026-03-30",
           "notes": []
+        },
+        {
+          "id": 6,
+          "description": "Design colibactin probes for spatial imaging",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-03-27",
+          "notes": [
+            {
+              "date": "2026-03-27",
+              "text": "Part of CCSG grant. Design probes targeting colibactin biosynthetic genes."
+            }
+          ]
         }
       ]
     },
@@ -144,7 +157,12 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-03-31",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-04-01",
+              "text": "Ran match algorithm on 4/1/26  - see if can find matches for K54 / A02 slide 2."
+            }
+          ]
         }
       ]
     },
@@ -272,9 +290,15 @@
           "id": 28,
           "description": "Follow-up Elena cardiac U/S",
           "status": "open",
-          "priority": "medium",
+          "priority": "high",
           "created": "2026-03-31",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-04-01",
+              "text": "Meet on Friday at 11AM to discuss U/S results"
+            }
+          ],
+          "due": "2026-04-03"
         }
       ]
     },
