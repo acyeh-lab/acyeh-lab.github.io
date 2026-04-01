@@ -1,5 +1,35 @@
 {
   "projects": {
+    "Personal": {
+      "description": "Non-work related stuff",
+      "tasks": [
+        {
+          "id": 16,
+          "description": "E-mail Tamer and connect with Alex",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": []
+        },
+        {
+          "id": 23,
+          "description": "Ask cascadia about yellow card for route 691 on Tuesday",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": [],
+          "completed": "2026-04-01"
+        },
+        {
+          "id": 29,
+          "description": "Look over Julie's Application!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-01",
+          "notes": []
+        }
+      ]
+    },
     "Admin": {
       "description": "Reviews, service, and administrative tasks",
       "tasks": [
@@ -190,48 +220,6 @@
         }
       ]
     },
-    "Markey-Alex Manuscript": {
-      "description": "Update data/figs",
-      "tasks": [
-        {
-          "id": 18,
-          "description": "make sure figures are good",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-03-30",
-          "notes": []
-        }
-      ]
-    },
-    "Personal": {
-      "description": "Non-work related stuff",
-      "tasks": [
-        {
-          "id": 16,
-          "description": "E-mail Tamer and connect with Alex",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-03-30",
-          "notes": []
-        },
-        {
-          "id": 23,
-          "description": "Ask cascadia about yellow card for route 691 on Tuesday",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-03-30",
-          "notes": []
-        },
-        {
-          "id": 29,
-          "description": "Look over Julie's Application!",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-04-01",
-          "notes": []
-        }
-      ]
-    },
     "Bacterial Engineering": {
       "description": "Work with Adonai",
       "tasks": [
@@ -279,6 +267,20 @@
           "priority": "medium",
           "created": "2026-03-31",
           "notes": []
+        }
+      ]
+    },
+    "Markey-Alex Manuscript": {
+      "description": "Update data/figs",
+      "tasks": [
+        {
+          "id": 18,
+          "description": "make sure figures are good",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": [],
+          "completed": "2026-04-01"
         }
       ]
     }
