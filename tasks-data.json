@@ -23,10 +23,11 @@
         {
           "id": 29,
           "description": "Look over Julie's Application!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-01",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-02"
         }
       ]
     },
@@ -98,11 +99,12 @@
         {
           "id": 8,
           "description": "Pick tissue for EH",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-29",
           "notes": [],
-          "due": "2026-03-30"
+          "due": "2026-03-30",
+          "completed": "2026-04-02"
         },
         {
           "id": 7,
@@ -137,6 +139,14 @@
               "text": "Part of CCSG grant. Design probes targeting colibactin biosynthetic genes."
             }
           ]
+        },
+        {
+          "id": 32,
+          "description": "Follow-up with Annie re: spatial workflow!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-02",
+          "notes": []
         }
       ]
     },
@@ -146,10 +156,11 @@
         {
           "id": 24,
           "description": "Ask Josh about 5' sequences and extracting BCR data using TRUST4",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-02"
         },
         {
           "id": 26,
@@ -163,6 +174,22 @@
               "text": "Ran match algorithm on 4/1/26  - see if can find matches for K54 / A02 slide 2."
             }
           ]
+        },
+        {
+          "id": 33,
+          "description": "Work on VDJ matching, f/u Francesco on 4/3/26, then send report to Evan",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-02",
+          "notes": []
+        },
+        {
+          "id": 38,
+          "description": "e-mail Tomas about overlapping regions",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-02",
+          "notes": []
         }
       ]
     },
@@ -235,6 +262,32 @@
           "created": "2026-03-30",
           "notes": [],
           "due": "2026-04-02"
+        },
+        {
+          "id": 34,
+          "description": "d21 Bleed on 4/23",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-02",
+          "notes": [],
+          "due": "2026-04-23"
+        },
+        {
+          "id": 35,
+          "description": "d28 Bleed on 4/30",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-02",
+          "notes": [],
+          "due": "2026-04-30"
+        },
+        {
+          "id": 36,
+          "description": "add gel on d7",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-02",
+          "notes": []
         }
       ]
     },
@@ -311,7 +364,8 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-01",
-          "notes": []
+          "notes": [],
+          "due": "2026-04-04"
         }
       ]
     },
@@ -326,6 +380,14 @@
           "created": "2026-03-30",
           "notes": [],
           "completed": "2026-04-01"
+        },
+        {
+          "id": 37,
+          "description": "Pending submission to Nat Med",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-02",
+          "notes": []
         }
       ]
     }
