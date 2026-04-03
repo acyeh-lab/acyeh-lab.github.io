@@ -31,7 +31,7 @@
         },
         {
           "id": 41,
-          "description": "Send new birthday invites to Jonathan, Krishna/Bonnie, Andrew, Sami",
+          "description": "Send new birthday invites to Jonathan, Krishna/Bonnie",
           "status": "open",
           "priority": "medium",
           "created": "2026-04-03",
@@ -40,10 +40,11 @@
         {
           "id": 43,
           "description": "cancel skyzone membership",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-03"
         }
       ]
     },
@@ -383,7 +384,7 @@
         {
           "id": 28,
           "description": "Follow-up Elena cardiac U/S",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-31",
           "notes": [
@@ -392,7 +393,24 @@
               "text": "Meet on Friday at 11AM to discuss U/S results"
             }
           ],
-          "due": "2026-04-03"
+          "due": "2026-04-03",
+          "completed": "2026-04-03"
+        },
+        {
+          "id": 45,
+          "description": "follow-up u/s results",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-03",
+          "notes": []
+        },
+        {
+          "id": 46,
+          "description": "Do CMV PCR",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-03",
+          "notes": []
         }
       ]
     },
@@ -401,12 +419,20 @@
       "tasks": [
         {
           "id": 30,
-          "description": "Talk with Arunima about project",
+          "description": "Talk with Arunima about project - schedule next mtg",
           "status": "open",
           "priority": "medium",
           "created": "2026-04-01",
           "notes": [],
-          "due": "2026-04-04"
+          "due": "2026-04-17"
+        },
+        {
+          "id": 44,
+          "description": "Ask Stephanie about brining Arunima on board",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-03",
+          "notes": []
         }
       ]
     },
