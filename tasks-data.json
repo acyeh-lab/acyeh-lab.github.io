@@ -288,6 +288,22 @@
           "priority": "high",
           "created": "2026-04-02",
           "notes": []
+        },
+        {
+          "id": 39,
+          "description": "ask bleakly about other markers",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-03",
+          "notes": []
+        },
+        {
+          "id": 40,
+          "description": "purchase anti-CD56 Ab and goat anti rabbit Ab.",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-03",
+          "notes": []
         }
       ]
     },
