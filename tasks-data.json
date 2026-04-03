@@ -194,10 +194,11 @@
         {
           "id": 38,
           "description": "e-mail Tomas about overlapping regions",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-02",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-03"
         }
       ]
     },
