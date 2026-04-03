@@ -313,6 +313,14 @@
           "priority": "medium",
           "created": "2026-04-03",
           "notes": []
+        },
+        {
+          "id": 42,
+          "description": "stain with CD49d and NK1.1",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-03",
+          "notes": []
         }
       ]
     },
