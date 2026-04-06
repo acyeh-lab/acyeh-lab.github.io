@@ -104,6 +104,14 @@
             }
           ],
           "completed": "2026-04-06"
+        },
+        {
+          "id": 47,
+          "description": "ASH Scholar critique",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-06",
+          "notes": []
         }
       ]
     },
@@ -237,14 +245,6 @@
           "due": "2026-04-09"
         },
         {
-          "id": 2,
-          "description": "Come up with B-cell panel",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-03-26",
-          "notes": []
-        },
-        {
           "id": 3,
           "description": "Takedown #1 — mouse organ harvest (day 14 post-transplant)",
           "status": "open",
@@ -264,7 +264,7 @@
         },
         {
           "id": 17,
-          "description": "Await for Vectra panel results!  Confirm expression",
+          "description": "ADD BCMA Ab to Vectra Panel",
           "status": "open",
           "priority": "high",
           "created": "2026-03-30",
@@ -283,11 +283,12 @@
         {
           "id": 15,
           "description": "NKG7 transplant on 4/2! Make sure to stain for CD56 and m09 tet",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-03-30",
           "notes": [],
-          "due": "2026-04-02"
+          "due": "2026-04-02",
+          "completed": "2026-04-06"
         },
         {
           "id": 34,
@@ -340,6 +341,22 @@
           "created": "2026-04-03",
           "notes": [],
           "completed": "2026-04-06"
+        },
+        {
+          "id": 48,
+          "description": "send prelim pre-graft overview of CD49d and NKG7",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-06",
+          "notes": []
+        },
+        {
+          "id": 49,
+          "description": "Look for non-BV480 NK1.1 Ab , as BV480 seems to bleed through to mG (FITC) channel",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-06",
+          "notes": []
         }
       ]
     },
