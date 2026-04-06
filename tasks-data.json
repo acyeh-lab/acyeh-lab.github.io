@@ -94,10 +94,16 @@
         {
           "id": 25,
           "description": "Follow-up with Stephanie re: biostats person / cGVHD ML project",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-03-31",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-04-06",
+              "text": "Asked stephanie about what status she could take to work on patient info"
+            }
+          ],
+          "completed": "2026-04-06"
         }
       ]
     },
@@ -125,7 +131,7 @@
         },
         {
           "id": 7,
-          "description": "Design additional bacterial probes (CCSG grant), including colibactin probes.  Reach out to 10x",
+          "description": "Design additional bacterial probes (CCSG grant), including colibactin probes.  Make fuso probe. Reach out to 10x",
           "status": "open",
           "priority": "high",
           "created": "2026-03-27",
@@ -139,15 +145,16 @@
         {
           "id": 14,
           "description": "make fuso probe",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-06"
         },
         {
           "id": 6,
           "description": "Design colibactin probes for spatial imaging",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-27",
           "notes": [
@@ -155,7 +162,8 @@
               "date": "2026-03-27",
               "text": "Part of CCSG grant. Design probes targeting colibactin biosynthetic genes."
             }
-          ]
+          ],
+          "completed": "2026-04-06"
         },
         {
           "id": 32,
@@ -183,7 +191,7 @@
           "id": 26,
           "description": "Look at immcantation",
           "status": "open",
-          "priority": "medium",
+          "priority": "low",
           "created": "2026-03-31",
           "notes": [
             {
@@ -310,10 +318,11 @@
         {
           "id": 39,
           "description": "ask bleakly about other markers",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-06"
         },
         {
           "id": 40,
@@ -326,10 +335,11 @@
         {
           "id": 42,
           "description": "stain with CD49d and NK1.1",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-06"
         }
       ]
     },
