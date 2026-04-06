@@ -32,10 +32,11 @@
         {
           "id": 41,
           "description": "Send new birthday invites to Jonathan, Krishna/Bonnie",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-06"
         },
         {
           "id": 43,
@@ -108,10 +109,11 @@
         {
           "id": 47,
           "description": "ASH Scholar critique",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-06",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-06"
         }
       ]
     },
@@ -240,6 +242,10 @@
             {
               "date": "2026-03-26",
               "text": "Murine transplant performed 2026-03-26. Will update details later."
+            },
+            {
+              "date": "2026-04-06",
+              "text": "Exclusion: CD3, CD4, CD8, F4/80 (plasma cells can express CD11b and Gr-1); IgD, CD138, Cd19, B220"
             }
           ],
           "due": "2026-04-09"
