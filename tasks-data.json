@@ -357,6 +357,22 @@
           "priority": "medium",
           "created": "2026-04-06",
           "notes": []
+        },
+        {
+          "id": 50,
+          "description": "Current Panel: CD3-PE/Cy7, CD8 APC/Cy7, CD4 UV496, CD49d AF647, NK1.1 BV510, mT (PE), mG (GFP), m09 (BV421)",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-06",
+          "notes": []
+        },
+        {
+          "id": 51,
+          "description": "Can try NK1.1 AF 700",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-06",
+          "notes": []
         }
       ]
     },
