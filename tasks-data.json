@@ -157,6 +157,10 @@
             {
               "date": "2026-03-27",
               "text": "Part of CCSG grant. Expand probe panel beyond current bacterial targets."
+            },
+            {
+              "date": "2026-04-07",
+              "text": "Thanks for sharing. I think Fuso would be a good addition based on the previous studies https://www.nature.com/articles/s41586-022-05435-0 ;  https://www.nature.com/articles/s41596-023-00888-7; https://www.nature.com/articles/s41586-024-07182-w"
             }
           ]
         },
@@ -206,6 +210,15 @@
           "priority": "medium",
           "created": "2026-04-07",
           "notes": []
+        },
+        {
+          "id": 56,
+          "description": "Thanks for sharing. I think Fuso would be a good addition based on the previous studies https://www.nature.com/articles/s41586-022-05435-0 ;  https://www.nature.com/articles/s41596-023-00888-7; https://www.nature.com/articles/s41586-024-07182-w",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-04-07",
+          "notes": [],
+          "completed": "2026-04-07"
         }
       ]
     },
