@@ -46,6 +46,14 @@
           "created": "2026-04-03",
           "notes": [],
           "completed": "2026-04-03"
+        },
+        {
+          "id": 57,
+          "description": "Aditya - FHCC internship offers mid-May",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-07",
+          "notes": []
         }
       ]
     },
