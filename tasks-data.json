@@ -53,7 +53,8 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-07",
-          "notes": []
+          "notes": [],
+          "due": "2026-05-26"
         }
       ]
     },
