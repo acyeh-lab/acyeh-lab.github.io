@@ -55,6 +55,14 @@
           "created": "2026-04-07",
           "notes": [],
           "due": "2026-05-26"
+        },
+        {
+          "id": 63,
+          "description": "George Camps",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-08",
+          "notes": []
         }
       ]
     },
@@ -499,7 +507,7 @@
       ]
     },
     "Cardiac CMV": {
-      "description": "clinical dataset + murine TTE",
+      "description": "clinical dataset + murine TTE; most recently Exp 1436 and 1439",
       "tasks": [
         {
           "id": 27,
@@ -534,7 +542,7 @@
         },
         {
           "id": 46,
-          "description": "Do CMV PCR",
+          "description": "Do CMV PCR calculations",
           "status": "open",
           "priority": "medium",
           "created": "2026-04-03",
