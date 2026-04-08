@@ -470,6 +470,14 @@
           "priority": "low",
           "created": "2026-04-01",
           "notes": []
+        },
+        {
+          "id": 59,
+          "description": "show division of TEa, SFB, or CBir1 T cells after oral gavage (take book out of Markey Lab - pre-treatment with 5d abx)",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-08",
+          "notes": []
         }
       ]
     },
