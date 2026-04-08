@@ -576,6 +576,19 @@
           "notes": []
         }
       ]
+    },
+    "MCMV XCR1 ko": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 60,
+          "description": "check when to profile cells! (d0=3/20/26)",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-08",
+          "notes": []
+        }
+      ]
     }
   },
   "completed_log": []
