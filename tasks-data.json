@@ -530,7 +530,7 @@
           "id": 27,
           "description": "follow-up with Kevin Ng",
           "status": "open",
-          "priority": "medium",
+          "priority": "low",
           "created": "2026-03-31",
           "notes": []
         },
@@ -551,17 +551,18 @@
         },
         {
           "id": 45,
-          "description": "follow-up u/s results",
+          "description": "follow-up u/s results - check images by Elena",
           "status": "open",
-          "priority": "medium",
+          "priority": "high",
           "created": "2026-04-03",
-          "notes": []
+          "notes": [],
+          "due": "2026-04-09"
         },
         {
           "id": 46,
           "description": "Do CMV PCR calculations",
           "status": "open",
-          "priority": "medium",
+          "priority": "high",
           "created": "2026-04-03",
           "notes": []
         },
