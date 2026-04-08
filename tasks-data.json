@@ -62,7 +62,12 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-08",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-04-08",
+              "text": "Swimming camp: 7/20"
+            }
+          ]
         }
       ]
     },
