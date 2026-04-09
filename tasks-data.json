@@ -459,10 +459,31 @@
         },
         {
           "id": 37,
-          "description": "Pending submission to Nat Med",
+          "description": "Pending submission to Cell Host Microbes",
           "status": "open",
           "priority": "low",
           "created": "2026-04-02",
+          "notes": []
+        }
+      ]
+    },
+    "Chalk Talk Ideas": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 48,
+          "description": "Talk about Immunity paper - then next steps, how do we study this phenomena?",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-09",
+          "notes": []
+        },
+        {
+          "id": 49,
+          "description": "Emphasize computational approach",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-09",
           "notes": []
         }
       ]
