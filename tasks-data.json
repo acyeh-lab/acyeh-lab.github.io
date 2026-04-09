@@ -32,11 +32,10 @@
         {
           "id": 41,
           "description": "Send new birthday invites to Jonathan, Krishna/Bonnie",
-          "status": "done",
+          "status": "open",
           "priority": "medium",
           "created": "2026-04-03",
-          "notes": [],
-          "completed": "2026-04-06"
+          "notes": []
         },
         {
           "id": 43,
@@ -46,40 +45,6 @@
           "created": "2026-04-03",
           "notes": [],
           "completed": "2026-04-03"
-        },
-        {
-          "id": 57,
-          "description": "Aditya - FHCC internship offers mid-May",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-07",
-          "notes": [],
-          "due": "2026-05-26"
-        },
-        {
-          "id": 63,
-          "description": "George Camps",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-08",
-          "notes": [
-            {
-              "date": "2026-04-08",
-              "text": "Swimming camp: 7/20: lake union swim academy, https://schools.mybrightwheel.com/paperwork/sign-ups/bf1aa104-4b20-46cc-875b-c618aa4e9d52/share"
-            },
-            {
-              "date": "2026-04-08",
-              "text": "Watts basketball spring break camp: call for only 2 days of classes; tel:+1(206)467-1383"
-            }
-          ]
-        },
-        {
-          "id": 64,
-          "description": "F/u with Ramya about Riaan camp",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-08",
-          "notes": []
         }
       ]
     },
@@ -129,32 +94,9 @@
         {
           "id": 25,
           "description": "Follow-up with Stephanie re: biostats person / cGVHD ML project",
-          "status": "done",
-          "priority": "medium",
-          "created": "2026-03-31",
-          "notes": [
-            {
-              "date": "2026-04-06",
-              "text": "Asked stephanie about what status she could take to work on patient info"
-            }
-          ],
-          "completed": "2026-04-06"
-        },
-        {
-          "id": 47,
-          "description": "ASH Scholar critique",
-          "status": "done",
-          "priority": "medium",
-          "created": "2026-04-06",
-          "notes": [],
-          "completed": "2026-04-06"
-        },
-        {
-          "id": 55,
-          "description": "https://github.com/katosh/agent_sandbox",
           "status": "open",
           "priority": "medium",
-          "created": "2026-04-07",
+          "created": "2026-03-31",
           "notes": []
         }
       ]
@@ -183,7 +125,7 @@
         },
         {
           "id": 7,
-          "description": "Design additional bacterial probes (CCSG grant), including colibactin probes.  Make fuso probe. Reach out to 10x",
+          "description": "Design additional bacterial probes (CCSG grant), including colibactin probes.  Reach out to 10x",
           "status": "open",
           "priority": "high",
           "created": "2026-03-27",
@@ -191,26 +133,21 @@
             {
               "date": "2026-03-27",
               "text": "Part of CCSG grant. Expand probe panel beyond current bacterial targets."
-            },
-            {
-              "date": "2026-04-07",
-              "text": "Thanks for sharing. I think Fuso would be a good addition based on the previous studies https://www.nature.com/articles/s41586-022-05435-0 ;  https://www.nature.com/articles/s41596-023-00888-7; https://www.nature.com/articles/s41586-024-07182-w"
             }
           ]
         },
         {
           "id": 14,
           "description": "make fuso probe",
-          "status": "done",
+          "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": [],
-          "completed": "2026-04-06"
+          "notes": []
         },
         {
           "id": 6,
           "description": "Design colibactin probes for spatial imaging",
-          "status": "done",
+          "status": "open",
           "priority": "high",
           "created": "2026-03-27",
           "notes": [
@@ -218,8 +155,7 @@
               "date": "2026-03-27",
               "text": "Part of CCSG grant. Design probes targeting colibactin biosynthetic genes."
             }
-          ],
-          "completed": "2026-04-06"
+          ]
         },
         {
           "id": 32,
@@ -227,48 +163,6 @@
           "status": "open",
           "priority": "high",
           "created": "2026-04-02",
-          "notes": []
-        },
-        {
-          "id": 52,
-          "description": "Reply to Wendy about CCSG vs. PAM-MRI!",
-          "status": "done",
-          "priority": "medium",
-          "created": "2026-04-07",
-          "notes": [],
-          "completed": "2026-04-08"
-        },
-        {
-          "id": 53,
-          "description": "look at gmrepo v3!",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-07",
-          "notes": []
-        },
-        {
-          "id": 56,
-          "description": "Thanks for sharing. I think Fuso would be a good addition based on the previous studies https://www.nature.com/articles/s41586-022-05435-0 ;  https://www.nature.com/articles/s41596-023-00888-7; https://www.nature.com/articles/s41586-024-07182-w",
-          "status": "done",
-          "priority": "medium",
-          "created": "2026-04-07",
-          "notes": [],
-          "completed": "2026-04-07"
-        },
-        {
-          "id": 61,
-          "description": "Ming has access to 22 adenoma blocks",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-08",
-          "notes": []
-        },
-        {
-          "id": 62,
-          "description": "Reply to Matt regarding 2,000 custom probe",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-08",
           "notes": []
         }
       ]
@@ -289,7 +183,7 @@
           "id": 26,
           "description": "Look at immcantation",
           "status": "open",
-          "priority": "low",
+          "priority": "medium",
           "created": "2026-03-31",
           "notes": [
             {
@@ -314,14 +208,6 @@
           "created": "2026-04-02",
           "notes": [],
           "completed": "2026-04-03"
-        },
-        {
-          "id": 54,
-          "description": "focus on GI samples",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-07",
-          "notes": []
         }
       ]
     },
@@ -338,13 +224,18 @@
             {
               "date": "2026-03-26",
               "text": "Murine transplant performed 2026-03-26. Will update details later."
-            },
-            {
-              "date": "2026-04-06",
-              "text": "Exclusion: CD3, CD4, CD8, F4/80 (plasma cells can express CD11b and Gr-1); IgD, CD138, Cd19, B220"
             }
           ],
           "due": "2026-04-09"
+        },
+        {
+          "id": 2,
+          "description": "Come up with B-cell panel",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-03-26",
+          "notes": [],
+          "completed": "2026-04-09"
         },
         {
           "id": 3,
@@ -366,7 +257,7 @@
         },
         {
           "id": 17,
-          "description": "E-mail Stephanie / ADD BCMA Ab to Vectra Panel",
+          "description": "Await for Vectra panel results!  Confirm expression",
           "status": "open",
           "priority": "high",
           "created": "2026-03-30",
@@ -374,12 +265,16 @@
             {
               "date": "2026-03-30",
               "text": "Validating EPCAM stain as CD138 also stains GI columnar epithelium"
-            },
-            {
-              "date": "2026-04-08",
-              "text": "E-mailed stephanie on 4/8 about using Vicky-2 from Enzo"
             }
           ]
+        },
+        {
+          "id": 47,
+          "description": "Transfer colon / ileum from d14 tkd to Ethanol and Histo!",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-09",
+          "notes": []
         }
       ]
     },
@@ -389,12 +284,11 @@
         {
           "id": 15,
           "description": "NKG7 transplant on 4/2! Make sure to stain for CD56 and m09 tet",
-          "status": "done",
+          "status": "open",
           "priority": "medium",
           "created": "2026-03-30",
           "notes": [],
-          "due": "2026-04-02",
-          "completed": "2026-04-06"
+          "due": "2026-04-02"
         },
         {
           "id": 34,
@@ -425,11 +319,10 @@
         {
           "id": 39,
           "description": "ask bleakly about other markers",
-          "status": "done",
+          "status": "open",
           "priority": "medium",
           "created": "2026-04-03",
-          "notes": [],
-          "completed": "2026-04-06"
+          "notes": []
         },
         {
           "id": 40,
@@ -442,42 +335,9 @@
         {
           "id": 42,
           "description": "stain with CD49d and NK1.1",
-          "status": "done",
+          "status": "open",
           "priority": "medium",
           "created": "2026-04-03",
-          "notes": [],
-          "completed": "2026-04-06"
-        },
-        {
-          "id": 48,
-          "description": "send prelim pre-graft overview of CD49d and NKG7",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-06",
-          "notes": []
-        },
-        {
-          "id": 49,
-          "description": "Look for non-BV480 NK1.1 Ab , as BV480 seems to bleed through to mG (FITC) channel",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-06",
-          "notes": []
-        },
-        {
-          "id": 50,
-          "description": "Current Panel: CD3-PE/Cy7, CD8 APC/Cy7, CD4 UV496, CD49d AF647, NK1.1 BV510, mT (PE), mG (GFP), m09 (BV421)",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-06",
-          "notes": []
-        },
-        {
-          "id": 51,
-          "description": "Can try NK1.1 AF 700",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-06",
           "notes": []
         }
       ]
@@ -516,25 +376,17 @@
           "priority": "low",
           "created": "2026-04-01",
           "notes": []
-        },
-        {
-          "id": 59,
-          "description": "show division of TEa, SFB, or CBir1 T cells after oral gavage (take book out of Markey Lab - pre-treatment with 5d abx)",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-08",
-          "notes": []
         }
       ]
     },
     "Cardiac CMV": {
-      "description": "clinical dataset + murine TTE; most recently Exp 1436 and 1439",
+      "description": "clinical dataset + murine TTE",
       "tasks": [
         {
           "id": 27,
           "description": "follow-up with Kevin Ng",
           "status": "open",
-          "priority": "low",
+          "priority": "medium",
           "created": "2026-03-31",
           "notes": []
         },
@@ -555,27 +407,18 @@
         },
         {
           "id": 45,
-          "description": "follow-up u/s results - check images by Elena",
+          "description": "follow-up u/s results",
           "status": "open",
-          "priority": "high",
-          "created": "2026-04-03",
-          "notes": [],
-          "due": "2026-04-09"
-        },
-        {
-          "id": 46,
-          "description": "Do CMV PCR calculations",
-          "status": "open",
-          "priority": "high",
+          "priority": "medium",
           "created": "2026-04-03",
           "notes": []
         },
         {
-          "id": 58,
-          "description": "terminal bleeding!",
+          "id": 46,
+          "description": "Do CMV PCR",
           "status": "open",
           "priority": "medium",
-          "created": "2026-04-07",
+          "created": "2026-04-03",
           "notes": []
         }
       ]
@@ -620,19 +463,6 @@
           "status": "open",
           "priority": "low",
           "created": "2026-04-02",
-          "notes": []
-        }
-      ]
-    },
-    "MCMV XCR1 ko": {
-      "description": "",
-      "tasks": [
-        {
-          "id": 60,
-          "description": "check when to profile cells! (d0=3/20/26)",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-08",
           "notes": []
         }
       ]
