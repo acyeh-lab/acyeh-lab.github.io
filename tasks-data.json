@@ -239,11 +239,12 @@
         },
         {
           "id": 32,
-          "description": "Follow-up with Annie re: spatial workflow!",
+          "description": "Follow-up with Paul re: RNA ish stain on Tuesday!",
           "status": "open",
           "priority": "high",
           "created": "2026-04-02",
-          "notes": []
+          "notes": [],
+          "due": "2026-04-14"
         },
         {
           "id": 52,
