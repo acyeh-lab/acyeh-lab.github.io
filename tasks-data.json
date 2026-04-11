@@ -673,6 +673,32 @@
           "notes": []
         }
       ]
+    },
+    "George": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 70,
+          "description": "Review https://www.chess.com/news/view/2026-fide-candidates-tournament-round-10",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-11",
+          "notes": []
+        }
+      ]
+    },
+    "Margaret": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 69,
+          "description": "birthday!",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-11",
+          "notes": []
+        }
+      ]
     }
   },
   "completed_log": []
