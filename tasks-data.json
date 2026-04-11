@@ -706,6 +706,15 @@
           "priority": "medium",
           "created": "2026-04-11",
           "notes": []
+        },
+        {
+          "id": 72,
+          "description": "test",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-04-11",
+          "notes": [],
+          "completed": "2026-04-11"
         }
       ]
     }
