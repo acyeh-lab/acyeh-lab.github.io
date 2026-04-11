@@ -191,6 +191,14 @@
           "priority": "medium",
           "created": "2026-04-11",
           "notes": []
+        },
+        {
+          "id": 74,
+          "description": "?2 summer undergrads",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-11",
+          "notes": []
         }
       ]
     },
