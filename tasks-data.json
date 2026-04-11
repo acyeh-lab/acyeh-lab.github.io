@@ -564,11 +564,12 @@
         },
         {
           "id": 68,
-          "description": "Follow-up plasmidsaurus submission on 4/10 for maxi preps (ORDER ID YRMWXP)",
+          "description": "SUBMIT MONDAY: Follow-up plasmidsaurus submission on 4/10 for maxi preps (ORDER ID YRMWXP)",
           "status": "open",
-          "priority": "medium",
+          "priority": "high",
           "created": "2026-04-11",
-          "notes": []
+          "notes": [],
+          "due": "2026-04-13"
         }
       ]
     },
