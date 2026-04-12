@@ -215,6 +215,23 @@
           "priority": "medium",
           "created": "2026-04-11",
           "notes": []
+        },
+        {
+          "id": 77,
+          "description": "apply for CCR grant due June!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-12",
+          "notes": [],
+          "due": "2026-05-01"
+        },
+        {
+          "id": 78,
+          "description": "apply for R22 or R21 grant for probe work?",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-12",
+          "notes": []
         }
       ]
     },
