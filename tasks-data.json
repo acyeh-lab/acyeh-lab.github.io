@@ -82,6 +82,14 @@
           "created": "2026-04-08",
           "notes": [],
           "completed": "2026-04-11"
+        },
+        {
+          "id": 76,
+          "description": "help Yonghao Liu (Huanle's friend)",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-12",
+          "notes": []
         }
       ]
     },
