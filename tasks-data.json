@@ -183,15 +183,17 @@
           "status": "open",
           "priority": "high",
           "created": "2026-04-10",
-          "notes": []
+          "notes": [],
+          "due": "2026-04-23"
         },
         {
           "id": 67,
           "description": "Talk to Gina about Marie's repository and collecting for it.",
-          "status": "open",
-          "priority": "medium",
+          "status": "done",
+          "priority": "low",
           "created": "2026-04-11",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-13"
         },
         {
           "id": 71,
