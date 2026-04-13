@@ -99,11 +99,12 @@
         {
           "id": 9,
           "description": "Review TCT article",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-29",
           "notes": [],
-          "due": "2026-04-12"
+          "due": "2026-04-12",
+          "completed": "2026-04-13"
         },
         {
           "id": 10,
@@ -180,7 +181,7 @@
           "id": 66,
           "description": "Nature Immunology Review!",
           "status": "open",
-          "priority": "medium",
+          "priority": "high",
           "created": "2026-04-10",
           "notes": []
         },
