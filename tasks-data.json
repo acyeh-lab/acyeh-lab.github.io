@@ -347,6 +347,14 @@
           "priority": "medium",
           "created": "2026-04-08",
           "notes": []
+        },
+        {
+          "id": 79,
+          "description": "look at VCAN activated macrophages?",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-13",
+          "notes": []
         }
       ]
     },
