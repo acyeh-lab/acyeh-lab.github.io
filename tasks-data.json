@@ -437,11 +437,12 @@
         {
           "id": 3,
           "description": "Takedown #1 — mouse organ harvest (day 14 post-transplant)",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-26",
           "notes": [],
-          "due": "2026-04-09"
+          "due": "2026-04-09",
+          "completed": "2026-04-13"
         },
         {
           "id": 4,
@@ -454,7 +455,7 @@
         },
         {
           "id": 17,
-          "description": "E-mail Stephanie / ADD BCMA Ab to Vectra Panel",
+          "description": "Meet Stephanie about Vectra panel 4/14 11AM",
           "status": "open",
           "priority": "high",
           "created": "2026-03-30",
@@ -467,7 +468,8 @@
               "date": "2026-04-08",
               "text": "E-mailed stephanie on 4/8 about using Vicky-2 from Enzo"
             }
-          ]
+          ],
+          "due": "2026-04-14"
         }
       ]
     },
