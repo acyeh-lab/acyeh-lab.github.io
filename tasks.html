@@ -663,7 +663,7 @@
             id: nextId(),
             description: description.trim(),
             status: 'open',
-            priority: 'medium',
+            priority: 'low',
             created: today(),
             notes: []
         };
@@ -736,12 +736,12 @@
     }
 
     function cyclePriority(taskId) {
-        const cycle = { high: 'medium', medium: 'low', low: 'high' };
+        const cycle = { low: 'medium', medium: 'high', high: 'low' };
         for (const p of Object.values(data.projects)) {
             const task = p.tasks.find(t => t.id === taskId);
             if (task) {
                 snapshot();
-                task.priority = cycle[task.priority] || 'medium';
+                task.priority = cycle[task.priority] || 'low';
                 saveLocal();
                 render();
                 toast('Priority: ' + task.priority);
@@ -876,7 +876,7 @@
             sel.appendChild(opt);
         }
         document.getElementById('task-desc').value = '';
-        document.getElementById('task-priority').value = 'medium';
+        document.getElementById('task-priority').value = 'low';
         document.getElementById('task-due').value = '';
         openModal('modal-task');
         setTimeout(() => document.getElementById('task-desc').focus(), 100);
