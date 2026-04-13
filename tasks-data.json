@@ -693,10 +693,11 @@
         {
           "id": 44,
           "description": "Ask Stephanie about brining Arunima on board",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-13"
         }
       ]
     },
@@ -714,7 +715,7 @@
         },
         {
           "id": 37,
-          "description": "Pending submission to Nat Med",
+          "description": "Pending submission to Blood Adv",
           "status": "open",
           "priority": "low",
           "created": "2026-04-02",
