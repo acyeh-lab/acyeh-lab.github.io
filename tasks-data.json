@@ -500,6 +500,14 @@
               "text": "E-mailed stephanie on 4/8 about using Vicky-2 from Enzo"
             }
           ]
+        },
+        {
+          "id": 84,
+          "description": "submit sample to histo!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-14",
+          "notes": []
         }
       ]
     },
