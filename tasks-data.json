@@ -486,7 +486,7 @@
         },
         {
           "id": 17,
-          "description": "E-mail Stephanie / ADD BCMA Ab to Vectra Panel",
+          "description": "VECTRA Panel",
           "status": "open",
           "priority": "high",
           "created": "2026-03-30",
@@ -498,6 +498,10 @@
             {
               "date": "2026-04-08",
               "text": "E-mailed stephanie on 4/8 about using Vicky-2 from Enzo"
+            },
+            {
+              "date": "2026-04-14",
+              "text": "Met with Steph, will try E-CAD staining."
             }
           ]
         },
@@ -507,7 +511,12 @@
           "status": "open",
           "priority": "high",
           "created": "2026-04-14",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-04-14",
+              "text": "Submitted on 4/14/26 - SR26-0506 for FFPE embed, H&E, image, and 1 unstained.  Follow-up for VECTRA"
+            }
+          ]
         }
       ]
     },
