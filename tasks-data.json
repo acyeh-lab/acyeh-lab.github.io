@@ -760,28 +760,6 @@
         }
       ]
     },
-    "Markey-Alex Manuscript": {
-      "description": "Update data/figs",
-      "tasks": [
-        {
-          "id": 18,
-          "description": "make sure figures are good",
-          "status": "done",
-          "priority": "medium",
-          "created": "2026-03-30",
-          "notes": [],
-          "completed": "2026-04-01"
-        },
-        {
-          "id": 37,
-          "description": "Pending submission to Blood Adv",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-02",
-          "notes": []
-        }
-      ]
-    },
     "MCMV XCR1 ko": {
       "description": "",
       "tasks": [
@@ -803,6 +781,85 @@
           "description": "Studying the microbe-immune interface, building computational tools",
           "status": "open",
           "priority": "low",
+          "created": "2026-04-15",
+          "notes": []
+        }
+      ]
+    },
+    "Margaret": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 69,
+          "description": "birthday!",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-11",
+          "notes": []
+        },
+        {
+          "id": 72,
+          "description": "test",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-04-11",
+          "notes": [],
+          "completed": "2026-04-11"
+        },
+        {
+          "id": 73,
+          "description": "test",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-04-11",
+          "notes": [],
+          "completed": "2026-04-11"
+        }
+      ]
+    },
+    "George": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 70,
+          "description": "Review https://www.chess.com/news/view/2026-fide-candidates-tournament-round-10",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-11",
+          "notes": []
+        }
+      ]
+    },
+    "Collaborations with Kate Markey": {
+      "description": "Update data/figs",
+      "tasks": [
+        {
+          "id": 18,
+          "description": "make sure figures are good",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-03-30",
+          "notes": [],
+          "completed": "2026-04-01"
+        },
+        {
+          "id": 37,
+          "description": "Alex's Blood Paper",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-02",
+          "notes": [
+            {
+              "date": "2026-04-15",
+              "text": "I helped with providing SMH Data"
+            }
+          ]
+        },
+        {
+          "id": 87,
+          "description": "Diet Paper (Blood Adv) Review",
+          "status": "open",
+          "priority": "medium",
           "created": "2026-04-15",
           "notes": []
         }
