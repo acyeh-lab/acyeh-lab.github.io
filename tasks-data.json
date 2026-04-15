@@ -371,10 +371,11 @@
         {
           "id": 83,
           "description": "Start teams group!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-14",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-15"
         }
       ]
     },
