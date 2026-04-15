@@ -88,6 +88,19 @@
         .filter-meta { font-size: 0.85rem; color: #666; margin-left: 10px; }
         .legend-row { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.8rem; color: #555; margin-top: 4px; }
         .legend-swatch { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 4px; }
+
+        /* Real-vs-approx data badge */
+        .data-badge { display: inline-block; font-size: 0.62rem; padding: 1px 5px; border-radius: 8px; vertical-align: middle; font-weight: 700; line-height: 1.3; }
+        .data-real { background: #e2f4e6; color: #1f7a37; border: 1px solid #b9dec3; }
+        .data-approx { background: #fdf3d8; color: #8a6d1c; border: 1px solid #ecd9a0; }
+
+        /* Spillover note rows */
+        .spill-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px dashed #eee; }
+        .spill-row:last-child { border-bottom: none; }
+        .spill-meta { font-size: 0.9rem; }
+        .spill-note { padding: 4px 8px; border: 1px solid #ddd; border-radius: 3px; font-family: inherit; font-size: 0.88rem; }
+        .spill-note:focus { outline: 2px solid #0056b3; border-color: #0056b3; }
+        @media (max-width: 700px) { .spill-row { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -128,7 +141,9 @@
             <div class="legend-row">
                 <span><span class="legend-swatch" style="border-top: 2px dashed #888;"></span>Excitation</span>
                 <span><span class="legend-swatch" style="background: #888;"></span>Emission</span>
-                <span class="hint">Spectra are Gaussian approximations from peak excitation/emission wavelengths — for final panel validation use BioLegend / BD / FPbase spectra viewers.</span>
+                <span><span class="data-badge data-real">FP</span>Real spectrum from FPbase</span>
+                <span><span class="data-badge data-approx">≈</span>Gaussian approximation</span>
+                <span class="hint">Real spectra via FPbase (CC-BY-4.0). Refresh data with <code>build_flow_spectra.py</code>.</span>
             </div>
 
             <h3 style="margin-top:18px;">Fluorophore library</h3>
@@ -138,7 +153,7 @@
         <!-- ===== Section 2: Panel builder ===== -->
         <div class="section">
             <h2>Panel Builder</h2>
-            <p class="hint">Click any fluorophore above to add it to the panel below. Fill in the marker / clone / notes inline. Green outline in the library indicates a fluorophore is already in the current panel.</p>
+            <p class="hint">Click any fluorophore above to add it to the panel — click again to remove. Shift-click or right-click to toggle on the spectra plot only. Fill in the marker / clone / notes inline. Green outline in the library = currently in panel.</p>
 
             <div class="controls">
                 <input type="text" id="panel-name" placeholder="Panel name (e.g. Plasma cell GVHD v1)" style="min-width: 280px;">
@@ -163,14 +178,14 @@
             </table>
 
             <h3 style="margin-top: 18px;">Spillover risk</h3>
-            <p class="hint">Pairs where emission peaks differ by &lt; 25 nm and share a laser are flagged. This is a coarse heuristic — not a substitute for a compensation matrix.</p>
+            <p class="hint">Pairs where emission peaks differ by &lt; 25 nm and share a laser are flagged automatically. Add free-form notes on each pair — they're saved with the panel and pushed to GitHub on Save.</p>
             <div id="spillover-warnings"></div>
         </div>
 
         <!-- ===== Section 3: Saved panels ===== -->
         <div class="section">
             <h2>Saved Panels</h2>
-            <p class="hint">Panels are stored in your browser. Use "Sync to GitHub" to push them to <code>flow-panels-data.json</code> in the site repo so they're available on other devices.</p>
+            <p class="hint">Panels are stored in your browser and — if a GitHub token is set — automatically pushed to <code>flow-panels-data.json</code> in the site repo on every Save. Use the manual Sync button to force a push.</p>
 
             <div class="controls">
                 <button class="btn secondary" id="refresh-saved-btn">Reload from server</button>
@@ -309,8 +324,11 @@ const STATE = {
     search: '',
     plotted: new Set(),        // fluorophore names currently plotted
     panel: [],                 // [{fluor, marker, clone, notes}]
-    savedPanels: [],           // [{name, created, updated, entries:[...]}]
+    spilloverNotes: {},        // { "FluorA||FluorB": "user note text" }
+    savedPanels: [],           // [{name, created, updated, entries, spilloverNotes}]
     currentPanelName: '',
+    spectraData: {},           // { fluorName: { ex: [[wl,y],...], em: [[wl,y],...] } } from FPbase
+    spectraMeta: null,         // {source, license, ...}
 };
 
 const STORAGE_KEY = 'ayeh-flow-saved-panels';
@@ -321,15 +339,14 @@ const GH_FILE = 'flow-panels-data.json';
 function getFluor(name) { return FLUOROPHORES.find(f => f.name === name); }
 
 /* ========================================================================
-   Gaussian spectra generation
-   We use asymmetric Gaussians: narrower on the blue side (tighter excitation
-   rise, tighter emission before peak) and broader on the red side for emission
-   tails. FWHM defaults chosen to roughly match typical antibody fluorophores.
+   Spectra generation
+   Real spectra come from FPbase via build_flow_spectra.py -> flow-spectra-data.json
+   When real data is missing for a fluorophore, fall back to an asymmetric
+   Gaussian anchored on the published peak ex/em wavelengths.
    ======================================================================== */
 function makeSpectrum(peak, kind) {
-    // kind: 'ex' or 'em'
-    const fwhmBlue = kind === 'em' ? 22 : 34;    // sharper on blue side
-    const fwhmRed  = kind === 'em' ? 52 : 38;    // broader red tail (esp. emission)
+    const fwhmBlue = kind === 'em' ? 22 : 34;
+    const fwhmRed  = kind === 'em' ? 52 : 38;
     const sigmaB = fwhmBlue / 2.355;
     const sigmaR = fwhmRed  / 2.355;
     const pts = [];
@@ -339,6 +356,36 @@ function makeSpectrum(peak, kind) {
         pts.push({ x: wl, y });
     }
     return pts;
+}
+
+function spectrumFor(fluor, kind) {
+    // kind: 'ex' or 'em'. Returns array of {x, y} points normalized to [0,1].
+    const real = STATE.spectraData[fluor.name];
+    if (real && real[kind] && real[kind].length) {
+        // Normalize y to peak = 1 (FPbase data is mostly normalized but be safe).
+        let peakY = 0;
+        for (const [, y] of real[kind]) if (y > peakY) peakY = y;
+        if (peakY <= 0) peakY = 1;
+        return real[kind].map(([x, y]) => ({ x, y: y / peakY }));
+    }
+    // Fallback to Gaussian on published peak.
+    return makeSpectrum(kind === 'em' ? fluor.em : fluor.ex, kind);
+}
+
+function hasRealSpectra(name) {
+    return !!(STATE.spectraData[name] && (STATE.spectraData[name].ex || STATE.spectraData[name].em));
+}
+
+async function loadSpectraData() {
+    try {
+        const resp = await fetch('flow-spectra-data.json?t=' + Date.now());
+        if (!resp.ok) return;
+        const body = await resp.json();
+        STATE.spectraData = body.fluorophores || {};
+        STATE.spectraMeta = body._meta || null;
+        renderFluorGrid();
+        renderSpectra();
+    } catch(e) { console.warn('No spectra data file available; using Gaussian approximations.', e); }
 }
 
 /* ========================================================================
@@ -388,24 +435,36 @@ function renderFluorGrid() {
 
     for (const f of visible) {
         const card = document.createElement('div');
+        const inPanel = panelNames.has(f.name);
         card.className = 'fluor-card'
             + (STATE.plotted.has(f.name) ? ' selected' : '')
-            + (panelNames.has(f.name) ? ' in-panel' : '');
+            + (inPanel ? ' in-panel' : '');
+        const dataBadge = hasRealSpectra(f.name)
+            ? '<span class="data-badge data-real" title="Real spectrum from FPbase">FP</span>'
+            : '<span class="data-badge data-approx" title="Gaussian approximation (no FPbase entry)">≈</span>';
         card.innerHTML =
             '<span class="fluor-swatch" style="background:' + wavelengthToRGB(f.em) + '"></span>' +
-            '<div>' +
-                '<div class="fluor-name">' + f.name + '</div>' +
+            '<div style="flex:1; min-width:0;">' +
+                '<div class="fluor-name">' + f.name + ' ' + dataBadge + '</div>' +
                 '<div class="fluor-meta">ex ' + f.ex + ' / em ' + f.em + ' • ' + f.laser + 'nm</div>' +
             '</div>';
         card.addEventListener('click', (e) => {
-            if (e.shiftKey) togglePlot(f.name);
-            else addToPanel(f.name);
+            if (e.shiftKey) {
+                togglePlot(f.name);
+                return;
+            }
+            // Toggle: remove if already in panel, otherwise add
+            if (STATE.panel.some(p => p.fluor === f.name)) {
+                removeFromPanel(f.name);
+            } else {
+                addToPanel(f.name);
+            }
         });
         card.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             togglePlot(f.name);
         });
-        card.title = 'Click: add to panel. Shift-click or right-click: toggle on spectra plot.';
+        card.title = 'Click: add/remove from panel. Shift-click or right-click: toggle on spectra plot.';
         grid.appendChild(card);
     }
 
@@ -426,7 +485,7 @@ function renderSpectra() {
         const color = wavelengthToRGB(f.em);
         datasets.push({
             label: name + ' (ex)',
-            data: makeSpectrum(f.ex, 'ex'),
+            data: spectrumFor(f, 'ex'),
             borderColor: color,
             backgroundColor: 'transparent',
             borderWidth: 1.5,
@@ -436,7 +495,7 @@ function renderSpectra() {
         });
         datasets.push({
             label: name + ' (em)',
-            data: makeSpectrum(f.em, 'em'),
+            data: spectrumFor(f, 'em'),
             borderColor: color,
             backgroundColor: color.replace('rgb(', 'rgba(').replace(')', ',0.15)'),
             borderWidth: 2,
@@ -506,10 +565,7 @@ function togglePlot(name) {
    Panel builder
    ======================================================================== */
 function addToPanel(name) {
-    if (STATE.panel.some(p => p.fluor === name)) {
-        toast(name + ' is already in the panel');
-        return;
-    }
+    if (STATE.panel.some(p => p.fluor === name)) return;
     STATE.panel.push({ fluor: name, marker: '', clone: '', notes: '' });
     STATE.plotted.add(name);
     renderPanel();
@@ -563,6 +619,11 @@ function renderPanel() {
 
 function escapeAttr(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 
+function pairKey(a, b) {
+    // Stable key regardless of order
+    return [a, b].sort().join('||');
+}
+
 function renderSpilloverWarnings() {
     const div = document.getElementById('spillover-warnings');
     const pairs = [];
@@ -575,14 +636,50 @@ function renderSpilloverWarnings() {
             }
         }
     }
-    if (pairs.length === 0) {
-        div.innerHTML = '<p class="hint">No close-emission pairs on the same laser. ✓</p>';
-    } else {
-        div.innerHTML = '<ul>' + pairs.map(p =>
-            '<li><strong>' + p.a + '</strong> and <strong>' + p.b + '</strong> — ' +
-            'both on ' + p.laser + ' nm laser, emission peaks only ' + p.delta + ' nm apart.</li>'
-        ).join('') + '</ul>';
+
+    // Always render a free-form notes input for any pair the user wants to track,
+    // plus the auto-detected close pairs above.
+    const flaggedKeys = new Set(pairs.map(p => pairKey(p.a, p.b)));
+    // Also surface saved notes that are no longer flagged (so the user can edit/remove)
+    const orphanKeys = Object.keys(STATE.spilloverNotes).filter(k => !flaggedKeys.has(k));
+
+    let html = '';
+    if (pairs.length === 0 && orphanKeys.length === 0) {
+        html = '<p class="hint">No close-emission pairs on the same laser. ✓ Notes you add here will be saved with the panel.</p>';
+    } else if (pairs.length === 0) {
+        html = '<p class="hint">No auto-flagged pairs. Saved notes for previously-flagged pairs are below — remove them by clearing the text.</p>';
     }
+
+    const renderRow = (a, b, laser, delta) => {
+        const key = pairKey(a, b);
+        const noteVal = escapeAttr(STATE.spilloverNotes[key] || '');
+        const meta = laser != null
+            ? `both on ${laser} nm laser, emission peaks ${delta} nm apart`
+            : 'no longer flagged (note retained)';
+        return (
+            '<div class="spill-row" data-key="' + key + '">' +
+                '<div class="spill-meta"><strong>' + a + '</strong> ↔ <strong>' + b + '</strong> — <span class="hint">' + meta + '</span></div>' +
+                '<input type="text" class="spill-note" placeholder="Notes (saved with panel)…" value="' + noteVal + '">' +
+            '</div>'
+        );
+    };
+
+    html += pairs.map(p => renderRow(p.a, p.b, p.laser, p.delta)).join('');
+    html += orphanKeys.map(k => {
+        const [a, b] = k.split('||');
+        return renderRow(a, b, null, null);
+    }).join('');
+
+    div.innerHTML = html;
+
+    div.querySelectorAll('.spill-note').forEach(inp => {
+        inp.addEventListener('input', (e) => {
+            const key = e.target.parentElement.dataset.key;
+            const v = e.target.value;
+            if (v.trim()) STATE.spilloverNotes[key] = v;
+            else delete STATE.spilloverNotes[key];
+        });
+    });
 }
 
 /* ========================================================================
@@ -606,22 +703,30 @@ function savePanel() {
     const now = new Date().toISOString();
     const existing = STATE.savedPanels.find(p => p.name === name);
     const entries = STATE.panel.map(p => ({ ...p }));
+    const spilloverNotes = { ...STATE.spilloverNotes };
     if (existing) {
         if (!confirm('Overwrite existing panel "' + name + '"?')) return;
         existing.entries = entries;
+        existing.spilloverNotes = spilloverNotes;
         existing.updated = now;
     } else {
-        STATE.savedPanels.push({ name, created: now, updated: now, entries });
+        STATE.savedPanels.push({ name, created: now, updated: now, entries, spilloverNotes });
     }
     persistSavedPanels();
     renderSavedPanels();
     toast('Saved "' + name + '"');
+
+    // Auto-sync to GitHub if a token is configured. Silent if no token.
+    if (getToken()) {
+        syncToGitHub({ silent: true });
+    }
 }
 
 function loadPanel(name) {
     const p = STATE.savedPanels.find(x => x.name === name);
     if (!p) return;
     STATE.panel = p.entries.map(e => ({ ...e })).filter(e => getFluor(e.fluor));
+    STATE.spilloverNotes = { ...(p.spilloverNotes || {}) };
     STATE.plotted = new Set(STATE.panel.map(e => e.fluor));
     STATE.currentPanelName = p.name;
     document.getElementById('panel-name').value = p.name;
@@ -681,9 +786,16 @@ function setupToken() {
     if (t.trim()) { localStorage.setItem(TOKEN_KEY, t.trim()); toast('Token saved'); }
 }
 
-async function syncToGitHub() {
+async function syncToGitHub(opts) {
+    opts = opts || {};
     const token = getToken();
-    if (!token) { setupToken(); if (!getToken()) return; }
+    if (!token) {
+        if (opts.silent) {
+            toast('Saved locally. Set up GitHub token to enable auto-sync.');
+            return;
+        }
+        setupToken(); if (!getToken()) return;
+    }
 
     const btn = document.getElementById('sync-github-btn');
     btn.textContent = 'Syncing...'; btn.disabled = true;
@@ -766,6 +878,7 @@ function init() {
     renderSpectra();
     renderSavedPanels();
     loadFromServer();
+    loadSpectraData();
 
     document.getElementById('search-input').addEventListener('input', (e) => {
         STATE.search = e.target.value;
@@ -782,7 +895,7 @@ function init() {
     document.getElementById('clear-panel-btn').addEventListener('click', () => {
         if (STATE.panel.length === 0) return;
         if (!confirm('Clear current panel?')) return;
-        STATE.panel = []; STATE.plotted.clear();
+        STATE.panel = []; STATE.plotted.clear(); STATE.spilloverNotes = {};
         document.getElementById('panel-name').value = '';
         renderPanel(); renderFluorGrid(); renderSpectra();
     });
