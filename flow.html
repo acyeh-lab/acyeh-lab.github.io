@@ -278,6 +278,7 @@ const FLUOROPHORES = [
     { name: 'PE-Texas Red',   ex: 565, em: 615, laser: 561, group: 'Tandem' },
     { name: 'PI',             ex: 535, em: 617, laser: 561, group: 'Viability' },
     { name: 'mCherry',        ex: 587, em: 610, laser: 561, group: 'FP' },
+    { name: 'tdTomato',       ex: 554, em: 581, laser: 561, group: 'FP' },
     { name: 'PE-Cy5',         ex: 565, em: 667, laser: 561, group: 'Tandem' },
     { name: 'PE-Cy5.5',       ex: 565, em: 695, laser: 561, group: 'Tandem' },
     { name: 'PE-Cy7',         ex: 565, em: 774, laser: 561, group: 'Tandem' },
@@ -447,7 +448,7 @@ function renderFluorGrid() {
     const visible = FLUOROPHORES
         .filter(f => STATE.activeLasers.has(f.laser))
         .filter(f => matchesSearch(f, STATE.search))
-        .sort((a, b) => a.laser - b.laser || a.em - b.em);
+        .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
 
     // Build a name -> count map once instead of recomputing per card
     const panelCounts = {};

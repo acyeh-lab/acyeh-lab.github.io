@@ -78,6 +78,7 @@ MAPPING = {
     "PE-Texas Red":       ("dye",     "PE-Texas Red"),
     "PI":                 ("dye",     "Propidium iodide (PI)"),
     "mCherry":            ("protein", "mCherry"),
+    "tdTomato":           ("protein", "tdTomato"),
     "PE-Cy5":             ("dye",     "PE-Cy5"),
     "PE-Cy5.5":           ("dye",     "PE-Cy5.5"),
     "PE-Cy7":             ("dye",     "PE-Cy7"),
