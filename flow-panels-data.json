@@ -3,7 +3,7 @@
     {
       "name": "DC Panel 1 (H2-Dd/Db)",
       "created": "2026-04-15T17:20:03.868Z",
-      "updated": "2026-04-15T17:36:23.146Z",
+      "updated": "2026-04-15T17:37:31.428Z",
       "entries": [
         {
           "fluor": "PE",
@@ -52,7 +52,8 @@
           "fluor": "Pacific Blue",
           "marker": "Ly6C",
           "clone": "HK1.4",
-          "notes": "Mono/Mac marker"
+          "notes": "Mono/Mac marker",
+          "volPer100uL": "0.2"
         },
         {
           "id": 8,
@@ -66,28 +67,32 @@
           "fluor": "BV650",
           "marker": "XCR1",
           "clone": "ZET",
-          "notes": "cDC1 marker"
+          "notes": "cDC1 marker",
+          "volPer100uL": "0.6"
         },
         {
           "id": 10,
           "fluor": "BUV737",
           "marker": "Siglec-H",
           "clone": "440c",
-          "notes": "pDC marker"
+          "notes": "pDC marker",
+          "volPer100uL": "0.2"
         },
         {
           "id": 11,
           "fluor": "BUV805",
           "marker": "CD8a",
           "clone": "53-6.7",
-          "notes": "cDC1 marker"
+          "notes": "cDC1 marker",
+          "volPer100uL": "0.250"
         },
         {
           "id": 12,
           "fluor": "BV510",
           "marker": "IA/IE",
           "clone": "M5/114.15.2",
-          "notes": "Using 480 laser on symphony"
+          "notes": "Using 480 laser on symphony",
+          "volPer100uL": "0.5"
         },
         {
           "id": 13,
@@ -101,7 +106,8 @@
           "fluor": "FITC",
           "marker": "H2-Dd",
           "clone": "34-2-12",
-          "notes": "1uL"
+          "notes": "1uL",
+          "volPer100uL": "01"
         },
         {
           "id": 15,
@@ -111,8 +117,9 @@
           "notes": "1uL"
         }
       ],
-      "spilloverNotes": {}
+      "spilloverNotes": {},
+      "description": ""
     }
   ],
-  "updated": "2026-04-15T17:36:25.101Z"
+  "updated": "2026-04-15T17:37:32.559Z"
 }
