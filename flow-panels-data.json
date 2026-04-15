@@ -3,17 +3,116 @@
     {
       "name": "DC Panel 1 (H2-Dd/Db)",
       "created": "2026-04-15T17:20:03.868Z",
-      "updated": "2026-04-15T17:20:03.868Z",
+      "updated": "2026-04-15T17:30:34.380Z",
       "entries": [
         {
           "fluor": "PE",
           "marker": "CD90.2",
           "clone": "",
+          "notes": "Part of dump gate",
+          "id": 1
+        },
+        {
+          "id": 2,
+          "fluor": "PE",
+          "marker": "CD3",
+          "clone": "",
+          "notes": "Part of dump gate"
+        },
+        {
+          "id": 3,
+          "fluor": "PE",
+          "marker": "CD19",
+          "clone": "",
+          "notes": "Part of dump gate"
+        },
+        {
+          "id": 4,
+          "fluor": "PE",
+          "marker": "NK1.1",
+          "clone": "",
+          "notes": "Part of dump gate"
+        },
+        {
+          "id": 5,
+          "fluor": "Alexa Fluor 700",
+          "marker": "CD11b",
+          "clone": "",
           "notes": ""
+        },
+        {
+          "id": 6,
+          "fluor": "PerCP-eFluor 710",
+          "marker": "CD11c",
+          "clone": "",
+          "notes": ""
+        },
+        {
+          "id": 7,
+          "fluor": "Pacific Blue",
+          "marker": "Ly6C",
+          "clone": "",
+          "notes": "Mono/Mac marker"
+        },
+        {
+          "id": 8,
+          "fluor": "PE-Cy7",
+          "marker": "CD64",
+          "clone": "",
+          "notes": "Mac marker"
+        },
+        {
+          "id": 9,
+          "fluor": "BV650",
+          "marker": "XCR1",
+          "clone": "",
+          "notes": "cDC1 marker"
+        },
+        {
+          "id": 10,
+          "fluor": "BUV737",
+          "marker": "Siglec-H",
+          "clone": "",
+          "notes": "pDC marker"
+        },
+        {
+          "id": 11,
+          "fluor": "BUV805",
+          "marker": "CD8a",
+          "clone": "",
+          "notes": "cDC1 marker"
+        },
+        {
+          "id": 12,
+          "fluor": "BV510",
+          "marker": "IA/IE",
+          "clone": "",
+          "notes": "Using 480 laser on symphony"
+        },
+        {
+          "id": 13,
+          "fluor": "7-AAD",
+          "marker": "Viability",
+          "clone": "",
+          "notes": "Using PE/Cy5 channel"
+        },
+        {
+          "id": 14,
+          "fluor": "FITC",
+          "marker": "H2-Dd",
+          "clone": "",
+          "notes": "1uL"
+        },
+        {
+          "id": 15,
+          "fluor": "APC-Fire 750",
+          "marker": "H2-Db",
+          "clone": "",
+          "notes": "1uL"
         }
       ],
       "spilloverNotes": {}
     }
   ],
-  "updated": "2026-04-15T17:30:30.487Z"
+  "updated": "2026-04-15T17:30:35.915Z"
 }
