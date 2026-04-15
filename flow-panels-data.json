@@ -3,12 +3,12 @@
     {
       "name": "DC Panel 1 (H2-Dd/Db)",
       "created": "2026-04-15T17:20:03.868Z",
-      "updated": "2026-04-15T17:30:34.380Z",
+      "updated": "2026-04-15T17:36:23.146Z",
       "entries": [
         {
           "fluor": "PE",
           "marker": "CD90.2",
-          "clone": "",
+          "clone": "53-2.1",
           "notes": "Part of dump gate",
           "id": 1
         },
@@ -16,77 +16,77 @@
           "id": 2,
           "fluor": "PE",
           "marker": "CD3",
-          "clone": "",
+          "clone": "145-2c11",
           "notes": "Part of dump gate"
         },
         {
           "id": 3,
           "fluor": "PE",
           "marker": "CD19",
-          "clone": "",
+          "clone": "6D5",
           "notes": "Part of dump gate"
         },
         {
           "id": 4,
           "fluor": "PE",
           "marker": "NK1.1",
-          "clone": "",
+          "clone": "PK136",
           "notes": "Part of dump gate"
         },
         {
           "id": 5,
           "fluor": "Alexa Fluor 700",
           "marker": "CD11b",
-          "clone": "",
+          "clone": "M1/70",
           "notes": ""
         },
         {
           "id": 6,
           "fluor": "PerCP-eFluor 710",
           "marker": "CD11c",
-          "clone": "",
+          "clone": "N418",
           "notes": ""
         },
         {
           "id": 7,
           "fluor": "Pacific Blue",
           "marker": "Ly6C",
-          "clone": "",
+          "clone": "HK1.4",
           "notes": "Mono/Mac marker"
         },
         {
           "id": 8,
           "fluor": "PE-Cy7",
           "marker": "CD64",
-          "clone": "",
+          "clone": "X54-5/7.1",
           "notes": "Mac marker"
         },
         {
           "id": 9,
           "fluor": "BV650",
           "marker": "XCR1",
-          "clone": "",
+          "clone": "ZET",
           "notes": "cDC1 marker"
         },
         {
           "id": 10,
           "fluor": "BUV737",
           "marker": "Siglec-H",
-          "clone": "",
+          "clone": "440c",
           "notes": "pDC marker"
         },
         {
           "id": 11,
           "fluor": "BUV805",
           "marker": "CD8a",
-          "clone": "",
+          "clone": "53-6.7",
           "notes": "cDC1 marker"
         },
         {
           "id": 12,
           "fluor": "BV510",
           "marker": "IA/IE",
-          "clone": "",
+          "clone": "M5/114.15.2",
           "notes": "Using 480 laser on symphony"
         },
         {
@@ -100,19 +100,19 @@
           "id": 14,
           "fluor": "FITC",
           "marker": "H2-Dd",
-          "clone": "",
+          "clone": "34-2-12",
           "notes": "1uL"
         },
         {
           "id": 15,
           "fluor": "APC-Fire 750",
           "marker": "H2-Db",
-          "clone": "",
+          "clone": "KH95",
           "notes": "1uL"
         }
       ],
       "spilloverNotes": {}
     }
   ],
-  "updated": "2026-04-15T17:30:37.972Z"
+  "updated": "2026-04-15T17:36:25.101Z"
 }
