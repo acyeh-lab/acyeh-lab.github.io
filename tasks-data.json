@@ -539,10 +539,11 @@
         {
           "id": 36,
           "description": "add gel on d7",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-02",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-15"
         },
         {
           "id": 39,
@@ -581,10 +582,11 @@
         {
           "id": 49,
           "description": "Look for non-BV480 NK1.1 Ab , as BV480 seems to bleed through to mG (FITC) channel",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-06",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-15"
         },
         {
           "id": 50,
@@ -767,6 +769,28 @@
           "priority": "medium",
           "created": "2026-04-08",
           "notes": []
+        },
+        {
+          "id": 81,
+          "description": "Finish exp, finalize and submit DC and tetramer flow panels",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-15",
+          "notes": []
+        }
+      ]
+    },
+    "Immunopeptidomics": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 82,
+          "description": "Meet with Misha",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-15",
+          "notes": [],
+          "due": "2026-04-17"
         }
       ]
     },
