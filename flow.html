@@ -167,16 +167,24 @@
             <table class="panel-table" id="panel-table">
                 <thead>
                     <tr>
-                        <th style="width: 22%;">Fluorophore</th>
-                        <th style="width: 10%;">Laser</th>
-                        <th style="width: 10%;">Ex / Em</th>
-                        <th style="width: 18%;">Marker</th>
-                        <th style="width: 14%;">Clone</th>
-                        <th style="width: 22%;">Notes</th>
+                        <th style="width: 20%;">Fluorophore</th>
+                        <th style="width: 8%;">Laser</th>
+                        <th style="width: 9%;">Ex / Em</th>
+                        <th style="width: 16%;">Marker</th>
+                        <th style="width: 13%;">Clone</th>
+                        <th style="width: 9%;" title="Volume of antibody in microliters per 100 uL stain">Vol per 100 uL (uL)</th>
+                        <th style="width: 21%;">Notes</th>
                         <th style="width: 4%;"></th>
                     </tr>
                 </thead>
                 <tbody id="panel-tbody"></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" style="text-align: right; font-size: 0.85rem; color: #555;"><strong>Total volume per 100 uL stain:</strong></td>
+                        <td id="vol-total" style="font-weight: 700; color: #0056b3;">0 uL</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
             </table>
 
             <h3 style="margin-top: 18px;">Spillover risk</h3>
@@ -574,7 +582,7 @@ function addToPanel(name) {
     // Duplicates allowed — each click adds a new row. Useful for dump gates
     // where multiple antibodies share one fluorophore (e.g., 3× BV421 for
     // CD3 / CD19 / CD56 → one dump axis).
-    STATE.panel.push({ id: newEntryId(), fluor: name, marker: '', clone: '', notes: '' });
+    STATE.panel.push({ id: newEntryId(), fluor: name, marker: '', clone: '', volPer100uL: '', notes: '' });
     STATE.plotted.add(name);
     renderPanel();
     renderFluorGrid();
@@ -604,7 +612,7 @@ function renderPanel() {
     const tbody = document.getElementById('panel-tbody');
     tbody.innerHTML = '';
     if (STATE.panel.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="empty-row">Panel is empty — click fluorophores above to add them.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-row">Panel is empty — click fluorophores above to add them.</td></tr>';
     } else {
         // sort by laser, then emission
         const sorted = [...STATE.panel].sort((a, b) => {
@@ -620,6 +628,7 @@ function renderPanel() {
                 '<td>' + f.ex + ' / ' + f.em + '</td>' +
                 '<td><input type="text" data-field="marker" placeholder="e.g. CD4" value="' + escapeAttr(p.marker) + '"></td>' +
                 '<td><input type="text" data-field="clone" placeholder="clone" value="' + escapeAttr(p.clone) + '"></td>' +
+                '<td><input type="number" data-field="volPer100uL" min="0" step="0.1" placeholder="uL" value="' + escapeAttr(p.volPer100uL) + '" style="text-align: right;"></td>' +
                 '<td><input type="text" data-field="notes" placeholder="notes" value="' + escapeAttr(p.notes) + '"></td>' +
                 '<td><button class="remove-btn" title="Remove this row">✕</button></td>';
             tr.querySelectorAll('input').forEach(inp => {
@@ -627,6 +636,7 @@ function renderPanel() {
                     const field = e.target.dataset.field;
                     const entry = STATE.panel.find(x => x.id === p.id);
                     if (entry) entry[field] = e.target.value;
+                    if (field === 'volPer100uL') updateVolumeTotal();
                 });
             });
             tr.querySelector('.remove-btn').addEventListener('click', () => removeFromPanel(p.id));
@@ -634,6 +644,22 @@ function renderPanel() {
         }
     }
     renderSpilloverWarnings();
+    updateVolumeTotal();
+}
+
+function updateVolumeTotal() {
+    const cell = document.getElementById('vol-total');
+    if (!cell) return;
+    let total = 0;
+    let any = false;
+    for (const p of STATE.panel) {
+        const v = parseFloat(p.volPer100uL);
+        if (!isNaN(v)) { total += v; any = true; }
+    }
+    if (!any) { cell.textContent = '0 uL'; return; }
+    // Round to 1 decimal to avoid float noise
+    const rounded = Math.round(total * 10) / 10;
+    cell.textContent = rounded + ' uL';
 }
 
 function escapeAttr(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
