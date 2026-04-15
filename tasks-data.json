@@ -90,6 +90,15 @@
           "priority": "medium",
           "created": "2026-04-12",
           "notes": []
+        },
+        {
+          "id": 81,
+          "description": "obtain work laptop",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-14",
+          "notes": [],
+          "due": "2026-04-30"
         }
       ]
     },
@@ -235,14 +244,6 @@
           "priority": "high",
           "created": "2026-04-12",
           "notes": []
-        },
-        {
-          "id": 80,
-          "description": "flow panel pages - T cell panel, Plasma cell panel, DC panel",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-15",
-          "notes": []
         }
       ]
     },
@@ -282,26 +283,6 @@
             {
               "date": "2026-04-07",
               "text": "Thanks for sharing. I think Fuso would be a good addition based on the previous studies https://www.nature.com/articles/s41586-022-05435-0 ;  https://www.nature.com/articles/s41596-023-00888-7; https://www.nature.com/articles/s41586-024-07182-w"
-            },
-            {
-              "date": "2026-04-13",
-              "text": "Meet with Neel / Ming.  Discuss what will go into 2000 custom panel.  Purchase type strains for cultures.  Include Senepy pathways, colibactin genes, include most differentiated genes between cells clusters for GI tract. Include 3-5 top up and down bacterail from Sci Repots paper.  ?Expand to include more commensals?"
-            },
-            {
-              "date": "2026-04-13",
-              "text": "Cost will be $36,000 for 12 reactions (12 slides) for 2000 gene custom panel"
-            },
-            {
-              "date": "2026-04-13",
-              "text": "Samples: large adenomas, can be up to 1cm. Compare TVA vs. TA vs. Over 10mm or villous component will be considered high-risk.  Higher risk are larger, so biased here.  FADA on fusobacterium. Colibactin. BFT toxin (B. fragiilis) - targets E. cahderin / fragilysin."
-            },
-            {
-              "date": "2026-04-13",
-              "text": "z-stack, but after survey"
-            },
-            {
-              "date": "2026-04-13",
-              "text": "include top 100 for female, male, include in methods"
             }
           ]
         },
@@ -386,6 +367,14 @@
           "priority": "medium",
           "created": "2026-04-13",
           "notes": []
+        },
+        {
+          "id": 83,
+          "description": "Start teams group!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-14",
+          "notes": []
         }
       ]
     },
@@ -418,7 +407,7 @@
           "id": 33,
           "description": "Work on VDJ matching, f/u Francesco on 4/3/26, then send report to Evan",
           "status": "open",
-          "priority": "low",
+          "priority": "medium",
           "created": "2026-04-02",
           "notes": []
         },
@@ -437,6 +426,22 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-07",
+          "notes": []
+        },
+        {
+          "id": 80,
+          "description": "email joshua about clinical parameters we want",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-14",
+          "notes": []
+        },
+        {
+          "id": 82,
+          "description": "download trekker data",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-14",
           "notes": []
         }
       ]
@@ -465,12 +470,11 @@
         {
           "id": 3,
           "description": "Takedown #1 — mouse organ harvest (day 14 post-transplant)",
-          "status": "done",
+          "status": "open",
           "priority": "high",
           "created": "2026-03-26",
           "notes": [],
-          "due": "2026-04-09",
-          "completed": "2026-04-13"
+          "due": "2026-04-09"
         },
         {
           "id": 4,
@@ -483,7 +487,7 @@
         },
         {
           "id": 17,
-          "description": "Pending E-cahderin in VECTRA panel",
+          "description": "VECTRA Panel",
           "status": "open",
           "priority": "high",
           "created": "2026-03-30",
@@ -497,11 +501,23 @@
               "text": "E-mailed stephanie on 4/8 about using Vicky-2 from Enzo"
             },
             {
-              "date": "2026-04-15",
-              "text": "Will try E-cad stain"
+              "date": "2026-04-14",
+              "text": "Met with Steph, will try E-CAD staining."
             }
-          ],
-          "due": "2026-04-14"
+          ]
+        },
+        {
+          "id": 84,
+          "description": "submit sample to histo!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-14",
+          "notes": [
+            {
+              "date": "2026-04-14",
+              "text": "Submitted on 4/14/26 - SR26-0506 for FFPE embed, H&E, image, and 1 unstained.  Follow-up for VECTRA"
+            }
+          ]
         }
       ]
     },
@@ -539,11 +555,10 @@
         {
           "id": 36,
           "description": "add gel on d7",
-          "status": "done",
+          "status": "open",
           "priority": "high",
           "created": "2026-04-02",
-          "notes": [],
-          "completed": "2026-04-15"
+          "notes": []
         },
         {
           "id": 39,
@@ -582,11 +597,10 @@
         {
           "id": 49,
           "description": "Look for non-BV480 NK1.1 Ab , as BV480 seems to bleed through to mG (FITC) channel",
-          "status": "done",
+          "status": "open",
           "priority": "medium",
           "created": "2026-04-06",
-          "notes": [],
-          "completed": "2026-04-15"
+          "notes": []
         },
         {
           "id": 50,
@@ -769,28 +783,6 @@
           "priority": "medium",
           "created": "2026-04-08",
           "notes": []
-        },
-        {
-          "id": 81,
-          "description": "Finish exp, finalize and submit DC and tetramer flow panels",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-15",
-          "notes": []
-        }
-      ]
-    },
-    "Immunopeptidomics": {
-      "description": "",
-      "tasks": [
-        {
-          "id": 82,
-          "description": "Meet with Misha",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-04-15",
-          "notes": [],
-          "due": "2026-04-17"
         }
       ]
     },
