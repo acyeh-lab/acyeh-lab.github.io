@@ -3,52 +3,58 @@
     {
       "name": "DC Panel 1 (H2-Dd/Db)",
       "created": "2026-04-15T17:20:03.868Z",
-      "updated": "2026-04-15T17:37:31.428Z",
+      "updated": "2026-04-15T17:39:45.155Z",
       "entries": [
         {
           "fluor": "PE",
           "marker": "CD90.2",
           "clone": "53-2.1",
           "notes": "Part of dump gate",
-          "id": 1
+          "id": 16,
+          "volPer100uL": "0.2"
         },
         {
-          "id": 2,
+          "id": 17,
           "fluor": "PE",
           "marker": "CD3",
           "clone": "145-2c11",
-          "notes": "Part of dump gate"
+          "notes": "Part of dump gate",
+          "volPer100uL": "0.5"
         },
         {
-          "id": 3,
+          "id": 18,
           "fluor": "PE",
           "marker": "CD19",
           "clone": "6D5",
-          "notes": "Part of dump gate"
+          "notes": "Part of dump gate",
+          "volPer100uL": "0.25"
         },
         {
-          "id": 4,
+          "id": 19,
           "fluor": "PE",
           "marker": "NK1.1",
           "clone": "PK136",
-          "notes": "Part of dump gate"
+          "notes": "Part of dump gate",
+          "volPer100uL": "0.5"
         },
         {
-          "id": 5,
+          "id": 20,
           "fluor": "Alexa Fluor 700",
           "marker": "CD11b",
           "clone": "M1/70",
-          "notes": ""
+          "notes": "",
+          "volPer100uL": "0.5"
         },
         {
-          "id": 6,
+          "id": 21,
           "fluor": "PerCP-eFluor 710",
           "marker": "CD11c",
           "clone": "N418",
-          "notes": ""
+          "notes": "",
+          "volPer100uL": "0.5"
         },
         {
-          "id": 7,
+          "id": 22,
           "fluor": "Pacific Blue",
           "marker": "Ly6C",
           "clone": "HK1.4",
@@ -56,22 +62,23 @@
           "volPer100uL": "0.2"
         },
         {
-          "id": 8,
+          "id": 23,
           "fluor": "PE-Cy7",
           "marker": "CD64",
           "clone": "X54-5/7.1",
-          "notes": "Mac marker"
+          "notes": "Mac marker",
+          "volPer100uL": "0.5"
         },
         {
-          "id": 9,
+          "id": 24,
           "fluor": "BV650",
           "marker": "XCR1",
           "clone": "ZET",
           "notes": "cDC1 marker",
-          "volPer100uL": "0.6"
+          "volPer100uL": "0.5"
         },
         {
-          "id": 10,
+          "id": 25,
           "fluor": "BUV737",
           "marker": "Siglec-H",
           "clone": "440c",
@@ -79,15 +86,15 @@
           "volPer100uL": "0.2"
         },
         {
-          "id": 11,
+          "id": 26,
           "fluor": "BUV805",
           "marker": "CD8a",
           "clone": "53-6.7",
           "notes": "cDC1 marker",
-          "volPer100uL": "0.250"
+          "volPer100uL": "0.25"
         },
         {
-          "id": 12,
+          "id": 27,
           "fluor": "BV510",
           "marker": "IA/IE",
           "clone": "M5/114.15.2",
@@ -95,31 +102,33 @@
           "volPer100uL": "0.5"
         },
         {
-          "id": 13,
+          "id": 28,
           "fluor": "7-AAD",
           "marker": "Viability",
           "clone": "",
-          "notes": "Using PE/Cy5 channel"
+          "notes": "Using PE/Cy5 channel",
+          "volPer100uL": "0"
         },
         {
-          "id": 14,
+          "id": 29,
           "fluor": "FITC",
           "marker": "H2-Dd",
           "clone": "34-2-12",
           "notes": "1uL",
-          "volPer100uL": "01"
+          "volPer100uL": "1"
         },
         {
-          "id": 15,
+          "id": 30,
           "fluor": "APC-Fire 750",
           "marker": "H2-Db",
           "clone": "KH95",
-          "notes": "1uL"
+          "notes": "1uL",
+          "volPer100uL": "1"
         }
       ],
       "spilloverNotes": {},
       "description": ""
     }
   ],
-  "updated": "2026-04-15T17:37:32.559Z"
+  "updated": "2026-04-15T17:39:46.376Z"
 }
