@@ -1,4 +1,19 @@
 {
-  "panels": [],
-  "updated": "2026-04-15T17:19:37.337Z"
+  "panels": [
+    {
+      "name": "DC Panel 1 (H2-Dd/Db)",
+      "created": "2026-04-15T17:20:03.868Z",
+      "updated": "2026-04-15T17:20:03.868Z",
+      "entries": [
+        {
+          "fluor": "PE",
+          "marker": "CD90.2",
+          "clone": "",
+          "notes": ""
+        }
+      ],
+      "spilloverNotes": {}
+    }
+  ],
+  "updated": "2026-04-15T17:20:04.086Z"
 }
