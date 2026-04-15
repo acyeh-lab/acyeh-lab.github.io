@@ -90,14 +90,6 @@
           "priority": "medium",
           "created": "2026-04-12",
           "notes": []
-        },
-        {
-          "id": 81,
-          "description": "get IT to check out laptop",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-14",
-          "notes": []
         }
       ]
     },
@@ -243,6 +235,14 @@
           "priority": "high",
           "created": "2026-04-12",
           "notes": []
+        },
+        {
+          "id": 80,
+          "description": "flow panel pages - T cell panel, Plasma cell panel, DC panel",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-15",
+          "notes": []
         }
       ]
     },
@@ -282,6 +282,26 @@
             {
               "date": "2026-04-07",
               "text": "Thanks for sharing. I think Fuso would be a good addition based on the previous studies https://www.nature.com/articles/s41586-022-05435-0 ;  https://www.nature.com/articles/s41596-023-00888-7; https://www.nature.com/articles/s41586-024-07182-w"
+            },
+            {
+              "date": "2026-04-13",
+              "text": "Meet with Neel / Ming.  Discuss what will go into 2000 custom panel.  Purchase type strains for cultures.  Include Senepy pathways, colibactin genes, include most differentiated genes between cells clusters for GI tract. Include 3-5 top up and down bacterail from Sci Repots paper.  ?Expand to include more commensals?"
+            },
+            {
+              "date": "2026-04-13",
+              "text": "Cost will be $36,000 for 12 reactions (12 slides) for 2000 gene custom panel"
+            },
+            {
+              "date": "2026-04-13",
+              "text": "Samples: large adenomas, can be up to 1cm. Compare TVA vs. TA vs. Over 10mm or villous component will be considered high-risk.  Higher risk are larger, so biased here.  FADA on fusobacterium. Colibactin. BFT toxin (B. fragiilis) - targets E. cahderin / fragilysin."
+            },
+            {
+              "date": "2026-04-13",
+              "text": "z-stack, but after survey"
+            },
+            {
+              "date": "2026-04-13",
+              "text": "include top 100 for female, male, include in methods"
             }
           ]
         },
@@ -366,14 +386,6 @@
           "priority": "medium",
           "created": "2026-04-13",
           "notes": []
-        },
-        {
-          "id": 83,
-          "description": "Start teams group!",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-04-14",
-          "notes": []
         }
       ]
     },
@@ -406,7 +418,7 @@
           "id": 33,
           "description": "Work on VDJ matching, f/u Francesco on 4/3/26, then send report to Evan",
           "status": "open",
-          "priority": "medium",
+          "priority": "low",
           "created": "2026-04-02",
           "notes": []
         },
@@ -425,22 +437,6 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-07",
-          "notes": []
-        },
-        {
-          "id": 80,
-          "description": "email joshua about clinical parameters we want",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-04-14",
-          "notes": []
-        },
-        {
-          "id": 82,
-          "description": "download trekker data",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-14",
           "notes": []
         }
       ]
@@ -469,11 +465,12 @@
         {
           "id": 3,
           "description": "Takedown #1 — mouse organ harvest (day 14 post-transplant)",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-26",
           "notes": [],
-          "due": "2026-04-09"
+          "due": "2026-04-09",
+          "completed": "2026-04-13"
         },
         {
           "id": 4,
@@ -486,7 +483,7 @@
         },
         {
           "id": 17,
-          "description": "VECTRA Panel",
+          "description": "Meet Stephanie about Vectra panel 4/14 11AM",
           "status": "open",
           "priority": "high",
           "created": "2026-03-30",
@@ -498,25 +495,9 @@
             {
               "date": "2026-04-08",
               "text": "E-mailed stephanie on 4/8 about using Vicky-2 from Enzo"
-            },
-            {
-              "date": "2026-04-14",
-              "text": "Met with Steph, will try E-CAD staining."
             }
-          ]
-        },
-        {
-          "id": 84,
-          "description": "submit sample to histo!",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-04-14",
-          "notes": [
-            {
-              "date": "2026-04-14",
-              "text": "Submitted on 4/14/26 - SR26-0506 for FFPE embed, H&E, image, and 1 unstained.  Follow-up for VECTRA"
-            }
-          ]
+          ],
+          "due": "2026-04-14"
         }
       ]
     },
