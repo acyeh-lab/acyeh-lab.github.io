@@ -1,0 +1,805 @@
+<!-- flow.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow - Albert Yeh Lab</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        body { font-family: 'Roboto', sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
+        header { background-color: #0056b3; color: #fff; padding: 20px 10px; text-align: center; }
+        header h1 { font-size: 48px; margin: 0; font-weight: 700; letter-spacing: 2px; }
+        header h2 { font-size: 24px; margin: 0; font-weight: 400; }
+        nav { text-align: center; margin: 10px 0; background-color: #fff; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
+        nav a:hover { text-decoration: underline; }
+        .container { max-width: 1400px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
+
+        h2, h3 { color: #0056b3; }
+        .section { margin: 24px 0; padding-top: 16px; border-top: 1px solid #eee; }
+        .section:first-of-type { border-top: none; padding-top: 0; }
+
+        /* Laser toggles */
+        .laser-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
+        .laser-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; border: 2px solid #ccc; cursor: pointer; background: #fafafa; font-size: 0.9rem; user-select: none; }
+        .laser-chip input { margin: 0; }
+        .laser-chip.active { border-color: #0056b3; background: #e8f0fe; }
+        .laser-swatch { width: 14px; height: 14px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.2); }
+
+        /* Controls row */
+        .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 10px 0; }
+        .controls input[type="text"] { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; min-width: 220px; }
+        .btn { padding: 6px 14px; border: 1px solid #0056b3; background: #0056b3; color: #fff; border-radius: 4px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+        .btn:hover { background: #003f82; }
+        .btn.secondary { background: #fff; color: #0056b3; }
+        .btn.secondary:hover { background: #e8f0fe; }
+        .btn.danger { background: #b33a3a; border-color: #b33a3a; }
+        .btn.danger:hover { background: #8a2828; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Fluorophore library grid */
+        .fluor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; margin-top: 10px; max-height: 420px; overflow-y: auto; padding: 6px; border: 1px solid #eee; border-radius: 4px; background: #fafafa; }
+        .fluor-card { padding: 8px 10px; border-radius: 4px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; transition: all 0.1s; }
+        .fluor-card:hover { border-color: #0056b3; box-shadow: 0 1px 4px rgba(0,86,179,0.2); }
+        .fluor-card.selected { border-color: #0056b3; background: #e8f0fe; }
+        .fluor-card.in-panel { outline: 2px solid #28a745; }
+        .fluor-swatch { width: 18px; height: 18px; border-radius: 3px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.15); }
+        .fluor-name { font-weight: 600; line-height: 1.1; font-size: 0.85rem; }
+        .fluor-meta { font-size: 0.7rem; color: #777; line-height: 1.1; }
+
+        /* Spectral plot */
+        #spectra-wrap { position: relative; height: 380px; margin: 10px 0; }
+
+        /* Panel table */
+        .panel-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        .panel-table th, .panel-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .panel-table th { background: #f4f4f9; color: #555; font-weight: 600; }
+        .panel-table td input { width: 100%; border: 1px solid #ddd; border-radius: 3px; padding: 4px 6px; font-size: 0.88rem; font-family: inherit; box-sizing: border-box; }
+        .panel-table td input:focus { outline: 2px solid #0056b3; border-color: #0056b3; }
+        .panel-table .remove-btn { background: transparent; border: none; color: #b33a3a; font-size: 1.1rem; cursor: pointer; padding: 0 6px; }
+        .panel-swatch-cell { display: flex; align-items: center; gap: 8px; }
+        .empty-row { text-align: center; color: #999; padding: 20px; font-style: italic; }
+
+        /* Saved panels */
+        .saved-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .saved-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #f4f4f9; border-radius: 4px; border: 1px solid #e0e0e0; }
+        .saved-item-name { font-weight: 600; }
+        .saved-item-meta { font-size: 0.8rem; color: #777; margin-left: 10px; }
+        .saved-item-actions { display: flex; gap: 6px; }
+        .saved-item-actions button { padding: 4px 10px; font-size: 0.8rem; }
+
+        /* Spillover matrix */
+        .spill-table { border-collapse: collapse; font-size: 0.75rem; margin-top: 10px; }
+        .spill-table th, .spill-table td { padding: 3px 5px; border: 1px solid #eee; text-align: center; min-width: 28px; }
+        .spill-table th { background: #f4f4f9; writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 500; height: 80px; font-size: 0.7rem; }
+        .spill-table th.row-label { writing-mode: horizontal-tb; transform: none; text-align: left; padding: 3px 8px; height: auto; min-width: 100px; }
+
+        /* Toast */
+        #toast { position: fixed; bottom: 20px; right: 20px; background: #333; color: #fff; padding: 10px 18px; border-radius: 4px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000; }
+        #toast.show { opacity: 1; }
+
+        .hint { font-size: 0.85rem; color: #666; font-style: italic; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+        .filter-meta { font-size: 0.85rem; color: #666; margin-left: 10px; }
+        .legend-row { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.8rem; color: #555; margin-top: 4px; }
+        .legend-swatch { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 4px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Albert Yeh Lab</h1>
+        <h2>Flow cytometry panel designer</h2>
+    </header>
+
+    <nav>
+        <a href="index.html">Main Page</a>
+        <a href="publications.html">Publications</a>
+        <a href="projects.html">Projects</a>
+        <a href="tools.html">Tools</a>
+        <a href="team.html">Team</a>
+        <a href="journal-watch.html">Journal Watch</a>
+        <a href="flow.html">Flow</a>
+    </nav>
+
+    <div class="container">
+
+        <!-- ===== Section 1: Spectra viewer ===== -->
+        <div class="section">
+            <h2>Spectra Viewer</h2>
+            <p class="hint">Click a fluorophore below to add it to the plot. Dashed = excitation, solid = emission. Filter by laser or search by name / marker / clone.</p>
+
+            <div class="laser-row" id="laser-row"><!-- laser chips --></div>
+
+            <div class="controls">
+                <input type="text" id="search-input" placeholder="Search fluorophore (e.g. BV421, PE-Cy7)...">
+                <button class="btn secondary" id="clear-plot-btn">Clear plot</button>
+                <button class="btn secondary" id="select-panel-btn">Plot current panel</button>
+                <span class="filter-meta" id="filter-meta"></span>
+            </div>
+
+            <div id="spectra-wrap">
+                <canvas id="spectra-canvas"></canvas>
+            </div>
+            <div class="legend-row">
+                <span><span class="legend-swatch" style="border-top: 2px dashed #888;"></span>Excitation</span>
+                <span><span class="legend-swatch" style="background: #888;"></span>Emission</span>
+                <span class="hint">Spectra are Gaussian approximations from peak excitation/emission wavelengths — for final panel validation use BioLegend / BD / FPbase spectra viewers.</span>
+            </div>
+
+            <h3 style="margin-top:18px;">Fluorophore library</h3>
+            <div class="fluor-grid" id="fluor-grid"><!-- cards --></div>
+        </div>
+
+        <!-- ===== Section 2: Panel builder ===== -->
+        <div class="section">
+            <h2>Panel Builder</h2>
+            <p class="hint">Click any fluorophore above to add it to the panel below. Fill in the marker / clone / notes inline. Green outline in the library indicates a fluorophore is already in the current panel.</p>
+
+            <div class="controls">
+                <input type="text" id="panel-name" placeholder="Panel name (e.g. Plasma cell GVHD v1)" style="min-width: 280px;">
+                <button class="btn" id="save-panel-btn">Save panel</button>
+                <button class="btn secondary" id="clear-panel-btn">Clear panel</button>
+                <button class="btn secondary" id="export-json-btn">Export JSON</button>
+            </div>
+
+            <table class="panel-table" id="panel-table">
+                <thead>
+                    <tr>
+                        <th style="width: 22%;">Fluorophore</th>
+                        <th style="width: 10%;">Laser</th>
+                        <th style="width: 10%;">Ex / Em</th>
+                        <th style="width: 18%;">Marker</th>
+                        <th style="width: 14%;">Clone</th>
+                        <th style="width: 22%;">Notes</th>
+                        <th style="width: 4%;"></th>
+                    </tr>
+                </thead>
+                <tbody id="panel-tbody"></tbody>
+            </table>
+
+            <h3 style="margin-top: 18px;">Spillover risk</h3>
+            <p class="hint">Pairs where emission peaks differ by &lt; 25 nm and share a laser are flagged. This is a coarse heuristic — not a substitute for a compensation matrix.</p>
+            <div id="spillover-warnings"></div>
+        </div>
+
+        <!-- ===== Section 3: Saved panels ===== -->
+        <div class="section">
+            <h2>Saved Panels</h2>
+            <p class="hint">Panels are stored in your browser. Use "Sync to GitHub" to push them to <code>flow-panels-data.json</code> in the site repo so they're available on other devices.</p>
+
+            <div class="controls">
+                <button class="btn secondary" id="refresh-saved-btn">Reload from server</button>
+                <button class="btn" id="sync-github-btn">Sync to GitHub</button>
+                <button class="btn secondary" id="setup-token-btn">Setup GitHub token</button>
+            </div>
+
+            <div class="saved-list" id="saved-list"></div>
+        </div>
+
+    </div>
+
+    <div id="toast"></div>
+
+    <footer>
+        <p>&copy; 2026 Albert Yeh Lab. All Rights Reserved.</p>
+    </footer>
+
+<script>
+/* ========================================================================
+   Fluorophore database
+   Fields: name, ex (nm), em (nm), laser (preferred laser in nm)
+   Peaks compiled from BD / BioLegend / Thermo spectral tables.
+   ======================================================================== */
+const FLUOROPHORES = [
+    // UV (355 nm) — BD Horizon BUV series
+    { name: 'BUV395',         ex: 348, em: 395, laser: 355, group: 'BUV' },
+    { name: 'BUV496',         ex: 348, em: 496, laser: 355, group: 'BUV' },
+    { name: 'BUV563',         ex: 348, em: 564, laser: 355, group: 'BUV' },
+    { name: 'BUV615',         ex: 348, em: 615, laser: 355, group: 'BUV' },
+    { name: 'BUV661',         ex: 348, em: 661, laser: 355, group: 'BUV' },
+    { name: 'BUV737',         ex: 348, em: 737, laser: 355, group: 'BUV' },
+    { name: 'BUV805',         ex: 348, em: 805, laser: 355, group: 'BUV' },
+    { name: 'DAPI',           ex: 358, em: 461, laser: 355, group: 'Nucleic' },
+    { name: 'Hoechst 33342',  ex: 355, em: 465, laser: 355, group: 'Nucleic' },
+    { name: 'Indo-1 (free)',  ex: 330, em: 475, laser: 355, group: 'Ca2+' },
+    { name: 'Indo-1 (bound)', ex: 330, em: 401, laser: 355, group: 'Ca2+' },
+
+    // Violet (405 nm) — BD Horizon BV + Pacific/eFluor
+    { name: 'BV421',          ex: 407, em: 421, laser: 405, group: 'BV' },
+    { name: 'Pacific Blue',   ex: 410, em: 455, laser: 405, group: 'Classical' },
+    { name: 'eFluor 450',     ex: 405, em: 450, laser: 405, group: 'Classical' },
+    { name: 'BV480',          ex: 436, em: 478, laser: 405, group: 'BV' },
+    { name: 'BV510',          ex: 405, em: 510, laser: 405, group: 'BV' },
+    { name: 'V500',           ex: 415, em: 500, laser: 405, group: 'Classical' },
+    { name: 'eFluor 506',     ex: 405, em: 506, laser: 405, group: 'Classical' },
+    { name: 'BV570',          ex: 407, em: 570, laser: 405, group: 'BV' },
+    { name: 'BV605',          ex: 407, em: 605, laser: 405, group: 'BV' },
+    { name: 'BV650',          ex: 407, em: 645, laser: 405, group: 'BV' },
+    { name: 'BV711',          ex: 407, em: 711, laser: 405, group: 'BV' },
+    { name: 'BV750',          ex: 407, em: 750, laser: 405, group: 'BV' },
+    { name: 'BV785',          ex: 407, em: 785, laser: 405, group: 'BV' },
+    { name: 'Super Bright 436',  ex: 405, em: 436, laser: 405, group: 'SB' },
+    { name: 'Super Bright 600',  ex: 405, em: 600, laser: 405, group: 'SB' },
+    { name: 'Super Bright 645',  ex: 405, em: 645, laser: 405, group: 'SB' },
+    { name: 'Super Bright 702',  ex: 405, em: 702, laser: 405, group: 'SB' },
+    { name: 'Super Bright 780',  ex: 405, em: 780, laser: 405, group: 'SB' },
+    { name: 'LIVE/DEAD Aqua',    ex: 367, em: 526, laser: 405, group: 'Viability' },
+    { name: 'Zombie UV',         ex: 350, em: 420, laser: 355, group: 'Viability' },
+    { name: 'Zombie Violet',     ex: 405, em: 423, laser: 405, group: 'Viability' },
+    { name: 'Zombie Aqua',       ex: 405, em: 520, laser: 405, group: 'Viability' },
+
+    // Blue (488 nm)
+    { name: 'FITC',           ex: 495, em: 519, laser: 488, group: 'Classical' },
+    { name: 'Alexa Fluor 488',ex: 495, em: 519, laser: 488, group: 'AF' },
+    { name: 'GFP',            ex: 488, em: 507, laser: 488, group: 'FP' },
+    { name: 'CFSE',           ex: 492, em: 517, laser: 488, group: 'Dye' },
+    { name: 'PerCP',          ex: 488, em: 677, laser: 488, group: 'Classical' },
+    { name: 'PerCP-Cy5.5',    ex: 488, em: 695, laser: 488, group: 'Tandem' },
+    { name: 'PerCP-eFluor 710', ex: 488, em: 710, laser: 488, group: 'Tandem' },
+    { name: '7-AAD',          ex: 546, em: 647, laser: 488, group: 'Viability' },
+
+    // Yellow-Green (561 nm)
+    { name: 'PE',             ex: 565, em: 578, laser: 561, group: 'Classical' },
+    { name: 'PE-CF594',       ex: 565, em: 620, laser: 561, group: 'Tandem' },
+    { name: 'PE-Dazzle 594',  ex: 565, em: 610, laser: 561, group: 'Tandem' },
+    { name: 'PE-Texas Red',   ex: 565, em: 615, laser: 561, group: 'Tandem' },
+    { name: 'PI',             ex: 535, em: 617, laser: 561, group: 'Viability' },
+    { name: 'mCherry',        ex: 587, em: 610, laser: 561, group: 'FP' },
+    { name: 'PE-Cy5',         ex: 565, em: 667, laser: 561, group: 'Tandem' },
+    { name: 'PE-Cy5.5',       ex: 565, em: 695, laser: 561, group: 'Tandem' },
+    { name: 'PE-Cy7',         ex: 565, em: 774, laser: 561, group: 'Tandem' },
+    { name: 'PE-Fire 640',    ex: 565, em: 662, laser: 561, group: 'Tandem' },
+    { name: 'PE-Fire 700',    ex: 565, em: 704, laser: 561, group: 'Tandem' },
+    { name: 'PE-Fire 744',    ex: 565, em: 744, laser: 561, group: 'Tandem' },
+    { name: 'PE-Fire 780',    ex: 565, em: 780, laser: 561, group: 'Tandem' },
+    { name: 'PE-Fire 810',    ex: 565, em: 810, laser: 561, group: 'Tandem' },
+    { name: 'LIVE/DEAD Yellow', ex: 400, em: 575, laser: 405, group: 'Viability' },
+
+    // Red (633/640 nm)
+    { name: 'APC',            ex: 650, em: 660, laser: 633, group: 'Classical' },
+    { name: 'Alexa Fluor 647',ex: 650, em: 668, laser: 633, group: 'AF' },
+    { name: 'Alexa Fluor 700',ex: 696, em: 719, laser: 633, group: 'AF' },
+    { name: 'APC-R700',       ex: 650, em: 702, laser: 633, group: 'Tandem' },
+    { name: 'APC-Fire 750',   ex: 650, em: 782, laser: 633, group: 'Tandem' },
+    { name: 'APC-Fire 810',   ex: 650, em: 812, laser: 633, group: 'Tandem' },
+    { name: 'APC-H7',         ex: 650, em: 780, laser: 633, group: 'Tandem' },
+    { name: 'APC-Cy7',        ex: 650, em: 774, laser: 633, group: 'Tandem' },
+    { name: 'Alexa Fluor 750',ex: 749, em: 775, laser: 633, group: 'AF' },
+    { name: 'LIVE/DEAD Far Red', ex: 650, em: 665, laser: 633, group: 'Viability' },
+    { name: 'LIVE/DEAD Near-IR', ex: 750, em: 775, laser: 633, group: 'Viability' },
+];
+
+const LASERS = [
+    { wl: 355, name: 'UV 355',       color: '#8a2be2' },
+    { wl: 405, name: 'Violet 405',   color: '#5b2cb8' },
+    { wl: 488, name: 'Blue 488',     color: '#1f77c8' },
+    { wl: 561, name: 'YG 561',       color: '#b6c000' },
+    { wl: 633, name: 'Red 633',      color: '#c0272d' },
+];
+
+/* Map wavelength -> approximate RGB for visual swatches.
+   Based on the standard wavelength-to-RGB approximation (380–780 nm). */
+function wavelengthToRGB(wl) {
+    let r = 0, g = 0, b = 0;
+    if (wl >= 380 && wl < 440)      { r = -(wl - 440) / 60; g = 0;                  b = 1; }
+    else if (wl >= 440 && wl < 490) { r = 0;                 g = (wl - 440) / 50;   b = 1; }
+    else if (wl >= 490 && wl < 510) { r = 0;                 g = 1;                 b = -(wl - 510) / 20; }
+    else if (wl >= 510 && wl < 580) { r = (wl - 510) / 70;   g = 1;                 b = 0; }
+    else if (wl >= 580 && wl < 645) { r = 1;                 g = -(wl - 645) / 65;  b = 0; }
+    else if (wl >= 645 && wl <= 780){ r = 1;                 g = 0;                 b = 0; }
+    else if (wl > 780)              { r = 0.5;               g = 0;                 b = 0; }
+    else                            { r = 0.4;               g = 0;                 b = 0.5; }
+    // Dim the edges slightly
+    const factor = (wl < 420) ? 0.3 + 0.7 * (wl - 380) / 40
+                 : (wl > 700) ? 0.3 + 0.7 * (780 - wl) / 80
+                 : 1;
+    return 'rgb(' + Math.round(r*255*factor) + ',' + Math.round(g*255*factor) + ',' + Math.round(b*255*factor) + ')';
+}
+
+/* ========================================================================
+   State
+   ======================================================================== */
+const STATE = {
+    activeLasers: new Set([355, 405, 488, 561, 633]),
+    search: '',
+    plotted: new Set(),        // fluorophore names currently plotted
+    panel: [],                 // [{fluor, marker, clone, notes}]
+    savedPanels: [],           // [{name, created, updated, entries:[...]}]
+    currentPanelName: '',
+};
+
+const STORAGE_KEY = 'ayeh-flow-saved-panels';
+const TOKEN_KEY = 'ayeh-lab-gh-token';
+const GH_REPO = 'acyeh-lab/acyeh-lab.github.io';
+const GH_FILE = 'flow-panels-data.json';
+
+function getFluor(name) { return FLUOROPHORES.find(f => f.name === name); }
+
+/* ========================================================================
+   Gaussian spectra generation
+   We use asymmetric Gaussians: narrower on the blue side (tighter excitation
+   rise, tighter emission before peak) and broader on the red side for emission
+   tails. FWHM defaults chosen to roughly match typical antibody fluorophores.
+   ======================================================================== */
+function makeSpectrum(peak, kind) {
+    // kind: 'ex' or 'em'
+    const fwhmBlue = kind === 'em' ? 22 : 34;    // sharper on blue side
+    const fwhmRed  = kind === 'em' ? 52 : 38;    // broader red tail (esp. emission)
+    const sigmaB = fwhmBlue / 2.355;
+    const sigmaR = fwhmRed  / 2.355;
+    const pts = [];
+    for (let wl = 300; wl <= 900; wl += 2) {
+        const s = (wl < peak) ? sigmaB : sigmaR;
+        const y = Math.exp(-0.5 * Math.pow((wl - peak) / s, 2));
+        pts.push({ x: wl, y });
+    }
+    return pts;
+}
+
+/* ========================================================================
+   Rendering: laser chips
+   ======================================================================== */
+function renderLaserChips() {
+    const row = document.getElementById('laser-row');
+    row.innerHTML = '';
+    for (const L of LASERS) {
+        const chip = document.createElement('label');
+        chip.className = 'laser-chip' + (STATE.activeLasers.has(L.wl) ? ' active' : '');
+        chip.innerHTML =
+            '<input type="checkbox" ' + (STATE.activeLasers.has(L.wl) ? 'checked' : '') + '>' +
+            '<span class="laser-swatch" style="background:' + L.color + '"></span>' +
+            L.name;
+        chip.querySelector('input').addEventListener('change', (e) => {
+            if (e.target.checked) STATE.activeLasers.add(L.wl);
+            else STATE.activeLasers.delete(L.wl);
+            chip.classList.toggle('active', e.target.checked);
+            renderFluorGrid();
+        });
+        row.appendChild(chip);
+    }
+}
+
+/* ========================================================================
+   Rendering: fluorophore library grid
+   ======================================================================== */
+function matchesSearch(f, q) {
+    if (!q) return true;
+    q = q.toLowerCase();
+    return f.name.toLowerCase().includes(q)
+        || (f.group || '').toLowerCase().includes(q)
+        || String(f.em).includes(q)
+        || String(f.ex).includes(q);
+}
+
+function renderFluorGrid() {
+    const grid = document.getElementById('fluor-grid');
+    grid.innerHTML = '';
+    const panelNames = new Set(STATE.panel.map(p => p.fluor));
+
+    const visible = FLUOROPHORES
+        .filter(f => STATE.activeLasers.has(f.laser))
+        .filter(f => matchesSearch(f, STATE.search))
+        .sort((a, b) => a.laser - b.laser || a.em - b.em);
+
+    for (const f of visible) {
+        const card = document.createElement('div');
+        card.className = 'fluor-card'
+            + (STATE.plotted.has(f.name) ? ' selected' : '')
+            + (panelNames.has(f.name) ? ' in-panel' : '');
+        card.innerHTML =
+            '<span class="fluor-swatch" style="background:' + wavelengthToRGB(f.em) + '"></span>' +
+            '<div>' +
+                '<div class="fluor-name">' + f.name + '</div>' +
+                '<div class="fluor-meta">ex ' + f.ex + ' / em ' + f.em + ' • ' + f.laser + 'nm</div>' +
+            '</div>';
+        card.addEventListener('click', (e) => {
+            if (e.shiftKey) togglePlot(f.name);
+            else addToPanel(f.name);
+        });
+        card.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            togglePlot(f.name);
+        });
+        card.title = 'Click: add to panel. Shift-click or right-click: toggle on spectra plot.';
+        grid.appendChild(card);
+    }
+
+    document.getElementById('filter-meta').textContent = visible.length + ' of ' + FLUOROPHORES.length + ' shown';
+}
+
+/* ========================================================================
+   Rendering: spectra chart (Chart.js)
+   ======================================================================== */
+let spectraChart = null;
+
+function renderSpectra() {
+    const ctx = document.getElementById('spectra-canvas').getContext('2d');
+    const datasets = [];
+    for (const name of STATE.plotted) {
+        const f = getFluor(name);
+        if (!f) continue;
+        const color = wavelengthToRGB(f.em);
+        datasets.push({
+            label: name + ' (ex)',
+            data: makeSpectrum(f.ex, 'ex'),
+            borderColor: color,
+            backgroundColor: 'transparent',
+            borderWidth: 1.5,
+            borderDash: [5, 4],
+            pointRadius: 0,
+            tension: 0.1,
+        });
+        datasets.push({
+            label: name + ' (em)',
+            data: makeSpectrum(f.em, 'em'),
+            borderColor: color,
+            backgroundColor: color.replace('rgb(', 'rgba(').replace(')', ',0.15)'),
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: true,
+            tension: 0.2,
+        });
+    }
+
+    // Laser lines as annotations (emulated via datasets)
+    for (const L of LASERS) {
+        if (!STATE.activeLasers.has(L.wl)) continue;
+        datasets.push({
+            label: L.name,
+            data: [{ x: L.wl, y: 0 }, { x: L.wl, y: 1.05 }],
+            borderColor: L.color,
+            borderWidth: 1.2,
+            borderDash: [2, 3],
+            pointRadius: 0,
+            showLine: true,
+        });
+    }
+
+    const config = {
+        type: 'line',
+        data: { datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            parsing: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { boxWidth: 12, font: { size: 11 }, filter: (item) => !item.text.endsWith(' (ex)') },
+                },
+                tooltip: { enabled: false },
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                    min: 300, max: 900,
+                    title: { display: true, text: 'Wavelength (nm)' },
+                    ticks: { stepSize: 50 },
+                },
+                y: {
+                    min: 0, max: 1.05,
+                    title: { display: true, text: 'Normalized intensity' },
+                    ticks: { display: false },
+                },
+            },
+        },
+    };
+
+    if (spectraChart) { spectraChart.destroy(); }
+    spectraChart = new Chart(ctx, config);
+}
+
+function togglePlot(name) {
+    if (STATE.plotted.has(name)) STATE.plotted.delete(name);
+    else STATE.plotted.add(name);
+    renderFluorGrid();
+    renderSpectra();
+}
+
+/* ========================================================================
+   Panel builder
+   ======================================================================== */
+function addToPanel(name) {
+    if (STATE.panel.some(p => p.fluor === name)) {
+        toast(name + ' is already in the panel');
+        return;
+    }
+    STATE.panel.push({ fluor: name, marker: '', clone: '', notes: '' });
+    STATE.plotted.add(name);
+    renderPanel();
+    renderFluorGrid();
+    renderSpectra();
+}
+
+function removeFromPanel(name) {
+    STATE.panel = STATE.panel.filter(p => p.fluor !== name);
+    STATE.plotted.delete(name);
+    renderPanel();
+    renderFluorGrid();
+    renderSpectra();
+}
+
+function renderPanel() {
+    const tbody = document.getElementById('panel-tbody');
+    tbody.innerHTML = '';
+    if (STATE.panel.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty-row">Panel is empty — click fluorophores above to add them.</td></tr>';
+    } else {
+        // sort by laser, then emission
+        const sorted = [...STATE.panel].sort((a, b) => {
+            const fa = getFluor(a.fluor), fb = getFluor(b.fluor);
+            return (fa.laser - fb.laser) || (fa.em - fb.em);
+        });
+        for (const p of sorted) {
+            const f = getFluor(p.fluor);
+            const tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td><div class="panel-swatch-cell"><span class="fluor-swatch" style="background:' + wavelengthToRGB(f.em) + '"></span><strong>' + p.fluor + '</strong></div></td>' +
+                '<td>' + f.laser + ' nm</td>' +
+                '<td>' + f.ex + ' / ' + f.em + '</td>' +
+                '<td><input type="text" data-field="marker" placeholder="e.g. CD4" value="' + escapeAttr(p.marker) + '"></td>' +
+                '<td><input type="text" data-field="clone" placeholder="clone" value="' + escapeAttr(p.clone) + '"></td>' +
+                '<td><input type="text" data-field="notes" placeholder="notes" value="' + escapeAttr(p.notes) + '"></td>' +
+                '<td><button class="remove-btn" title="Remove">✕</button></td>';
+            tr.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('input', (e) => {
+                    const field = e.target.dataset.field;
+                    const entry = STATE.panel.find(x => x.fluor === p.fluor);
+                    if (entry) entry[field] = e.target.value;
+                });
+            });
+            tr.querySelector('.remove-btn').addEventListener('click', () => removeFromPanel(p.fluor));
+            tbody.appendChild(tr);
+        }
+    }
+    renderSpilloverWarnings();
+}
+
+function escapeAttr(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
+function renderSpilloverWarnings() {
+    const div = document.getElementById('spillover-warnings');
+    const pairs = [];
+    for (let i = 0; i < STATE.panel.length; i++) {
+        for (let j = i + 1; j < STATE.panel.length; j++) {
+            const a = getFluor(STATE.panel[i].fluor);
+            const b = getFluor(STATE.panel[j].fluor);
+            if (a.laser === b.laser && Math.abs(a.em - b.em) < 25) {
+                pairs.push({ a: a.name, b: b.name, laser: a.laser, delta: Math.abs(a.em - b.em) });
+            }
+        }
+    }
+    if (pairs.length === 0) {
+        div.innerHTML = '<p class="hint">No close-emission pairs on the same laser. ✓</p>';
+    } else {
+        div.innerHTML = '<ul>' + pairs.map(p =>
+            '<li><strong>' + p.a + '</strong> and <strong>' + p.b + '</strong> — ' +
+            'both on ' + p.laser + ' nm laser, emission peaks only ' + p.delta + ' nm apart.</li>'
+        ).join('') + '</ul>';
+    }
+}
+
+/* ========================================================================
+   Saved panels — localStorage
+   ======================================================================== */
+function loadSavedPanels() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) STATE.savedPanels = JSON.parse(raw);
+    } catch(e) { console.error('load saved panels:', e); }
+}
+function persistSavedPanels() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE.savedPanels));
+}
+
+function savePanel() {
+    const name = document.getElementById('panel-name').value.trim();
+    if (!name) { toast('Enter a panel name first'); return; }
+    if (STATE.panel.length === 0) { toast('Panel is empty'); return; }
+
+    const now = new Date().toISOString();
+    const existing = STATE.savedPanels.find(p => p.name === name);
+    const entries = STATE.panel.map(p => ({ ...p }));
+    if (existing) {
+        if (!confirm('Overwrite existing panel "' + name + '"?')) return;
+        existing.entries = entries;
+        existing.updated = now;
+    } else {
+        STATE.savedPanels.push({ name, created: now, updated: now, entries });
+    }
+    persistSavedPanels();
+    renderSavedPanels();
+    toast('Saved "' + name + '"');
+}
+
+function loadPanel(name) {
+    const p = STATE.savedPanels.find(x => x.name === name);
+    if (!p) return;
+    STATE.panel = p.entries.map(e => ({ ...e })).filter(e => getFluor(e.fluor));
+    STATE.plotted = new Set(STATE.panel.map(e => e.fluor));
+    STATE.currentPanelName = p.name;
+    document.getElementById('panel-name').value = p.name;
+    renderPanel();
+    renderFluorGrid();
+    renderSpectra();
+    window.scrollTo({ top: document.querySelector('#panel-tbody').offsetTop - 100, behavior: 'smooth' });
+    toast('Loaded "' + name + '"');
+}
+
+function deletePanel(name) {
+    if (!confirm('Delete panel "' + name + '"?')) return;
+    STATE.savedPanels = STATE.savedPanels.filter(p => p.name !== name);
+    persistSavedPanels();
+    renderSavedPanels();
+    toast('Deleted "' + name + '"');
+}
+
+function renderSavedPanels() {
+    const list = document.getElementById('saved-list');
+    list.innerHTML = '';
+    if (STATE.savedPanels.length === 0) {
+        list.innerHTML = '<div class="hint">No saved panels yet.</div>';
+        return;
+    }
+    const sorted = [...STATE.savedPanels].sort((a, b) => (b.updated || '').localeCompare(a.updated || ''));
+    for (const p of sorted) {
+        const row = document.createElement('div');
+        row.className = 'saved-item';
+        row.innerHTML =
+            '<div>' +
+                '<span class="saved-item-name">' + escapeAttr(p.name) + '</span>' +
+                '<span class="saved-item-meta">' + (p.entries.length) + ' fluors • updated ' + (p.updated ? p.updated.slice(0, 10) : '—') + '</span>' +
+            '</div>' +
+            '<div class="saved-item-actions">' +
+                '<button class="btn secondary" data-act="load">Load</button>' +
+                '<button class="btn danger" data-act="del">Delete</button>' +
+            '</div>';
+        row.querySelector('[data-act=load]').addEventListener('click', () => loadPanel(p.name));
+        row.querySelector('[data-act=del]').addEventListener('click', () => deletePanel(p.name));
+        list.appendChild(row);
+    }
+}
+
+/* ========================================================================
+   GitHub sync (mirrors the tasks.html pattern)
+   ======================================================================== */
+function getToken() { return localStorage.getItem(TOKEN_KEY); }
+
+function setupToken() {
+    const current = getToken();
+    const msg = current
+        ? 'GitHub token is set. Enter a new one to replace, or leave blank to keep current:'
+        : 'To enable sync, enter a GitHub Personal Access Token.\n\nCreate one at: github.com/settings/tokens\nScope needed: Contents read/write on acyeh-lab.github.io\n\nPaste token:';
+    const t = prompt(msg);
+    if (t === null) return;
+    if (t.trim()) { localStorage.setItem(TOKEN_KEY, t.trim()); toast('Token saved'); }
+}
+
+async function syncToGitHub() {
+    const token = getToken();
+    if (!token) { setupToken(); if (!getToken()) return; }
+
+    const btn = document.getElementById('sync-github-btn');
+    btn.textContent = 'Syncing...'; btn.disabled = true;
+    try {
+        const getResp = await fetch('https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE, {
+            headers: { 'Authorization': 'token ' + getToken(), 'Accept': 'application/vnd.github.v3+json' }
+        });
+        let sha = null;
+        if (getResp.ok) { sha = (await getResp.json()).sha; }
+        else if (getResp.status !== 404) { throw new Error('Could not read repo (check token permissions)'); }
+
+        const body = { panels: STATE.savedPanels, updated: new Date().toISOString() };
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(body, null, 2) + '\n')));
+        const payload = {
+            message: 'Update flow panels from web — ' + new Date().toISOString().slice(0, 10),
+            content,
+            committer: { name: 'web-sync', email: 'ayeh@fredhutch.org' },
+        };
+        if (sha) payload.sha = sha;
+
+        const putResp = await fetch('https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token ' + getToken(),
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+        if (!putResp.ok) {
+            const err = await putResp.json();
+            throw new Error(err.message || 'Push failed');
+        }
+        toast('Panels synced to GitHub');
+    } catch(e) {
+        toast('Sync failed: ' + e.message);
+        console.error(e);
+    } finally {
+        btn.textContent = 'Sync to GitHub'; btn.disabled = false;
+    }
+}
+
+async function loadFromServer() {
+    try {
+        const resp = await fetch('flow-panels-data.json?t=' + Date.now());
+        if (!resp.ok) return;
+        const body = await resp.json();
+        if (body.panels && Array.isArray(body.panels)) {
+            // merge: prefer remote for panels with same name if remote is newer, otherwise keep local
+            const local = new Map(STATE.savedPanels.map(p => [p.name, p]));
+            for (const remote of body.panels) {
+                const loc = local.get(remote.name);
+                if (!loc || (remote.updated || '') > (loc.updated || '')) {
+                    local.set(remote.name, remote);
+                }
+            }
+            STATE.savedPanels = [...local.values()];
+            persistSavedPanels();
+            renderSavedPanels();
+        }
+    } catch(e) { /* file may not exist yet */ }
+}
+
+/* ========================================================================
+   UI wiring
+   ======================================================================== */
+function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+function init() {
+    renderLaserChips();
+    loadSavedPanels();
+    renderFluorGrid();
+    renderPanel();
+    renderSpectra();
+    renderSavedPanels();
+    loadFromServer();
+
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        STATE.search = e.target.value;
+        renderFluorGrid();
+    });
+    document.getElementById('clear-plot-btn').addEventListener('click', () => {
+        STATE.plotted.clear(); renderFluorGrid(); renderSpectra();
+    });
+    document.getElementById('select-panel-btn').addEventListener('click', () => {
+        STATE.plotted = new Set(STATE.panel.map(p => p.fluor));
+        renderFluorGrid(); renderSpectra();
+    });
+    document.getElementById('save-panel-btn').addEventListener('click', savePanel);
+    document.getElementById('clear-panel-btn').addEventListener('click', () => {
+        if (STATE.panel.length === 0) return;
+        if (!confirm('Clear current panel?')) return;
+        STATE.panel = []; STATE.plotted.clear();
+        document.getElementById('panel-name').value = '';
+        renderPanel(); renderFluorGrid(); renderSpectra();
+    });
+    document.getElementById('export-json-btn').addEventListener('click', () => {
+        const name = document.getElementById('panel-name').value.trim() || 'flow-panel';
+        const blob = new Blob([JSON.stringify({ name, entries: STATE.panel }, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = name.replace(/[^a-z0-9_-]+/gi, '_') + '.json';
+        a.click(); URL.revokeObjectURL(url);
+    });
+    document.getElementById('sync-github-btn').addEventListener('click', syncToGitHub);
+    document.getElementById('setup-token-btn').addEventListener('click', setupToken);
+    document.getElementById('refresh-saved-btn').addEventListener('click', loadFromServer);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
