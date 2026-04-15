@@ -244,6 +244,14 @@
           "priority": "high",
           "created": "2026-04-12",
           "notes": []
+        },
+        {
+          "id": 85,
+          "description": "Geoff's R01 summary - human spatial data",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-15",
+          "notes": []
         }
       ]
     },
