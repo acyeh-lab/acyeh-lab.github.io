@@ -795,47 +795,16 @@
         }
       ]
     },
-    "George": {
+    "Job Talk Ideas": {
       "description": "",
       "tasks": [
         {
-          "id": 70,
-          "description": "Review https://www.chess.com/news/view/2026-fide-candidates-tournament-round-10",
+          "id": 86,
+          "description": "Studying the microbe-immune interface, building computational tools",
           "status": "open",
-          "priority": "medium",
-          "created": "2026-04-11",
+          "priority": "low",
+          "created": "2026-04-15",
           "notes": []
-        }
-      ]
-    },
-    "Margaret": {
-      "description": "",
-      "tasks": [
-        {
-          "id": 69,
-          "description": "birthday!",
-          "status": "open",
-          "priority": "medium",
-          "created": "2026-04-11",
-          "notes": []
-        },
-        {
-          "id": 72,
-          "description": "test",
-          "status": "done",
-          "priority": "medium",
-          "created": "2026-04-11",
-          "notes": [],
-          "completed": "2026-04-11"
-        },
-        {
-          "id": 73,
-          "description": "test",
-          "status": "done",
-          "priority": "medium",
-          "created": "2026-04-11",
-          "notes": [],
-          "completed": "2026-04-11"
         }
       ]
     }
