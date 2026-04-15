@@ -68,6 +68,7 @@
         .saved-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #f4f4f9; border-radius: 4px; border: 1px solid #e0e0e0; }
         .saved-item-name { font-weight: 600; }
         .saved-item-meta { font-size: 0.8rem; color: #777; margin-left: 10px; }
+        .saved-item-desc { font-size: 0.82rem; color: #555; margin-top: 4px; font-style: italic; max-width: 720px; }
         .saved-item-actions { display: flex; gap: 6px; }
         .saved-item-actions button { padding: 4px 10px; font-size: 0.8rem; }
 
@@ -163,6 +164,8 @@
                 <button class="btn secondary" id="clear-panel-btn">Clear panel</button>
                 <button class="btn secondary" id="export-json-btn">Export JSON</button>
             </div>
+
+            <textarea id="panel-description" placeholder="Panel description / comments — purpose, sample type, master mix recipe, anything you want to remember next time you open this panel…" style="width: 100%; min-height: 70px; margin-top: 10px; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 0.92rem; resize: vertical; box-sizing: border-box;"></textarea>
 
             <table class="panel-table" id="panel-table">
                 <thead>
@@ -758,13 +761,15 @@ function savePanel() {
     const existing = STATE.savedPanels.find(p => p.name === name);
     const entries = STATE.panel.map(p => ({ ...p }));
     const spilloverNotes = { ...STATE.spilloverNotes };
+    const description = document.getElementById('panel-description').value;
     if (existing) {
         if (!confirm('Overwrite existing panel "' + name + '"?')) return;
         existing.entries = entries;
         existing.spilloverNotes = spilloverNotes;
+        existing.description = description;
         existing.updated = now;
     } else {
-        STATE.savedPanels.push({ name, created: now, updated: now, entries, spilloverNotes });
+        STATE.savedPanels.push({ name, created: now, updated: now, entries, spilloverNotes, description });
     }
     persistSavedPanels();
     renderSavedPanels();
@@ -789,6 +794,7 @@ function loadPanel(name) {
     STATE.plotted = new Set(STATE.panel.map(e => e.fluor));
     STATE.currentPanelName = p.name;
     document.getElementById('panel-name').value = p.name;
+    document.getElementById('panel-description').value = p.description || '';
     renderPanel();
     renderFluorGrid();
     renderSpectra();
@@ -815,10 +821,15 @@ function renderSavedPanels() {
     for (const p of sorted) {
         const row = document.createElement('div');
         row.className = 'saved-item';
+        const descPreview = (p.description || '').trim();
+        const descLine = descPreview
+            ? '<div class="saved-item-desc">' + escapeAttr(descPreview.length > 140 ? descPreview.slice(0, 137) + '…' : descPreview) + '</div>'
+            : '';
         row.innerHTML =
             '<div>' +
                 '<span class="saved-item-name">' + escapeAttr(p.name) + '</span>' +
                 '<span class="saved-item-meta">' + (p.entries.length) + ' fluors • updated ' + (p.updated ? p.updated.slice(0, 10) : '—') + '</span>' +
+                descLine +
             '</div>' +
             '<div class="saved-item-actions">' +
                 '<button class="btn secondary" data-act="load">Load</button>' +
@@ -956,6 +967,7 @@ function init() {
         if (!confirm('Clear current panel?')) return;
         STATE.panel = []; STATE.plotted.clear(); STATE.spilloverNotes = {};
         document.getElementById('panel-name').value = '';
+        document.getElementById('panel-description').value = '';
         renderPanel(); renderFluorGrid(); renderSpectra();
     });
     document.getElementById('export-json-btn').addEventListener('click', () => {
