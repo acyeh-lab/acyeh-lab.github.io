@@ -93,6 +93,8 @@
         .data-badge { display: inline-block; font-size: 0.62rem; padding: 1px 5px; border-radius: 8px; vertical-align: middle; font-weight: 700; line-height: 1.3; }
         .data-real { background: #e2f4e6; color: #1f7a37; border: 1px solid #b9dec3; }
         .data-approx { background: #fdf3d8; color: #8a6d1c; border: 1px solid #ecd9a0; }
+        /* Multi-copy count badge for fluorophores added more than once (dump gates) */
+        .count-badge { display: inline-block; font-size: 0.65rem; padding: 1px 6px; border-radius: 8px; vertical-align: middle; font-weight: 700; background: #28a745; color: #fff; margin-left: 2px; }
 
         /* Spillover note rows */
         .spill-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px dashed #eee; }
@@ -153,7 +155,7 @@
         <!-- ===== Section 2: Panel builder ===== -->
         <div class="section">
             <h2>Panel Builder</h2>
-            <p class="hint">Click any fluorophore above to add it to the panel — click again to remove. Shift-click or right-click to toggle on the spectra plot only. Fill in the marker / clone / notes inline. Green outline in the library = currently in panel.</p>
+            <p class="hint">Click any fluorophore above to add it to the panel — <strong>each click adds a new row</strong>, so duplicates are allowed (useful for dump gates: 3× BV421 with markers CD3 / CD19 / CD56 → one dump axis). Remove individual rows with the ✕ button. Shift-click or right-click toggles on the spectra plot only. Green outline + ×N badge in the library = how many times this fluor is currently in the panel.</p>
 
             <div class="controls">
                 <input type="text" id="panel-name" placeholder="Panel name (e.g. Plasma cell GVHD v1)" style="min-width: 280px;">
@@ -323,13 +325,16 @@ const STATE = {
     activeLasers: new Set([355, 405, 488, 561, 633]),
     search: '',
     plotted: new Set(),        // fluorophore names currently plotted
-    panel: [],                 // [{fluor, marker, clone, notes}]
+    panel: [],                 // [{id, fluor, marker, clone, notes}] — duplicates allowed (e.g. dump gates)
     spilloverNotes: {},        // { "FluorA||FluorB": "user note text" }
     savedPanels: [],           // [{name, created, updated, entries, spilloverNotes}]
     currentPanelName: '',
     spectraData: {},           // { fluorName: { ex: [[wl,y],...], em: [[wl,y],...] } } from FPbase
     spectraMeta: null,         // {source, license, ...}
+    nextEntryId: 1,            // monotonic per-session entry ID counter
 };
+
+function newEntryId() { return STATE.nextEntryId++; }
 
 const STORAGE_KEY = 'ayeh-flow-saved-panels';
 const TOKEN_KEY = 'ayeh-lab-gh-token';
@@ -433,38 +438,39 @@ function renderFluorGrid() {
         .filter(f => matchesSearch(f, STATE.search))
         .sort((a, b) => a.laser - b.laser || a.em - b.em);
 
+    // Build a name -> count map once instead of recomputing per card
+    const panelCounts = {};
+    for (const p of STATE.panel) panelCounts[p.fluor] = (panelCounts[p.fluor] || 0) + 1;
+
     for (const f of visible) {
         const card = document.createElement('div');
-        const inPanel = panelNames.has(f.name);
+        const count = panelCounts[f.name] || 0;
         card.className = 'fluor-card'
             + (STATE.plotted.has(f.name) ? ' selected' : '')
-            + (inPanel ? ' in-panel' : '');
+            + (count > 0 ? ' in-panel' : '');
         const dataBadge = hasRealSpectra(f.name)
             ? '<span class="data-badge data-real" title="Real spectrum from FPbase">FP</span>'
             : '<span class="data-badge data-approx" title="Gaussian approximation (no FPbase entry)">≈</span>';
+        const countBadge = count > 1
+            ? '<span class="count-badge" title="' + count + ' rows in panel">×' + count + '</span>'
+            : '';
         card.innerHTML =
             '<span class="fluor-swatch" style="background:' + wavelengthToRGB(f.em) + '"></span>' +
             '<div style="flex:1; min-width:0;">' +
-                '<div class="fluor-name">' + f.name + ' ' + dataBadge + '</div>' +
+                '<div class="fluor-name">' + f.name + ' ' + dataBadge + countBadge + '</div>' +
                 '<div class="fluor-meta">ex ' + f.ex + ' / em ' + f.em + ' • ' + f.laser + 'nm</div>' +
             '</div>';
         card.addEventListener('click', (e) => {
-            if (e.shiftKey) {
-                togglePlot(f.name);
-                return;
-            }
-            // Toggle: remove if already in panel, otherwise add
-            if (STATE.panel.some(p => p.fluor === f.name)) {
-                removeFromPanel(f.name);
-            } else {
-                addToPanel(f.name);
-            }
+            if (e.shiftKey) { togglePlot(f.name); return; }
+            // Always add — duplicates supported (dump gates etc.). Remove via
+            // the ✕ button on each panel row.
+            addToPanel(f.name);
         });
         card.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             togglePlot(f.name);
         });
-        card.title = 'Click: add/remove from panel. Shift-click or right-click: toggle on spectra plot.';
+        card.title = 'Click: add to panel (each click = a new row, duplicates allowed). Shift-click or right-click: toggle on spectra plot only. Remove via ✕ on the row.';
         grid.appendChild(card);
     }
 
@@ -565,20 +571,33 @@ function togglePlot(name) {
    Panel builder
    ======================================================================== */
 function addToPanel(name) {
-    if (STATE.panel.some(p => p.fluor === name)) return;
-    STATE.panel.push({ fluor: name, marker: '', clone: '', notes: '' });
+    // Duplicates allowed — each click adds a new row. Useful for dump gates
+    // where multiple antibodies share one fluorophore (e.g., 3× BV421 for
+    // CD3 / CD19 / CD56 → one dump axis).
+    STATE.panel.push({ id: newEntryId(), fluor: name, marker: '', clone: '', notes: '' });
     STATE.plotted.add(name);
+    renderPanel();
+    renderFluorGrid();
+    renderSpectra();
+    const count = countInPanel(name);
+    if (count > 1) toast(name + ' added (now × ' + count + ')');
+}
+
+function removeFromPanel(id) {
+    const entry = STATE.panel.find(p => p.id === id);
+    if (!entry) return;
+    STATE.panel = STATE.panel.filter(p => p.id !== id);
+    // Only drop from the plot if no other copies of this fluor remain
+    if (!STATE.panel.some(p => p.fluor === entry.fluor)) {
+        STATE.plotted.delete(entry.fluor);
+    }
     renderPanel();
     renderFluorGrid();
     renderSpectra();
 }
 
-function removeFromPanel(name) {
-    STATE.panel = STATE.panel.filter(p => p.fluor !== name);
-    STATE.plotted.delete(name);
-    renderPanel();
-    renderFluorGrid();
-    renderSpectra();
+function countInPanel(name) {
+    return STATE.panel.reduce((n, p) => n + (p.fluor === name ? 1 : 0), 0);
 }
 
 function renderPanel() {
@@ -602,15 +621,15 @@ function renderPanel() {
                 '<td><input type="text" data-field="marker" placeholder="e.g. CD4" value="' + escapeAttr(p.marker) + '"></td>' +
                 '<td><input type="text" data-field="clone" placeholder="clone" value="' + escapeAttr(p.clone) + '"></td>' +
                 '<td><input type="text" data-field="notes" placeholder="notes" value="' + escapeAttr(p.notes) + '"></td>' +
-                '<td><button class="remove-btn" title="Remove">✕</button></td>';
+                '<td><button class="remove-btn" title="Remove this row">✕</button></td>';
             tr.querySelectorAll('input').forEach(inp => {
                 inp.addEventListener('input', (e) => {
                     const field = e.target.dataset.field;
-                    const entry = STATE.panel.find(x => x.fluor === p.fluor);
+                    const entry = STATE.panel.find(x => x.id === p.id);
                     if (entry) entry[field] = e.target.value;
                 });
             });
-            tr.querySelector('.remove-btn').addEventListener('click', () => removeFromPanel(p.fluor));
+            tr.querySelector('.remove-btn').addEventListener('click', () => removeFromPanel(p.id));
             tbody.appendChild(tr);
         }
     }
@@ -626,12 +645,21 @@ function pairKey(a, b) {
 
 function renderSpilloverWarnings() {
     const div = document.getElementById('spillover-warnings');
+    // Deduplicate by unique fluorophore pair so multi-copy rows (dump gates)
+    // don't generate redundant warnings or spam the same pair multiple times.
+    const seen = new Set();
     const pairs = [];
-    for (let i = 0; i < STATE.panel.length; i++) {
-        for (let j = i + 1; j < STATE.panel.length; j++) {
-            const a = getFluor(STATE.panel[i].fluor);
-            const b = getFluor(STATE.panel[j].fluor);
+    const uniqueFluors = [...new Set(STATE.panel.map(p => p.fluor))];
+    for (let i = 0; i < uniqueFluors.length; i++) {
+        for (let j = i + 1; j < uniqueFluors.length; j++) {
+            const a = getFluor(uniqueFluors[i]);
+            const b = getFluor(uniqueFluors[j]);
+            // Skip same-fluor pairs entirely (intentional in dump gates)
+            if (a.name === b.name) continue;
             if (a.laser === b.laser && Math.abs(a.em - b.em) < 25) {
+                const k = pairKey(a.name, b.name);
+                if (seen.has(k)) continue;
+                seen.add(k);
                 pairs.push({ a: a.name, b: b.name, laser: a.laser, delta: Math.abs(a.em - b.em) });
             }
         }
@@ -725,7 +753,12 @@ function savePanel() {
 function loadPanel(name) {
     const p = STATE.savedPanels.find(x => x.name === name);
     if (!p) return;
-    STATE.panel = p.entries.map(e => ({ ...e })).filter(e => getFluor(e.fluor));
+    // Always assign fresh entry IDs on load — persisted IDs are per-session
+    // and would collide across loads / panels. Keeping them stable inside a
+    // single load is what matters for input wiring.
+    STATE.panel = p.entries
+        .filter(e => getFluor(e.fluor))
+        .map(e => ({ ...e, id: newEntryId() }));
     STATE.spilloverNotes = { ...(p.spilloverNotes || {}) };
     STATE.plotted = new Set(STATE.panel.map(e => e.fluor));
     STATE.currentPanelName = p.name;
