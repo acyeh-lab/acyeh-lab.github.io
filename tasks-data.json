@@ -838,6 +838,19 @@
           "notes": []
         }
       ]
+    },
+    "B-cell CoNGA": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 90,
+          "description": "Ask Arunima to work on it as no FHCC data allowed for sharing.  She will have to e independent collaborator",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-16",
+          "notes": []
+        }
+      ]
     }
   },
   "completed_log": []
