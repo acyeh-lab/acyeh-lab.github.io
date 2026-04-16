@@ -86,10 +86,11 @@
         {
           "id": 76,
           "description": "help Yonghao Liu (Huanle's friend)",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-12",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-16"
         },
         {
           "id": 81,
@@ -99,6 +100,14 @@
           "created": "2026-04-14",
           "notes": [],
           "due": "2026-04-30"
+        },
+        {
+          "id": 92,
+          "description": "pick up histo from xenium slides",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-16",
+          "notes": []
         }
       ]
     },
