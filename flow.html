@@ -354,7 +354,19 @@ const FLUOROPHORES = [
     { name: 'Alexa Fluor 750',ex: 749, em: 775, laser: 633, group: 'AF' },
     { name: 'LIVE/DEAD Far Red', ex: 650, em: 665, laser: 633, group: 'Viability' },
     { name: 'LIVE/DEAD Near-IR', ex: 750, em: 775, laser: 633, group: 'Viability' },
+
+    // Non-fluorochrome linkers — added so reagents conjugated to these can go
+    // into a panel. laser=0 is a sentinel meaning "not excited by any laser";
+    // rendering code skips spectrum / laser / em for these.
+    { name: 'Biotin',         ex: 0,   em: 0,   laser: 0,   group: 'Secondary' },
 ];
+
+function isPlottable(fluor) {
+    // True if this fluorophore has real ex/em data worth plotting. False for
+    // Biotin and other non-fluor linkers (laser sentinel = 0).
+    const f = typeof fluor === 'string' ? getFluor(fluor) : fluor;
+    return !!(f && f.laser && f.laser > 0);
+}
 
 const LASERS = [
     { wl: 355, name: 'UV 355',       color: '#8a2be2' },
@@ -538,10 +550,12 @@ function renderReagentList() {
 
 function addReagentToPanel(r) {
     const f = getFluor(r.fluorochrome);
-    if (!f) { toast('No spectrum for ' + r.fluorochrome); return; }
+    if (!f) { toast('No entry for ' + r.fluorochrome); return; }
     const notesParts = [r.supplier, r.catalog].filter(Boolean);
     if (r.notes) notesParts.push(r.notes);
     if (r.bad) notesParts.push('⚠ ' + r.bad);
+    // Hint that biotin antibodies need a secondary
+    if (r.fluorochrome === 'Biotin') notesParts.push('needs streptavidin secondary');
     STATE.panel.push({
         id: newEntryId(),
         fluor: r.fluorochrome,
@@ -550,7 +564,7 @@ function addReagentToPanel(r) {
         volPer100uL: '',
         notes: notesParts.join(' · '),
     });
-    STATE.plotted.add(r.fluorochrome);
+    if (isPlottable(r.fluorochrome)) STATE.plotted.add(r.fluorochrome);
     renderPanel();
     renderFluorGrid();
     renderSpectra();
@@ -751,7 +765,7 @@ function addToPanel(name) {
     // where multiple antibodies share one fluorophore (e.g., 3× BV421 for
     // CD3 / CD19 / CD56 → one dump axis).
     STATE.panel.push({ id: newEntryId(), fluor: name, marker: '', clone: '', volPer100uL: '', notes: '' });
-    STATE.plotted.add(name);
+    if (isPlottable(name)) STATE.plotted.add(name);
     renderPanel();
     renderFluorGrid();
     renderSpectra();
@@ -782,18 +796,24 @@ function renderPanel() {
     if (STATE.panel.length === 0) {
         tbody.innerHTML = '<tr><td colspan="8" class="empty-row">Panel is empty — click fluorophores above to add them.</td></tr>';
     } else {
-        // sort by laser, then emission
+        // Sort: real fluorophores by laser then em, secondaries (laser=0) at the bottom
         const sorted = [...STATE.panel].sort((a, b) => {
             const fa = getFluor(a.fluor), fb = getFluor(b.fluor);
-            return (fa.laser - fb.laser) || (fa.em - fb.em);
+            // Treat laser=0 as Infinity so secondaries sort last
+            const la = fa.laser || Infinity, lb = fb.laser || Infinity;
+            return (la - lb) || (fa.em - fb.em);
         });
         for (const p of sorted) {
             const f = getFluor(p.fluor);
+            const plottable = isPlottable(f);
+            const swatchColor = plottable ? wavelengthToRGB(f.em) : '#888';
+            const laserCell = plottable ? (f.laser + ' nm') : '<span class="hint">secondary</span>';
+            const exemCell = plottable ? (f.ex + ' / ' + f.em) : '—';
             const tr = document.createElement('tr');
             tr.innerHTML =
-                '<td><div class="panel-swatch-cell"><span class="fluor-swatch" style="background:' + wavelengthToRGB(f.em) + '"></span><strong>' + p.fluor + '</strong></div></td>' +
-                '<td>' + f.laser + ' nm</td>' +
-                '<td>' + f.ex + ' / ' + f.em + '</td>' +
+                '<td><div class="panel-swatch-cell"><span class="fluor-swatch" style="background:' + swatchColor + '"></span><strong>' + p.fluor + '</strong></div></td>' +
+                '<td>' + laserCell + '</td>' +
+                '<td>' + exemCell + '</td>' +
                 '<td><input type="text" data-field="marker" placeholder="e.g. CD4" value="' + escapeAttr(p.marker) + '"></td>' +
                 '<td><input type="text" data-field="clone" placeholder="clone" value="' + escapeAttr(p.clone) + '"></td>' +
                 '<td><input type="number" data-field="volPer100uL" min="0" step="0.1" placeholder="uL" value="' + escapeAttr(p.volPer100uL) + '" style="text-align: right;"></td>' +
@@ -850,6 +870,8 @@ function renderSpilloverWarnings() {
             const b = getFluor(uniqueFluors[j]);
             // Skip same-fluor pairs entirely (intentional in dump gates)
             if (a.name === b.name) continue;
+            // Skip secondaries (no real laser / emission to compare)
+            if (!a.laser || !b.laser) continue;
             if (a.laser === b.laser && Math.abs(a.em - b.em) < 25) {
                 const k = pairKey(a.name, b.name);
                 if (seen.has(k)) continue;
