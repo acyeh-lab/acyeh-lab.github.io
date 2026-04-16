@@ -254,6 +254,7 @@ def is_bad(fluor, target, clone):
 
 def parse_file(xlsx_path, species):
     """Extract all reagent rows. species: 'mouse' / 'human' / 'tetramer' / 'isotype'."""
+    is_tetramer_file = (species == "tetramer")
     reagents = []
     with zipfile.ZipFile(xlsx_path) as z:
         strings = read_shared_strings(z)
@@ -264,7 +265,7 @@ def parse_file(xlsx_path, species):
                 continue
             # Tetramers file has "Mouse" and "Human" sheets — override species
             sp = species
-            if species == "tetramer":
+            if is_tetramer_file:
                 sp = "mouse tetramer" if "mouse" in sheet_name.lower() else "human tetramer"
 
             rows = read_sheet_rows(z, sheet_target, strings)
@@ -279,8 +280,10 @@ def parse_file(xlsx_path, species):
                 col4 = cells.get(4, "")
                 col5 = cells.get(5, "")
 
-                # Skip the column-header rows ("Antibody"/"Tetramer")
-                if col0 in ("Antibody", "Tetramer") and col1 in ("Clone", ""):
+                # Skip column-header rows — "Antibody" or "Tetramer" as the
+                # target is never a real reagent name. Tetramer sheets use
+                # col1="Order ID" instead of "Clone", so don't gate on col1.
+                if col0 in ("Antibody", "Tetramer"):
                     in_header_area = False
                     continue
 
@@ -299,8 +302,14 @@ def parse_file(xlsx_path, species):
                     in_header_area = True
                     continue
 
-                # Skip pure commentary rows (no clone AND no cat#)
-                if not col1 and not col3:
+                # Commentary / blank filter:
+                # - Tetramer sheets: many rows have only col0 (target name) populated,
+                #   so we accept as data anything with a col0 that isn't a header.
+                # - Antibody sheets: require col1 (clone) or col3 (cat#) so we don't
+                #   pull in legend rows like "yellow fill = we have backup".
+                if not col0:
+                    continue
+                if not is_tetramer_file and not col1 and not col3:
                     continue
 
                 # Skip titular rows like "MOUSE ANTIBODIES" banners (caps, long)
@@ -328,15 +337,41 @@ def parse_file(xlsx_path, species):
                     # design without knowing the conjugate.
                     continue
 
+                # Target-based species override for tetramers: anything with
+                # MHC-I (H-2*, H2-*) or MHC-II (I-A(b), I-A(d), I-E*) restriction
+                # is a mouse tetramer regardless of which sheet it landed on.
+                effective_sp = sp
+                if is_tetramer_file:
+                    t_upper = target.upper()
+                    if (t_upper.startswith("I-A(") or t_upper.startswith("I-AB")
+                            or t_upper.startswith("I-E") or t_upper.startswith("H-2")
+                            or t_upper.startswith("H2-")):
+                        effective_sp = "mouse tetramer"
+
+                # Tetramer sheets put the NIH order ID in col1 and supplier in col2.
+                # For tetramers, treat col1 as catalog/order-id, col2 as supplier.
+                if is_tetramer_file:
+                    clone_val = ""
+                    isotype_val = ""
+                    catalog_val = col1 or col3
+                    supplier_val = col2 or col4 or "NIH"
+                    notes_val = col5
+                else:
+                    clone_val = col1
+                    isotype_val = col2
+                    catalog_val = col3
+                    supplier_val = col4
+                    notes_val = col5
+
                 reagent = {
-                    "species":     sp,
+                    "species":     effective_sp,
                     "fluorochrome": fluor,
                     "target":       clean_target(target),
-                    "clone":        col1,
-                    "isotype":      col2,
-                    "catalog":      col3,
-                    "supplier":     col4,
-                    "notes":        col5,
+                    "clone":        clone_val,
+                    "isotype":      isotype_val,
+                    "catalog":      catalog_val,
+                    "supplier":     supplier_val,
+                    "notes":        notes_val,
                 }
                 bad = is_bad(fluor, target, col1)
                 if bad:
