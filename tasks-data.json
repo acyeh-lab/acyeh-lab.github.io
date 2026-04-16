@@ -801,6 +801,14 @@
           "priority": "low",
           "created": "2026-04-15",
           "notes": []
+        },
+        {
+          "id": 91,
+          "description": "Talk not just about my work in Immunity (Transplant); show Nature paper (epitope spreading), recent Sci Immunol paper",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-16",
+          "notes": []
         }
       ]
     },
@@ -846,7 +854,7 @@
           "id": 90,
           "description": "Ask Arunima to work on it as no FHCC data allowed for sharing.  She will have to e independent collaborator",
           "status": "open",
-          "priority": "low",
+          "priority": "high",
           "created": "2026-04-16",
           "notes": []
         }
