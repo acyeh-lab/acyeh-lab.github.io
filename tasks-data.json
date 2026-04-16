@@ -744,11 +744,12 @@
         {
           "id": 30,
           "description": "Talk with Arunima about project - schedule next mtg",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-01",
           "notes": [],
-          "due": "2026-04-17"
+          "due": "2026-04-17",
+          "completed": "2026-04-16"
         },
         {
           "id": 44,
@@ -758,6 +759,22 @@
           "created": "2026-04-03",
           "notes": [],
           "completed": "2026-04-13"
+        },
+        {
+          "id": 88,
+          "description": "Need to find someone who can work on it.  Stephanie has Gandelman 2019 dataaset we can try to recreate ",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-16",
+          "notes": []
+        },
+        {
+          "id": 89,
+          "description": "Will use FlowSOM / MEM packages in R.",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-16",
+          "notes": []
         }
       ]
     },
