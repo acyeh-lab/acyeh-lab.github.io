@@ -97,6 +97,34 @@
         /* Multi-copy count badge for fluorophores added more than once (dump gates) */
         .count-badge { display: inline-block; font-size: 0.65rem; padding: 1px 6px; border-radius: 8px; vertical-align: middle; font-weight: 700; background: #28a745; color: #fff; margin-left: 2px; }
 
+        /* Lab reagent library */
+        .reagent-controls { gap: 12px; align-items: center; flex-wrap: wrap; }
+        .species-tabs { display: inline-flex; gap: 0; border: 1px solid #ccc; border-radius: 4px; overflow: hidden; }
+        .species-tab { padding: 6px 12px; font-size: 0.85rem; background: #fafafa; border: none; border-right: 1px solid #ccc; cursor: pointer; font-family: inherit; color: #333; }
+        .species-tab:last-child { border-right: none; }
+        .species-tab:hover { background: #e8f0fe; }
+        .species-tab.active { background: #0056b3; color: #fff; font-weight: 600; }
+        #reagent-fluor-filter { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 0.9rem; min-width: 180px; }
+        #reagent-search { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+
+        .reagent-list { max-height: 420px; overflow-y: auto; margin-top: 10px; border: 1px solid #eee; border-radius: 4px; background: #fafafa; }
+        .reagent-row { display: grid; grid-template-columns: 110px 2fr 1.2fr 1.5fr; align-items: center; gap: 12px; padding: 6px 12px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 0.88rem; transition: background 0.08s; }
+        .reagent-row:last-child { border-bottom: none; }
+        .reagent-row:hover { background: #e8f0fe; }
+        .reagent-row.disabled { cursor: not-allowed; opacity: 0.55; }
+        .reagent-row.disabled:hover { background: #fafafa; }
+        .reagent-fluor-chip { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 0.72rem; font-weight: 700; color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,0.3); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .reagent-target { color: #222; }
+        .reagent-clone { color: #555; font-size: 0.83rem; }
+        .reagent-supplier { color: #666; font-size: 0.82rem; }
+        .reagent-bad { display: inline-block; font-size: 0.62rem; padding: 1px 5px; border-radius: 6px; font-weight: 700; background: #c0272d; color: #fff; margin-left: 6px; vertical-align: middle; }
+        .reagent-notes-inline { font-size: 0.75rem; color: #888; font-style: italic; margin-left: 8px; }
+
+        @media (max-width: 900px) {
+            .reagent-row { grid-template-columns: 100px 1fr; gap: 6px; }
+            .reagent-row .reagent-clone, .reagent-row .reagent-supplier { grid-column: 2; }
+        }
+
         /* Spillover note rows */
         .spill-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px dashed #eee; }
         .spill-row:last-child { border-bottom: none; }
@@ -153,7 +181,29 @@
             <div class="fluor-grid" id="fluor-grid"><!-- cards --></div>
         </div>
 
-        <!-- ===== Section 2: Panel builder ===== -->
+        <!-- ===== Section 2: Lab reagent library ===== -->
+        <div class="section">
+            <h2>Lab Reagents <span class="hint" id="reagent-count" style="font-weight: normal;"></span></h2>
+            <p class="hint">Hill lab antibody / tetramer inventory, parsed from <code>reference_data/hill_reagents/*.xlsx</code>. Click a row to add it to the panel (pre-fills marker, clone, and supplier/cat# into notes). Red BAD flag = known-bad reagent (edit <code>KNOWN_BAD</code> in <code>build_reagents.py</code> to add). Greyed rows have a fluorochrome not in the spectra library — inventory-browseable but not one-click addable.</p>
+
+            <div class="controls reagent-controls">
+                <div class="species-tabs" id="species-tabs">
+                    <button class="species-tab active" data-species="mouse">Mouse</button>
+                    <button class="species-tab" data-species="human">Human</button>
+                    <button class="species-tab" data-species="mouse tetramer">Mouse tetr.</button>
+                    <button class="species-tab" data-species="human tetramer">Human tetr.</button>
+                    <button class="species-tab" data-species="isotype">Isotype</button>
+                </div>
+                <select id="reagent-fluor-filter">
+                    <option value="all">All fluorochromes</option>
+                </select>
+                <input type="text" id="reagent-search" placeholder="Search target / clone / supplier / cat#..." style="flex: 1; min-width: 240px;">
+            </div>
+
+            <div class="reagent-list" id="reagent-list"></div>
+        </div>
+
+        <!-- ===== Section 3: Panel builder ===== -->
         <div class="section">
             <h2>Panel Builder</h2>
             <p class="hint">Click any fluorophore above to add it to the panel — <strong>each click adds a new row</strong>, so duplicates are allowed (useful for dump gates: 3× BV421 with markers CD3 / CD19 / CD56 → one dump axis). Remove individual rows with the ✕ button. Shift-click or right-click toggles on the spectra plot only. Green outline + ×N badge in the library = how many times this fluor is currently in the panel.</p>
@@ -347,6 +397,8 @@ const STATE = {
     spectraData: {},           // { fluorName: { ex: [[wl,y],...], em: [[wl,y],...] } } from FPbase
     spectraMeta: null,         // {source, license, ...}
     nextEntryId: 1,            // monotonic per-session entry ID counter
+    reagents: [],              // flattened lab reagent rows from lab-reagents-data.json
+    reagentFilters: { species: 'mouse', fluor: 'all', search: '' },
 };
 
 function newEntryId() { return STATE.nextEntryId++; }
@@ -394,6 +446,115 @@ function spectrumFor(fluor, kind) {
 
 function hasRealSpectra(name) {
     return !!(STATE.spectraData[name] && (STATE.spectraData[name].ex || STATE.spectraData[name].em));
+}
+
+async function loadReagents() {
+    try {
+        const resp = await fetch('lab-reagents-data.json?t=' + Date.now());
+        if (!resp.ok) return;
+        const body = await resp.json();
+        STATE.reagents = body.reagents || [];
+        // Populate fluorochrome filter dropdown with unique values sorted
+        const fluors = [...new Set(STATE.reagents.map(r => r.fluorochrome))].sort(
+            (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
+        );
+        const sel = document.getElementById('reagent-fluor-filter');
+        for (const fluor of fluors) {
+            const opt = document.createElement('option');
+            opt.value = fluor;
+            opt.textContent = fluor;
+            sel.appendChild(opt);
+        }
+        renderReagentList();
+    } catch(e) { console.warn('No reagent data available.', e); }
+}
+
+function renderReagentList() {
+    const list = document.getElementById('reagent-list');
+    if (!list) return;
+    const { species, fluor, search } = STATE.reagentFilters;
+    const q = (search || '').toLowerCase().trim();
+
+    const matches = STATE.reagents.filter(r => {
+        if (species && r.species !== species) return false;
+        if (fluor !== 'all' && r.fluorochrome !== fluor) return false;
+        if (q) {
+            const hay = (
+                (r.target || '') + ' ' +
+                (r.clone || '') + ' ' +
+                (r.supplier || '') + ' ' +
+                (r.catalog || '') + ' ' +
+                (r.fluorochrome || '') + ' ' +
+                (r.notes || '')
+            ).toLowerCase();
+            if (!hay.includes(q)) return false;
+        }
+        return true;
+    });
+
+    // Cap for render perf; user can narrow with filters
+    const CAP = 500;
+    const visible = matches.slice(0, CAP);
+
+    const meta = document.getElementById('reagent-count');
+    if (meta) {
+        meta.textContent = '— ' + matches.length + ' of ' + STATE.reagents.length
+            + (matches.length > CAP ? ' (showing first ' + CAP + ')' : '');
+    }
+
+    if (visible.length === 0) {
+        list.innerHTML = '<div class="hint" style="padding:14px; text-align:center;">No reagents match these filters.</div>';
+        return;
+    }
+
+    const html = visible.map((r, i) => {
+        const f = getFluor(r.fluorochrome);
+        const mapped = !!f;
+        const chipColor = mapped ? wavelengthToRGB(f.em) : '#999';
+        const badTag = r.bad ? '<span class="reagent-bad" title="' + escapeAttr(r.bad) + '">BAD</span>' : '';
+        const notesTag = r.notes ? '<span class="reagent-notes-inline" title="' + escapeAttr(r.notes) + '">· ' + escapeAttr(r.notes.length > 40 ? r.notes.slice(0,37)+'…' : r.notes) + '</span>' : '';
+        const cls = 'reagent-row' + (mapped ? '' : ' disabled');
+        return (
+            '<div class="' + cls + '" data-idx="' + i + '">' +
+                '<span class="reagent-fluor-chip" style="background:' + chipColor + '">' + escapeAttr(r.fluorochrome) + '</span>' +
+                '<span class="reagent-target"><strong>' + escapeAttr(r.target) + '</strong>' + badTag + notesTag + '</span>' +
+                '<span class="reagent-clone">' + escapeAttr(r.clone || '—') + '</span>' +
+                '<span class="reagent-supplier">' + escapeAttr((r.supplier || '') + (r.catalog ? ' · ' + r.catalog : '')) + '</span>' +
+            '</div>'
+        );
+    }).join('');
+
+    list.innerHTML = html;
+
+    // Wire click handlers to add to panel
+    list.querySelectorAll('.reagent-row:not(.disabled)').forEach(el => {
+        el.addEventListener('click', () => {
+            const idx = parseInt(el.dataset.idx, 10);
+            const r = visible[idx];
+            addReagentToPanel(r);
+        });
+    });
+}
+
+function addReagentToPanel(r) {
+    const f = getFluor(r.fluorochrome);
+    if (!f) { toast('No spectrum for ' + r.fluorochrome); return; }
+    const notesParts = [r.supplier, r.catalog].filter(Boolean);
+    if (r.notes) notesParts.push(r.notes);
+    if (r.bad) notesParts.push('⚠ ' + r.bad);
+    STATE.panel.push({
+        id: newEntryId(),
+        fluor: r.fluorochrome,
+        marker: r.target || '',
+        clone: r.clone || '',
+        volPer100uL: '',
+        notes: notesParts.join(' · '),
+    });
+    STATE.plotted.add(r.fluorochrome);
+    renderPanel();
+    renderFluorGrid();
+    renderSpectra();
+    toast('Added: ' + r.fluorochrome + ' anti-' + (r.target || ''));
 }
 
 async function loadSpectraData() {
@@ -953,6 +1114,30 @@ function init() {
     renderSavedPanels();
     loadFromServer();
     loadSpectraData();
+    loadReagents();
+
+    // Wire reagent controls
+    const tabs = document.getElementById('species-tabs');
+    if (tabs) {
+        tabs.querySelectorAll('.species-tab').forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabs.querySelectorAll('.species-tab').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                STATE.reagentFilters.species = btn.dataset.species;
+                renderReagentList();
+            });
+        });
+    }
+    const fluorSel = document.getElementById('reagent-fluor-filter');
+    if (fluorSel) fluorSel.addEventListener('change', (e) => {
+        STATE.reagentFilters.fluor = e.target.value;
+        renderReagentList();
+    });
+    const reagentSearch = document.getElementById('reagent-search');
+    if (reagentSearch) reagentSearch.addEventListener('input', (e) => {
+        STATE.reagentFilters.search = e.target.value;
+        renderReagentList();
+    });
 
     document.getElementById('search-input').addEventListener('input', (e) => {
         STATE.search = e.target.value;
