@@ -132,7 +132,7 @@
     {
       "name": "MCMV Tetramer Panel 1 (m09, m45, m38)",
       "created": "2026-04-17T06:36:33.330Z",
-      "updated": "2026-04-17T19:59:54.166Z",
+      "updated": "2026-04-17T20:00:56.655Z",
       "entries": [
         {
           "id": 1,
@@ -157,11 +157,35 @@
           "clone": "",
           "volPer100uL": "",
           "notes": "1:800 dilution, 37C x 30 minutes"
+        },
+        {
+          "id": 4,
+          "fluor": "mVenus",
+          "marker": "",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "Recipient XCR1 KO"
+        },
+        {
+          "id": 5,
+          "fluor": "mCherry",
+          "marker": "",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "Donor"
+        },
+        {
+          "id": 6,
+          "fluor": "7-AAD",
+          "marker": "",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "Viability"
         }
       ],
       "spilloverNotes": {},
       "description": "Panel used for experiment 2438T / 1481.  Note that m38 and m45 are class I tetramers while m09 is a class II tetramer."
     }
   ],
-  "updated": "2026-04-17T19:59:56.432Z"
+  "updated": "2026-04-17T20:00:58.966Z"
 }
