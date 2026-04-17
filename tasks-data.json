@@ -458,7 +458,7 @@
         },
         {
           "id": 33,
-          "description": "Work on VDJ matching, f/u Francesco on 4/3/26, then send report to Evan",
+          "description": "Work on VDJ matching of melanoma dataset provided Francesco/Alessandro, then send report to Evan",
           "status": "open",
           "priority": "medium",
           "created": "2026-04-02",
