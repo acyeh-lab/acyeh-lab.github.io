@@ -269,7 +269,12 @@
           "status": "open",
           "priority": "high",
           "created": "2026-04-17",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-04-17",
+              "text": "PAR-26-032"
+            }
+          ]
         }
       ]
     },
@@ -402,6 +407,27 @@
           "created": "2026-04-14",
           "notes": [],
           "completed": "2026-04-15"
+        }
+      ]
+    },
+    "Microbe Immunopeptidomics": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 94,
+          "description": "Test CD40L stimulation for gut CD4 LP cells",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-17",
+          "notes": []
+        },
+        {
+          "id": 95,
+          "description": "TBW Misha / Sameer re: TIRTLEsq (clonotype plate for CD40L, large-scale plate for CD40L neg)",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-17",
+          "notes": []
         }
       ]
     },
