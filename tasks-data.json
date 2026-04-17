@@ -262,6 +262,14 @@
           "priority": "high",
           "created": "2026-04-15",
           "notes": []
+        },
+        {
+          "id": 93,
+          "description": "R35 – requires limited piloted information.",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-17",
+          "notes": []
         }
       ]
     },
