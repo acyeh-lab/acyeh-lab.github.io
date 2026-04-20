@@ -104,10 +104,11 @@
         {
           "id": 92,
           "description": "pick up histo from xenium slides",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-04-16",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-20"
         },
         {
           "id": 96,
@@ -351,11 +352,12 @@
         {
           "id": 32,
           "description": "Follow-up with Paul re: RNA ish stain on Tuesday!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-02",
           "notes": [],
-          "due": "2026-04-14"
+          "due": "2026-04-14",
+          "completed": "2026-04-20"
         },
         {
           "id": 52,
@@ -491,11 +493,16 @@
         },
         {
           "id": 80,
-          "description": "email joshua about clinical parameters we want",
+          "description": "F/u joshua about clinical parameters we want",
           "status": "open",
           "priority": "high",
           "created": "2026-04-14",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-04-20",
+              "text": "Sent list of items to ask for from NW Biotrust: Age of patient at collection; Patient gende;r Patient ethnicity / race; Sample collection date; Anatomic site of sample collected Pathology report of sample collected; Surgical / procedure note for collection; Most recent oncology note prior to surgery; Staging (TNM); Pre-biopsy chemotherapy / immunotherapy exposure (including all prior lines of therapy and date ranges of therapy; including exposure to immunotherapies such as ipilimumab, nivolumab, pembrolizumab, atezolizumab) Past medical history (including history of autoimmune disease, prior malignancies)"
+            }
+          ]
         },
         {
           "id": 82,
@@ -569,7 +576,7 @@
         },
         {
           "id": 84,
-          "description": "submit sample to histo!",
+          "description": "F/u d14 histo!",
           "status": "open",
           "priority": "high",
           "created": "2026-04-14",
@@ -616,10 +623,11 @@
         {
           "id": 36,
           "description": "add gel on d7",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-02",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-20"
         },
         {
           "id": 39,
@@ -679,6 +687,15 @@
           "created": "2026-04-06",
           "notes": [],
           "completed": "2026-04-11"
+        },
+        {
+          "id": 97,
+          "description": "Aim for d35 takedown",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-20",
+          "notes": [],
+          "due": "2026-04-30"
         }
       ]
     },
