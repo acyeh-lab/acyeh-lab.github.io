@@ -729,6 +729,14 @@
           "created": "2026-04-20",
           "notes": [],
           "due": "2026-04-30"
+        },
+        {
+          "id": 102,
+          "description": "Add CD27 as an exclusion marker! (murine) based on human flow",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-21",
+          "notes": []
         }
       ]
     },
