@@ -732,11 +732,12 @@
         },
         {
           "id": 102,
-          "description": "Add CD27 as an exclusion marker! (murine) based on human flow",
+          "description": "Add CD27 as an exclusion marker! (murine) and Gzmb (pos) marker based on human flow to rule out other subsets",
           "status": "open",
-          "priority": "low",
+          "priority": "high",
           "created": "2026-04-21",
-          "notes": []
+          "notes": [],
+          "due": "2026-04-24"
         }
       ]
     },
@@ -786,11 +787,12 @@
         {
           "id": 68,
           "description": "SUBMIT MONDAY: Follow-up plasmidsaurus submission on 4/10 for maxi preps (ORDER ID YRMWXP)",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-11",
           "notes": [],
-          "due": "2026-04-13"
+          "due": "2026-04-13",
+          "completed": "2026-04-21"
         }
       ]
     },
