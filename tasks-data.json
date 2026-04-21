@@ -736,7 +736,12 @@
           "status": "open",
           "priority": "high",
           "created": "2026-04-21",
-          "notes": [],
+          "notes": [
+            {
+              "date": "2026-04-21",
+              "text": "Use control BV421 I-Ab tetramer"
+            }
+          ],
           "due": "2026-04-24"
         }
       ]
