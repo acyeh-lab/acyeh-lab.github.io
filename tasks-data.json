@@ -121,10 +121,11 @@
         {
           "id": 98,
           "description": "thank you cards",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-04-20",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-21"
         },
         {
           "id": 99,
@@ -300,6 +301,14 @@
               "text": "PAR-26-032"
             }
           ]
+        },
+        {
+          "id": 100,
+          "description": "UWM Compliance - 2026 Mandatory Compliance Training - Time is running out!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-21",
+          "notes": []
         }
       ]
     },
