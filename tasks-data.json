@@ -729,20 +729,6 @@
           "created": "2026-04-20",
           "notes": [],
           "due": "2026-04-30"
-        },
-        {
-          "id": 102,
-          "description": "Add CD27 as an exclusion marker! (murine) and Gzmb (pos) marker based on human flow to rule out other subsets",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-04-21",
-          "notes": [
-            {
-              "date": "2026-04-21",
-              "text": "Use control BV421 I-Ab tetramer"
-            }
-          ],
-          "due": "2026-04-24"
         }
       ]
     },
@@ -792,12 +778,11 @@
         {
           "id": 68,
           "description": "SUBMIT MONDAY: Follow-up plasmidsaurus submission on 4/10 for maxi preps (ORDER ID YRMWXP)",
-          "status": "done",
+          "status": "open",
           "priority": "high",
           "created": "2026-04-11",
           "notes": [],
-          "due": "2026-04-13",
-          "completed": "2026-04-21"
+          "due": "2026-04-13"
         }
       ]
     },
@@ -925,6 +910,15 @@
           "priority": "low",
           "created": "2026-04-16",
           "notes": []
+        },
+        {
+          "id": 102,
+          "description": "Prepare",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-21",
+          "notes": [],
+          "due": "2026-05-14"
         }
       ]
     },
