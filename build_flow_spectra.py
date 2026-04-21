@@ -93,6 +93,7 @@ MAPPING = {
     "LIVE/DEAD Yellow":   ("dye",     "LIVE/DEAD Fixable Yellow"),
 
     # Red (633/640)
+    "eFluor 660":         ("dye",     "eFluor 660"),
     "APC":                ("dye",     "APC (allophycocyanin)"),
     "Alexa Fluor 647":    ("dye",     "Alexa Fluor 647"),
     "Alexa Fluor 700":    ("dye",     "Alexa Fluor 700"),

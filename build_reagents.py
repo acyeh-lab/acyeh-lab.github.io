@@ -44,6 +44,8 @@ SECTION_PATTERNS = [
     (r"APC[\s/-]?H7",                "APC-H7"),
     (r"APC[\s-]?R700",               "APC-R700"),
     (r"eFluor\s*660",                "eFluor 660"),
+    (r"\bBB660\b",                   "eFluor 660"),         # BB660 ≈ eFluor 660 channel
+    (r"\bR718\b",                    "Alexa Fluor 700"),    # R718 ≈ AF700 channel
     (r"Alexa\s*Fluor\s*647",         "Alexa Fluor 647"),
     (r"Alexa\s*Fluor\s*700",         "Alexa Fluor 700"),
     (r"Alexa\s*Fluor\s*750",         "Alexa Fluor 750"),
@@ -288,15 +290,21 @@ def parse_file(xlsx_path, species):
                     continue
 
                 # Is this a section banner?
-                # Heuristic: col0 has a fluorochrome-matching text AND other
-                # columns (clone/cat#) are empty. Lets a row like "PE CD45"
-                # that IS data still be treated as data.
-                looks_like_banner = (
-                    not col1 and not col3 and col0
-                    and len(col0) < 60
-                    and re.search(r"(conjugat|UV conjugates|Streptavidin|Annexin|Biotin|tetramer)", col0, re.I)
-                )
-                sec = match_section(col0) if looks_like_banner else None
+                # Banners appear in EITHER col0 or col1 — the first few sections
+                # use col0 ("PE conjugated antibodies") but most sub-sections
+                # (PE-Cy5, BV421, APC-Cy7, etc.) put the banner in col1.
+                # Heuristic: the banner cell has keywords AND the row doesn't
+                # look like a data row (i.e., no clone + cat# filled).
+                sec = None
+                for banner_text in (col0, col1):
+                    if not banner_text or len(banner_text) > 80:
+                        continue
+                    if not re.search(r"(conjugat|UV conjugate|Streptavidin|Annexin|Biotin|tetramer)", banner_text, re.I):
+                        continue
+                    candidate = match_section(banner_text)
+                    if candidate:
+                        sec = candidate
+                        break
                 if sec:
                     current_fluor = sec
                     in_header_area = True
