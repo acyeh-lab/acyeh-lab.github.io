@@ -116,16 +116,16 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-17",
-          "notes": []
+          "notes": [],
+          "due": "2026-05-04"
         },
         {
           "id": 98,
           "description": "thank you cards",
-          "status": "done",
+          "status": "open",
           "priority": "low",
           "created": "2026-04-20",
-          "notes": [],
-          "completed": "2026-04-21"
+          "notes": []
         },
         {
           "id": 99,
@@ -136,11 +136,11 @@
           "notes": []
         },
         {
-          "id": 101,
-          "description": "help jeanette",
+          "id": 100,
+          "description": "Respond to Sara Kraft about talk title!",
           "status": "open",
-          "priority": "low",
-          "created": "2026-04-21",
+          "priority": "high",
+          "created": "2026-04-22",
           "notes": []
         }
       ]
@@ -309,14 +309,6 @@
               "text": "PAR-26-032"
             }
           ]
-        },
-        {
-          "id": 100,
-          "description": "UWM Compliance - 2026 Mandatory Compliance Training - Time is running out!",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-04-21",
-          "notes": []
         }
       ]
     },
@@ -910,15 +902,6 @@
           "priority": "low",
           "created": "2026-04-16",
           "notes": []
-        },
-        {
-          "id": 102,
-          "description": "Prepare",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-04-21",
-          "notes": [],
-          "due": "2026-05-14"
         }
       ]
     },
