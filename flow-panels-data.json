@@ -187,47 +187,6 @@
       "description": "Panel used for experiment 2438T / 1481.  Note that m38 and m45 are class I tetramers while m09 is a class II tetramer."
     },
     {
-      "name": "TLR Panel 1",
-      "created": "2026-04-23T15:22:30.255Z",
-      "updated": "2026-04-23T15:27:54.620Z",
-      "entries": [
-        {
-          "id": 1,
-          "fluor": "PE",
-          "marker": "TLR7 (CD287)",
-          "clone": "",
-          "volPer100uL": "",
-          "notes": "Biolegend "
-        },
-        {
-          "id": 2,
-          "fluor": "APC",
-          "marker": "TLR4 (CD284)",
-          "clone": "",
-          "volPer100uL": "",
-          "notes": "Biolegend; also comes in PE format"
-        },
-        {
-          "id": 5,
-          "fluor": "PE",
-          "marker": "TLR5 (CD285)",
-          "clone": "",
-          "volPer100uL": "",
-          "notes": "Biolegend; also comes in APC and AF647 format"
-        },
-        {
-          "id": 6,
-          "fluor": "BV421",
-          "marker": "TLR2 (CD282)",
-          "clone": "",
-          "volPer100uL": "",
-          "notes": "Biolegend; also comes in PE / APC formats"
-        }
-      ],
-      "spilloverNotes": {},
-      "description": "This is a hypothetical panel examining expression of major TLRs in mice."
-    },
-    {
       "name": "TLR Panel 1 (Mouse)",
       "created": "2026-04-23T15:28:35.272Z",
       "updated": "2026-04-23T15:28:35.272Z",
@@ -269,5 +228,5 @@
       "description": "This is a hypothetical panel examining expression of major TLRs in mice."
     }
   ],
-  "updated": "2026-04-23T15:28:35.657Z"
+  "updated": "2026-04-23T15:28:46.910Z"
 }
