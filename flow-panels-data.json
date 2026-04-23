@@ -189,20 +189,20 @@
     {
       "name": "TLR Panel 1",
       "created": "2026-04-23T15:22:30.255Z",
-      "updated": "2026-04-23T15:22:30.255Z",
+      "updated": "2026-04-23T15:24:07.867Z",
       "entries": [
         {
-          "id": 1,
-          "fluor": "APC",
+          "id": 2,
+          "fluor": "PE",
           "marker": "TLR7 (CD287)",
           "clone": "",
           "volPer100uL": "",
-          "notes": ""
+          "notes": "Biolegend "
         }
       ],
       "spilloverNotes": {},
       "description": "This is a hypothetical panel examining expression of major TLRs in mice."
     }
   ],
-  "updated": "2026-04-23T15:22:30.975Z"
+  "updated": "2026-04-23T15:24:09.810Z"
 }
