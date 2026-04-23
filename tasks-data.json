@@ -1,5 +1,51 @@
 {
   "projects": {
+    "Job Talk Ideas": {
+      "description": "",
+      "tasks": [
+        {
+          "id": 86,
+          "description": "Studying the microbe-immune interface, building computational tools",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-15",
+          "notes": []
+        },
+        {
+          "id": 91,
+          "description": "Talk not just about my work in Immunity (Transplant); show Nature paper (epitope spreading), recent Sci Immunol paper",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-16",
+          "notes": []
+        },
+        {
+          "id": 102,
+          "description": "Prepare",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-21",
+          "notes": [],
+          "due": "2026-05-14"
+        },
+        {
+          "id": 103,
+          "description": "Title: Antigen-Specific Immune Responses to the Microbiome in Transplantation",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-21",
+          "notes": []
+        },
+        {
+          "id": 104,
+          "description": "Keep opener TCR-focused,",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-21",
+          "notes": []
+        }
+      ]
+    },
     "Personal": {
       "description": "Non-work related stuff",
       "tasks": [
@@ -116,16 +162,16 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-17",
-          "notes": [],
-          "due": "2026-05-04"
+          "notes": []
         },
         {
           "id": 98,
           "description": "thank you cards",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-04-20",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-21"
         },
         {
           "id": 99,
@@ -136,11 +182,11 @@
           "notes": []
         },
         {
-          "id": 100,
-          "description": "Respond to Sara Kraft about talk title!",
+          "id": 101,
+          "description": "help jeanette",
           "status": "open",
-          "priority": "high",
-          "created": "2026-04-22",
+          "priority": "low",
+          "created": "2026-04-21",
           "notes": []
         }
       ]
@@ -309,6 +355,14 @@
               "text": "PAR-26-032"
             }
           ]
+        },
+        {
+          "id": 100,
+          "description": "UWM Compliance - 2026 Mandatory Compliance Training - Time is running out!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-21",
+          "notes": []
         }
       ]
     },
@@ -573,7 +627,7 @@
           "id": 4,
           "description": "Takedown #2 — mouse organ harvest (day 28 post-transplant)",
           "status": "open",
-          "priority": "high",
+          "priority": "medium",
           "created": "2026-03-26",
           "notes": [],
           "due": "2026-04-23"
@@ -775,6 +829,14 @@
           "created": "2026-04-11",
           "notes": [],
           "due": "2026-04-13"
+        },
+        {
+          "id": 105,
+          "description": "GM-CSF BM DC culture (d5):  Regulation of phagosome maturation by signals from toll-like receptors (PMID: 15143282). Look at protocol!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-23",
+          "notes": []
         }
       ]
     },
@@ -880,27 +942,6 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-08",
-          "notes": []
-        }
-      ]
-    },
-    "Job Talk Ideas": {
-      "description": "",
-      "tasks": [
-        {
-          "id": 86,
-          "description": "Studying the microbe-immune interface, building computational tools",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-15",
-          "notes": []
-        },
-        {
-          "id": 91,
-          "description": "Talk not just about my work in Immunity (Transplant); show Nature paper (epitope spreading), recent Sci Immunol paper",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-16",
           "notes": []
         }
       ]
