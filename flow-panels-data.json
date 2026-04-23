@@ -558,5 +558,5 @@
       "description": "Used for experiment 1487 / 2439T testing B6->B6D2F1 and B6->B6 plasma cell response at day 14 and day 27 takedown.  Note that the BV711 signal (Ly-6G) bleeds quite heavily into the BV785 (CD19) channel, so need heavy compensation.  CD19+ cells should not express Ly-6G so this should not be a problem."
     }
   ],
-  "updated": "2026-04-23T18:03:28.930Z"
+  "updated": "2026-04-23T18:03:32.528Z"
 }
