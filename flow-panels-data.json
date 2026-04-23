@@ -238,20 +238,28 @@
     {
       "name": "Plasma Cell GvHD Panel 1",
       "created": "2026-04-23T17:31:30.982Z",
-      "updated": "2026-04-23T17:31:30.982Z",
+      "updated": "2026-04-23T17:33:15.565Z",
       "entries": [
         {
-          "id": 1,
-          "fluor": "FITC",
-          "marker": "H2Db",
-          "clone": "KH95",
-          "volPer100uL": "",
-          "notes": "Biolegend · 111506"
+          "id": 3,
+          "fluor": "BUV395",
+          "marker": "CD45.1",
+          "clone": "A20",
+          "volPer100uL": "0.5",
+          "notes": "BD Bioscience · 565212 · Need 2x backups-starting 5/23/23 (Simone)"
+        },
+        {
+          "id": 4,
+          "fluor": "Alexa Fluor 700",
+          "marker": "CD45.2",
+          "clone": "104",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 109822"
         }
       ],
       "spilloverNotes": {},
       "description": "Used for experiment 1487 / 2439T testing B6->B6D2F1 and B6->B6 plasma cell response at day 14 and day 27 takedown"
     }
   ],
-  "updated": "2026-04-23T17:32:42.330Z"
+  "updated": "2026-04-23T17:33:17.100Z"
 }
