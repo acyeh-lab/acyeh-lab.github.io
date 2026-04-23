@@ -238,10 +238,10 @@
     {
       "name": "Plasma Cell GvHD Panel 1",
       "created": "2026-04-23T17:31:30.982Z",
-      "updated": "2026-04-23T17:36:18.781Z",
+      "updated": "2026-04-23T17:37:40.914Z",
       "entries": [
         {
-          "id": 3,
+          "id": 1,
           "fluor": "BUV395",
           "marker": "CD45.1",
           "clone": "A20",
@@ -249,7 +249,7 @@
           "notes": "BD Bioscience · 565212 · Need 2x backups-starting 5/23/23 (Simone)"
         },
         {
-          "id": 4,
+          "id": 2,
           "fluor": "Alexa Fluor 700",
           "marker": "CD45.2",
           "clone": "104",
@@ -257,7 +257,7 @@
           "notes": "Biolegend · 109822"
         },
         {
-          "id": 5,
+          "id": 3,
           "fluor": "PE-Dazzle 594",
           "marker": "CD3",
           "clone": "145-2C11",
@@ -265,7 +265,7 @@
           "notes": "Biolegend · 100348"
         },
         {
-          "id": 6,
+          "id": 4,
           "fluor": "BV480",
           "marker": "CD90.2",
           "clone": "53-2.1",
@@ -273,7 +273,7 @@
           "notes": "BD Bioscience · 566075"
         },
         {
-          "id": 7,
+          "id": 5,
           "fluor": "BUV496",
           "marker": "CD4",
           "clone": "GK1.5",
@@ -281,7 +281,7 @@
           "notes": "BD Bioscience · 612952 · Need 2x backups"
         },
         {
-          "id": 8,
+          "id": 6,
           "fluor": "BUV805",
           "marker": "CD8a",
           "clone": "53-6.7",
@@ -289,7 +289,7 @@
           "notes": "BD Bioscience · 612898 · Need 2x backups; Opti-Build (approved)"
         },
         {
-          "id": 9,
+          "id": 7,
           "fluor": "PerCP-Cy5.5",
           "marker": "CD11b",
           "clone": "M1/70",
@@ -297,17 +297,41 @@
           "notes": "Biolegend · 101228 · cross reacts mouse/human $189 (100ug) Need 2x backups"
         },
         {
-          "id": 10,
+          "id": 8,
           "fluor": "BV711",
           "marker": "Ly-6G",
           "clone": "1A8",
           "volPer100uL": "0.5",
           "notes": "Biolegend · 127643"
+        },
+        {
+          "id": 9,
+          "fluor": "BV785",
+          "marker": "CD19",
+          "clone": "1D3",
+          "volPer100uL": "0.25",
+          "notes": "BD Bioscience · 563333"
+        },
+        {
+          "id": 10,
+          "fluor": "BUV661",
+          "marker": "anti-CD45R/B220",
+          "clone": "RA3-6B2",
+          "volPer100uL": "0.25",
+          "notes": "BD Bioscience · 612972"
+        },
+        {
+          "id": 11,
+          "fluor": "BV421",
+          "marker": "CD138 (Syndecan-1)",
+          "clone": "281-2",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 142507"
         }
       ],
       "spilloverNotes": {},
       "description": "Used for experiment 1487 / 2439T testing B6->B6D2F1 and B6->B6 plasma cell response at day 14 and day 27 takedown"
     }
   ],
-  "updated": "2026-04-23T17:36:20.166Z"
+  "updated": "2026-04-23T17:37:42.421Z"
 }
