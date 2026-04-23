@@ -238,7 +238,7 @@
     {
       "name": "Plasma Cell GvHD Panel 1",
       "created": "2026-04-23T17:31:30.982Z",
-      "updated": "2026-04-23T17:37:40.914Z",
+      "updated": "2026-04-23T18:01:23.401Z",
       "entries": [
         {
           "id": 1,
@@ -327,11 +327,75 @@
           "clone": "281-2",
           "volPer100uL": "0.5",
           "notes": "Biolegend · 142507"
+        },
+        {
+          "id": 12,
+          "fluor": "PE-Cy7",
+          "marker": "IgM",
+          "clone": "RMM-1",
+          "volPer100uL": "0.8",
+          "notes": "Biolegend · 406514"
+        },
+        {
+          "id": 13,
+          "fluor": "APC-Cy7",
+          "marker": "IgD",
+          "clone": "11-26c.2a",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 405716"
+        },
+        {
+          "id": 14,
+          "fluor": "APC",
+          "marker": "CD95 (Fas)",
+          "clone": "SA367H8",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 152604"
+        },
+        {
+          "id": 15,
+          "fluor": "FITC",
+          "marker": "GL7 Antigen",
+          "clone": "GL7",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 144604 · Cross reacts Hu/Ms - in mouse box"
+        },
+        {
+          "id": 16,
+          "fluor": "BV650",
+          "marker": "NK1.1",
+          "clone": "PK136",
+          "volPer100uL": "0.75",
+          "notes": "Biolegend · 108736"
+        },
+        {
+          "id": 17,
+          "fluor": "BUV563",
+          "marker": "Anti-CD49b",
+          "clone": "HMα2",
+          "volPer100uL": "0.5",
+          "notes": "BD Bioscience · 741280 · Opti-Build (approved)"
+        },
+        {
+          "id": 18,
+          "fluor": "PE",
+          "marker": "H2Dd",
+          "clone": "34-2-12",
+          "volPer100uL": "1",
+          "notes": "Biolegend · 110608"
+        },
+        {
+          "id": 19,
+          "fluor": "7-AAD",
+          "marker": "",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": ""
         }
       ],
       "spilloverNotes": {},
       "description": "Used for experiment 1487 / 2439T testing B6->B6D2F1 and B6->B6 plasma cell response at day 14 and day 27 takedown"
     }
   ],
-  "updated": "2026-04-23T17:37:42.421Z"
+  "updated": "2026-04-23T18:01:24.777Z"
 }
