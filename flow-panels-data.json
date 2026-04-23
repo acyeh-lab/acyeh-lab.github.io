@@ -238,7 +238,7 @@
     {
       "name": "Plasma Cell GvHD Panel 1",
       "created": "2026-04-23T17:31:30.982Z",
-      "updated": "2026-04-23T18:01:23.401Z",
+      "updated": "2026-04-23T18:03:07.832Z",
       "entries": [
         {
           "id": 1,
@@ -394,8 +394,8 @@
         }
       ],
       "spilloverNotes": {},
-      "description": "Used for experiment 1487 / 2439T testing B6->B6D2F1 and B6->B6 plasma cell response at day 14 and day 27 takedown"
+      "description": "Used for experiment 1487 / 2439T testing B6->B6D2F1 and B6->B6 plasma cell response at day 14 and day 27 takedown.  Note that the BV711 signal (Ly-6G) bleeds quite heavily into the BV785 (CD19) channel, so need heavy compensation.  CD19+ cells should not express Ly-6G so this should not be a problem."
     }
   ],
-  "updated": "2026-04-23T18:01:24.777Z"
+  "updated": "2026-04-23T18:03:09.486Z"
 }
