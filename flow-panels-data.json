@@ -189,7 +189,7 @@
     {
       "name": "TLR Panel 1",
       "created": "2026-04-23T15:22:30.255Z",
-      "updated": "2026-04-23T15:24:07.867Z",
+      "updated": "2026-04-23T15:25:00.487Z",
       "entries": [
         {
           "id": 2,
@@ -198,11 +198,19 @@
           "clone": "",
           "volPer100uL": "",
           "notes": "Biolegend "
+        },
+        {
+          "id": 3,
+          "fluor": "APC",
+          "marker": "TLR4 (CD284)",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "Biolegend; also comes in PE format"
         }
       ],
       "spilloverNotes": {},
       "description": "This is a hypothetical panel examining expression of major TLRs in mice."
     }
   ],
-  "updated": "2026-04-23T15:24:09.810Z"
+  "updated": "2026-04-23T15:25:01.947Z"
 }
