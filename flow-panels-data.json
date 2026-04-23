@@ -234,7 +234,24 @@
       ],
       "spilloverNotes": {},
       "description": "This is a hypothetical panel examining expression of major TLRs in mice."
+    },
+    {
+      "name": "Plasma Cell GvHD Panel 1",
+      "created": "2026-04-23T17:31:30.982Z",
+      "updated": "2026-04-23T17:31:30.982Z",
+      "entries": [
+        {
+          "id": 1,
+          "fluor": "FITC",
+          "marker": "H2Db",
+          "clone": "KH95",
+          "volPer100uL": "",
+          "notes": "Biolegend · 111506"
+        }
+      ],
+      "spilloverNotes": {},
+      "description": "Used for experiment 1487 / 2439T testing B6->B6D2F1 and B6->B6 plasma cell response at day 14 and day 27 takedown"
     }
   ],
-  "updated": "2026-04-23T15:31:20.041Z"
+  "updated": "2026-04-23T17:32:42.330Z"
 }
