@@ -238,7 +238,7 @@
     {
       "name": "Plasma Cell GvHD Panel 1",
       "created": "2026-04-23T17:31:30.982Z",
-      "updated": "2026-04-23T17:34:11.482Z",
+      "updated": "2026-04-23T17:36:18.781Z",
       "entries": [
         {
           "id": 3,
@@ -279,11 +279,35 @@
           "clone": "GK1.5",
           "volPer100uL": "0.25",
           "notes": "BD Bioscience · 612952 · Need 2x backups"
+        },
+        {
+          "id": 8,
+          "fluor": "BUV805",
+          "marker": "CD8a",
+          "clone": "53-6.7",
+          "volPer100uL": "0.25",
+          "notes": "BD Bioscience · 612898 · Need 2x backups; Opti-Build (approved)"
+        },
+        {
+          "id": 9,
+          "fluor": "PerCP-Cy5.5",
+          "marker": "CD11b",
+          "clone": "M1/70",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 101228 · cross reacts mouse/human $189 (100ug) Need 2x backups"
+        },
+        {
+          "id": 10,
+          "fluor": "BV711",
+          "marker": "Ly-6G",
+          "clone": "1A8",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 127643"
         }
       ],
       "spilloverNotes": {},
       "description": "Used for experiment 1487 / 2439T testing B6->B6D2F1 and B6->B6 plasma cell response at day 14 and day 27 takedown"
     }
   ],
-  "updated": "2026-04-23T17:34:15.290Z"
+  "updated": "2026-04-23T17:36:20.166Z"
 }
