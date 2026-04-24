@@ -395,7 +395,32 @@
       ],
       "spilloverNotes": {},
       "description": "Used for experiment 1487 / 2439T testing B6->B6D2F1 and B6->B6 plasma cell response at day 14 and day 27 takedown.  Note that the BV711 signal (Ly-6G) bleeds quite heavily into the BV785 (CD19) channel, so need heavy compensation.  CD19+ cells should not express Ly-6G so this should not be a problem."
+    },
+    {
+      "name": "mT/mG MCMV CD4 Bleakley Panel 1 (Mouse)",
+      "created": "2026-04-24T16:39:58.024Z",
+      "updated": "2026-04-24T16:39:58.024Z",
+      "entries": [
+        {
+          "id": 1,
+          "fluor": "GFP",
+          "marker": "mG (Cre activated)",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": ""
+        },
+        {
+          "id": 2,
+          "fluor": "tdTomato",
+          "marker": "mT (default)",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": ""
+        }
+      ],
+      "spilloverNotes": {},
+      "description": "This panel was used in Exp 2436 / 1492 for Marie to try and track her CD4+ CD56+ T cell phenotype she sees post TnD in patients with CMV reactivation.  Since mice do not express CD56 in the same fashion as humans do, we have to use other markers, including NK1.1 (CD161 equivalent) (hi), CD49d (ITGA4) (hi), CD27 (low), and granzymeB (hi)"
     }
   ],
-  "updated": "2026-04-23T18:03:38.466Z"
+  "updated": "2026-04-24T16:39:58.277Z"
 }
