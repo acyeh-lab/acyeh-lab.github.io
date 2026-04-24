@@ -399,7 +399,7 @@
     {
       "name": "mT/mG MCMV CD4 Bleakley Panel 1 (Mouse)",
       "created": "2026-04-24T16:39:58.024Z",
-      "updated": "2026-04-24T16:46:28.791Z",
+      "updated": "2026-04-24T16:47:45.676Z",
       "entries": [
         {
           "id": 2,
@@ -494,5 +494,5 @@
       "description": "This panel was used in Exp 2436 / 1492 for Marie to try and track her CD4+ CD56+ T cell phenotype she sees post TnD in patients with CMV reactivation.  Since mice do not express CD56 in the same fashion as humans do, we have to use other markers, including NK1.1 (CD161 equivalent) (hi), CD49d (ITGA4) (hi), CD27 (low), and granzymeB (hi)"
     }
   ],
-  "updated": "2026-04-24T16:46:30.126Z"
+  "updated": "2026-04-24T16:47:46.820Z"
 }
