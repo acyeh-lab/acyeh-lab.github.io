@@ -492,7 +492,112 @@
       ],
       "spilloverNotes": {},
       "description": "This panel was used in Exp 2436 / 1492 for Marie to try and track her CD4+ CD56+ T cell phenotype she sees post TnD in patients with CMV reactivation.  Since mice do not express CD56 in the same fashion as humans do, we have to use other markers, including NK1.1 (CD161 equivalent) (hi), CD49d (ITGA4) (hi), CD27 (low), and granzymeB (hi)"
+    },
+    {
+      "name": "mT/mG MCMV m09 CD4 Bleakley Panel 1 (Mouse)",
+      "created": "2026-04-24T18:09:06.229Z",
+      "updated": "2026-04-24T18:09:06.229Z",
+      "entries": [
+        {
+          "id": 12,
+          "fluor": "tdTomato",
+          "marker": "mT (default)",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": ""
+        },
+        {
+          "id": 13,
+          "fluor": "eGFP",
+          "marker": "mG (Cre activated)",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": ""
+        },
+        {
+          "id": 14,
+          "fluor": "PE-Cy7",
+          "marker": "CD3",
+          "clone": "145-2C11",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 100320"
+        },
+        {
+          "id": 15,
+          "fluor": "BUV496",
+          "marker": "CD4",
+          "clone": "GK1.5",
+          "volPer100uL": "0.25",
+          "notes": "BD Bioscience · 612952 · Need 2x backups"
+        },
+        {
+          "id": 16,
+          "fluor": "APC-Cy7",
+          "marker": "CD8a",
+          "clone": "53-6.7",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 100714 · $150.50 (100ug)"
+        },
+        {
+          "id": 17,
+          "fluor": "Alexa Fluor 700",
+          "marker": "NK1.1",
+          "clone": "S17016D",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 156512"
+        },
+        {
+          "id": 18,
+          "fluor": "BUV737",
+          "marker": "CD62L",
+          "clone": "MEL-14",
+          "volPer100uL": "0.5",
+          "notes": "BD Bioscience · 612833"
+        },
+        {
+          "id": 19,
+          "fluor": "BUV661",
+          "marker": "CD44",
+          "clone": "IM7",
+          "volPer100uL": "0.2",
+          "notes": "BD Bioscience · 741471"
+        },
+        {
+          "id": 20,
+          "fluor": "BV605",
+          "marker": "CD27",
+          "clone": "LG.3A10",
+          "volPer100uL": "0.5",
+          "notes": "BD Bioscience · 563365 · BL ab (below) is cheaper"
+        },
+        {
+          "id": 21,
+          "fluor": "PE-Dazzle 594",
+          "marker": "Granzyme B (IC)",
+          "clone": "QA16A02",
+          "volPer100uL": "2.5",
+          "notes": "Biolegend · 372216"
+        },
+        {
+          "id": 22,
+          "fluor": "Alexa Fluor 647",
+          "marker": "CD49d",
+          "clone": "R1-2",
+          "volPer100uL": "0.5",
+          "notes": "Biolegend · 103614"
+        },
+        {
+          "id": 23,
+          "fluor": "BV421",
+          "marker": "m09 tet (I-Ab GYLYIYPSAGNSFDL)",
+          "clone": "",
+          "volPer100uL": "0.125",
+          "notes": "(1:800 dilution)"
+        }
+      ],
+      "spilloverNotes": {},
+      "description": "This panel was used in Exp 2436 / 1492 for Marie to try and track her CD4+ CD56+ T cell phenotype she sees post TnD in patients with CMV reactivation.  Since mice do not express CD56 in the same fashion as humans do, we have to use other markers, including NK1.1 (CD161 equivalent) (hi), CD49d (ITGA4) (hi), CD27 (low), and granzymeB (hi)"
     }
   ],
-  "updated": "2026-04-24T16:47:46.820Z"
+  "updated": "2026-04-24T18:09:06.425Z"
 }
