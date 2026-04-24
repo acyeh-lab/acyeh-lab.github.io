@@ -141,11 +141,12 @@
         {
           "id": 81,
           "description": "obtain work laptop",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-04-14",
           "notes": [],
-          "due": "2026-04-30"
+          "due": "2026-04-30",
+          "completed": "2026-04-24"
         },
         {
           "id": 92,
@@ -162,7 +163,8 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-17",
-          "notes": []
+          "notes": [],
+          "due": "2026-05-04"
         },
         {
           "id": 98,
@@ -187,6 +189,14 @@
           "status": "open",
           "priority": "low",
           "created": "2026-04-21",
+          "notes": []
+        },
+        {
+          "id": 106,
+          "description": "comment on weilin's thing",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-24",
           "notes": []
         }
       ]
