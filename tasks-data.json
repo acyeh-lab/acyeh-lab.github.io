@@ -627,20 +627,22 @@
         {
           "id": 3,
           "description": "Takedown #1 — mouse organ harvest (day 14 post-transplant)",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-26",
           "notes": [],
-          "due": "2026-04-09"
+          "due": "2026-04-09",
+          "completed": "2026-04-24"
         },
         {
           "id": 4,
           "description": "Takedown #2 — mouse organ harvest (day 28 post-transplant)",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-03-26",
           "notes": [],
-          "due": "2026-04-23"
+          "due": "2026-04-23",
+          "completed": "2026-04-24"
         },
         {
           "id": 17,
@@ -667,7 +669,7 @@
           "id": 84,
           "description": "F/u d14 histo!",
           "status": "open",
-          "priority": "high",
+          "priority": "low",
           "created": "2026-04-14",
           "notes": [
             {
@@ -675,6 +677,23 @@
               "text": "Submitted on 4/14/26 - SR26-0506 for FFPE embed, H&E, image, and 1 unstained.  Follow-up for VECTRA"
             }
           ]
+        },
+        {
+          "id": 107,
+          "description": "Repeat plasma cell experiment - use CD45.1 F1s as recips?",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-04-24",
+          "notes": []
+        },
+        {
+          "id": 108,
+          "description": "Send to EH",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-24",
+          "notes": [],
+          "due": "2026-04-24"
         }
       ]
     },
