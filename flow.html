@@ -243,6 +243,10 @@
             <h3 style="margin-top: 18px;">Spillover risk</h3>
             <p class="hint">Pairs where emission peaks differ by &lt; 25 nm and share a laser are flagged automatically. Add free-form notes on each pair — they're saved with the panel and pushed to GitHub on Save.</p>
             <div id="spillover-warnings"></div>
+
+            <div style="margin-top: 18px;">
+                <button class="btn" id="print-panel-btn">Print / Save PDF</button>
+            </div>
         </div>
 
         <!-- ===== Section 3: Saved panels ===== -->
@@ -1194,6 +1198,114 @@ function init() {
     document.getElementById('sync-github-btn').addEventListener('click', syncToGitHub);
     document.getElementById('setup-token-btn').addEventListener('click', setupToken);
     document.getElementById('refresh-saved-btn').addEventListener('click', loadFromServer);
+    document.getElementById('print-panel-btn').addEventListener('click', printPanel);
+}
+
+function printPanel() {
+    if (STATE.panel.length === 0) { toast('Panel is empty'); return; }
+    const name = document.getElementById('panel-name').value.trim() || 'Untitled Panel';
+    const desc = document.getElementById('panel-description').value.trim();
+    const today = new Date().toISOString().slice(0, 10);
+
+    // Sort same as panel table: real fluors by laser/em, secondaries last
+    const sorted = [...STATE.panel].sort((a, b) => {
+        const fa = getFluor(a.fluor), fb = getFluor(b.fluor);
+        const la = fa.laser || Infinity, lb = fb.laser || Infinity;
+        return (la - lb) || (fa.em - fb.em);
+    });
+
+    // Group by laser for compact display
+    const laserGroups = {};
+    for (const p of sorted) {
+        const f = getFluor(p.fluor);
+        const key = f.laser ? f.laser + ' nm' : 'Secondary';
+        if (!laserGroups[key]) laserGroups[key] = [];
+        laserGroups[key].push(p);
+    }
+
+    // Volume total
+    let volTotal = 0;
+    let anyVol = false;
+    for (const p of STATE.panel) {
+        const v = parseFloat(p.volPer100uL);
+        if (!isNaN(v)) { volTotal += v; anyVol = true; }
+    }
+
+    // Spillover warnings
+    const spills = [];
+    const uniqueFluors = [...new Set(STATE.panel.map(p => p.fluor))];
+    for (let i = 0; i < uniqueFluors.length; i++) {
+        for (let j = i + 1; j < uniqueFluors.length; j++) {
+            const a = getFluor(uniqueFluors[i]), b = getFluor(uniqueFluors[j]);
+            if (a.name === b.name || !a.laser || !b.laser) continue;
+            if (a.laser === b.laser && Math.abs(a.em - b.em) < 25) {
+                const key = pairKey(a.name, b.name);
+                const note = STATE.spilloverNotes[key] || '';
+                spills.push({ a: a.name, b: b.name, delta: Math.abs(a.em - b.em), note });
+            }
+        }
+    }
+
+    // Build HTML
+    let rows = '';
+    for (const p of sorted) {
+        const f = getFluor(p.fluor);
+        const plottable = isPlottable(f);
+        const color = plottable ? wavelengthToRGB(f.em) : '#888';
+        const laser = plottable ? f.laser + ' nm' : 'secondary';
+        const exem = plottable ? f.ex + '/' + f.em : '—';
+        const vol = p.volPer100uL || '';
+        rows += '<tr>' +
+            '<td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:' + color + ';margin-right:6px;vertical-align:middle;"></span>' + escapeAttr(p.fluor) + '</td>' +
+            '<td>' + laser + '</td>' +
+            '<td>' + exem + '</td>' +
+            '<td><strong>' + escapeAttr(p.marker || '') + '</strong></td>' +
+            '<td>' + escapeAttr(p.clone || '') + '</td>' +
+            '<td style="text-align:right;">' + (vol ? vol + ' uL' : '') + '</td>' +
+            '<td style="font-size:0.8em;color:#555;">' + escapeAttr(p.notes || '') + '</td>' +
+            '</tr>';
+    }
+
+    let spillHtml = '';
+    if (spills.length) {
+        spillHtml = '<div style="margin-top:12px;"><strong style="font-size:0.85em;">Spillover flags:</strong><ul style="margin:4px 0;padding-left:18px;font-size:0.82em;color:#555;">';
+        for (const s of spills) {
+            spillHtml += '<li>' + s.a + ' / ' + s.b + ' (' + s.delta + ' nm apart)';
+            if (s.note) spillHtml += ' — <em>' + escapeAttr(s.note) + '</em>';
+            spillHtml += '</li>';
+        }
+        spillHtml += '</ul></div>';
+    }
+
+    const html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + escapeAttr(name) + '</title>' +
+        '<style>' +
+        'body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#222;margin:20px;max-width:800px;}' +
+        'h1{font-size:16px;margin:0 0 2px 0;color:#0056b3;}' +
+        '.meta{font-size:10px;color:#666;margin-bottom:8px;}' +
+        '.desc{font-size:11px;color:#444;margin-bottom:10px;font-style:italic;border-left:3px solid #0056b3;padding-left:8px;}' +
+        'table{width:100%;border-collapse:collapse;font-size:10.5px;}' +
+        'th{background:#f0f4f8;text-align:left;padding:4px 6px;border-bottom:2px solid #0056b3;font-size:10px;color:#444;}' +
+        'td{padding:3px 6px;border-bottom:1px solid #e0e0e0;vertical-align:top;}' +
+        'tr:last-child td{border-bottom:none;}' +
+        '.vol-total{text-align:right;font-weight:bold;padding-top:6px;font-size:11px;color:#0056b3;}' +
+        '@media print{body{margin:10px;}@page{size:landscape;margin:12mm;}}' +
+        '</style></head><body>' +
+        '<h1>' + escapeAttr(name) + '</h1>' +
+        '<div class="meta">Generated ' + today + ' | ' + STATE.panel.length + ' channels | Albert Yeh Lab</div>' +
+        (desc ? '<div class="desc">' + escapeAttr(desc) + '</div>' : '') +
+        '<table><thead><tr>' +
+        '<th>Fluorophore</th><th>Laser</th><th>Ex/Em</th><th>Marker</th><th>Clone</th><th style="text-align:right;">Vol/100uL</th><th>Notes</th>' +
+        '</tr></thead><tbody>' + rows + '</tbody></table>' +
+        (anyVol ? '<div class="vol-total">Total volume per 100 uL stain: ' + (Math.round(volTotal * 10) / 10) + ' uL</div>' : '') +
+        spillHtml +
+        '<div style="margin-top:16px;font-size:9px;color:#999;border-top:1px solid #ddd;padding-top:6px;">Flow panel from acyeh-lab.github.io/flow.html</div>' +
+        '</body></html>';
+
+    const w = window.open('', '_blank');
+    w.document.write(html);
+    w.document.close();
+    // Auto-trigger print dialog so user can Save as PDF or print
+    setTimeout(() => w.print(), 400);
 }
 
 document.addEventListener('DOMContentLoaded', init);
