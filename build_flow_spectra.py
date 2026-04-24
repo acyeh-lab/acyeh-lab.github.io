@@ -65,6 +65,7 @@ MAPPING = {
     "FITC":               ("dye",     "Fluorescein (FITC)"),
     "Alexa Fluor 488":    ("dye",     "Alexa Fluor 488"),
     "GFP":                ("protein", "EGFP"),
+    "eGFP":               ("protein", "EGFP"),
     "mVenus":             ("protein", "mVenus"),
     "YFP":                ("protein", "EYFP"),
     "CFSE":               ("dye",     "CFSE (fluorescein, CFDA, SE)"),
