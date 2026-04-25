@@ -187,10 +187,11 @@
         {
           "id": 19,
           "description": "ASH interview with Shawn Gates - week of 4/20",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-03-30",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-25"
         },
         {
           "id": 25,
@@ -548,7 +549,7 @@
         {
           "id": 1,
           "description": "Design/validate plasma cell flow panel",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-26",
           "notes": [
@@ -561,16 +562,18 @@
               "text": "Exclusion: CD3, CD4, CD8, F4/80 (plasma cells can express CD11b and Gr-1); IgD, CD138, Cd19, B220"
             }
           ],
-          "due": "2026-04-09"
+          "due": "2026-04-09",
+          "completed": "2026-04-25"
         },
         {
           "id": 3,
           "description": "Takedown #1 — mouse organ harvest (day 14 post-transplant)",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-26",
           "notes": [],
-          "due": "2026-04-09"
+          "due": "2026-04-09",
+          "completed": "2026-04-25"
         },
         {
           "id": 4,
@@ -585,7 +588,7 @@
           "id": 17,
           "description": "VECTRA Panel",
           "status": "open",
-          "priority": "high",
+          "priority": "low",
           "created": "2026-03-30",
           "notes": [
             {
@@ -606,7 +609,7 @@
           "id": 84,
           "description": "F/u d14 histo!",
           "status": "open",
-          "priority": "high",
+          "priority": "medium",
           "created": "2026-04-14",
           "notes": [
             {
@@ -614,6 +617,15 @@
               "text": "Submitted on 4/14/26 - SR26-0506 for FFPE embed, H&E, image, and 1 unstained.  Follow-up for VECTRA"
             }
           ]
+        },
+        {
+          "id": 103,
+          "description": "Transfer to EH",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-25",
+          "notes": [],
+          "due": "2026-04-27"
         }
       ]
     },
@@ -686,26 +698,29 @@
         {
           "id": 48,
           "description": "send prelim pre-graft overview of CD49d and NKG7",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-06",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-25"
         },
         {
           "id": 49,
           "description": "Look for non-BV480 NK1.1 Ab , as BV480 seems to bleed through to mG (FITC) channel",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-06",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-25"
         },
         {
           "id": 50,
           "description": "Current Panel: CD3-PE/Cy7, CD8 APC/Cy7, CD4 UV496, CD49d AF647, NK1.1 AF700, mT (PE), mG (GFP), m09 (BV421)",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-06",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-25"
         },
         {
           "id": 51,
@@ -728,10 +743,11 @@
         {
           "id": 101,
           "description": "granzyme B stain",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-25",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-25"
         }
       ]
     },
@@ -791,11 +807,12 @@
         {
           "id": 102,
           "description": "remove plates",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-25",
           "notes": [],
-          "due": "2026-04-26"
+          "due": "2026-04-26",
+          "completed": "2026-04-25"
         }
       ]
     },
@@ -845,10 +862,11 @@
         {
           "id": 58,
           "description": "terminal bleeding!",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-07",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-25"
         }
       ]
     },
@@ -898,10 +916,11 @@
         {
           "id": 60,
           "description": "check when to profile cells! (d0=3/20/26)",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-08",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-25"
         }
       ]
     },
