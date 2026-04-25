@@ -95,11 +95,12 @@
         {
           "id": 81,
           "description": "obtain work laptop",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-04-14",
           "notes": [],
-          "due": "2026-04-30"
+          "due": "2026-04-30",
+          "completed": "2026-04-25"
         },
         {
           "id": 92,
@@ -122,10 +123,11 @@
         {
           "id": 98,
           "description": "thank you cards",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-04-20",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-25"
         },
         {
           "id": 99,
