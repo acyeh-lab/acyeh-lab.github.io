@@ -235,11 +235,12 @@
         {
           "id": 66,
           "description": "Nature Immunology Review!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-10",
           "notes": [],
-          "due": "2026-04-23"
+          "due": "2026-04-23",
+          "completed": "2026-04-25"
         },
         {
           "id": 67,
