@@ -322,7 +322,8 @@
           "status": "open",
           "priority": "high",
           "created": "2026-04-28",
-          "notes": []
+          "notes": [],
+          "due": "2026-04-29"
         },
         {
           "id": 106,
