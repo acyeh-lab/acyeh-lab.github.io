@@ -1006,9 +1006,14 @@
           "id": 90,
           "description": "Ask Arunima to work on it as no FHCC data allowed for sharing.  She will have to e independent collaborator",
           "status": "open",
-          "priority": "high",
+          "priority": "low",
           "created": "2026-04-16",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-04-28",
+              "text": "Sent her Azimuth paper (Hao et al, Cell 2021) and pointed her to azimuth website https://azimuth.hubmapconsortium.org/references/#Human%20-%20PBMC"
+            }
+          ]
         }
       ]
     },
