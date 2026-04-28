@@ -687,20 +687,22 @@
         {
           "id": 34,
           "description": "d21 Bleed on 4/23",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-02",
           "notes": [],
-          "due": "2026-04-23"
+          "due": "2026-04-23",
+          "completed": "2026-04-28"
         },
         {
           "id": 35,
           "description": "d35 Bleed on 4/30",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-02",
           "notes": [],
-          "due": "2026-04-29"
+          "due": "2026-04-29",
+          "completed": "2026-04-28"
         },
         {
           "id": 36,
@@ -723,10 +725,11 @@
         {
           "id": 40,
           "description": "purchase anti-CD56 Ab and goat anti rabbit Ab.",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-28"
         },
         {
           "id": 42,
@@ -775,12 +778,17 @@
         },
         {
           "id": 97,
-          "description": "Aim for d35 takedown",
+          "description": "Takedown analysis",
           "status": "open",
           "priority": "high",
           "created": "2026-04-20",
-          "notes": [],
-          "due": "2026-04-30"
+          "notes": [
+            {
+              "date": "2026-04-28",
+              "text": "Took down on 4/28/26 (2 days earlier) due to weight loss in animal"
+            }
+          ],
+          "due": "2026-04-28"
         },
         {
           "id": 101,
@@ -790,6 +798,15 @@
           "created": "2026-04-25",
           "notes": [],
           "completed": "2026-04-25"
+        },
+        {
+          "id": 111,
+          "description": "Analyze d21 and d35 bleeds for CMV titers",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-28",
+          "notes": [],
+          "due": "2026-05-04"
         }
       ]
     },
