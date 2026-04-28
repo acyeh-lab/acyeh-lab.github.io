@@ -222,6 +222,105 @@
             opacity: 0; transition: opacity 0.3s; pointer-events: none;
         }
         .toast.show { opacity: 1; pointer-events: auto; }
+
+        /* Project color dot */
+        .project-dot {
+            width: 12px; height: 12px; border-radius: 50%;
+            flex-shrink: 0; cursor: pointer;
+            border: 2px solid rgba(0,0,0,0.05);
+            transition: transform 0.15s;
+        }
+        .project-dot:hover { transform: scale(1.25); }
+
+        /* Mini calendar */
+        .calendar-section {
+            margin-bottom: 16px; border: 1px solid #e8e8e8; border-radius: 10px;
+            overflow: hidden; background: #fff;
+        }
+        .calendar-header {
+            display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+            background: #f7f9fc; border-bottom: 1px solid #e8e8e8;
+        }
+        .calendar-chevron {
+            font-size: 0.65em; color: #aaa; cursor: pointer;
+            transition: transform 0.25s; user-select: none; padding: 0 4px;
+        }
+        .calendar-section.collapsed .calendar-chevron { transform: rotate(-90deg); }
+        .calendar-section.collapsed .calendar-weekdays,
+        .calendar-section.collapsed .calendar-grid { display: none; }
+        .calendar-title {
+            font-weight: 700; font-size: 0.95em; color: #333; flex: 1;
+        }
+        .calendar-nav-btn {
+            background: #fff; border: 1px solid #ddd; border-radius: 6px;
+            width: 26px; height: 26px; cursor: pointer; color: #666;
+            font-size: 0.78em; display: flex; align-items: center; justify-content: center;
+            font-family: 'Roboto', sans-serif;
+        }
+        .calendar-nav-btn:hover { background: #eef2f7; color: #0056b3; border-color: #0056b3; }
+        .calendar-today-btn {
+            background: #fff; border: 1px solid #ddd; border-radius: 6px;
+            padding: 4px 10px; cursor: pointer; font-size: 0.78em;
+            color: #555; font-family: 'Roboto', sans-serif;
+        }
+        .calendar-today-btn:hover { background: #eef2f7; color: #0056b3; border-color: #0056b3; }
+        .calendar-weekdays {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            background: #fafbfc; font-size: 0.7em; color: #888;
+            text-align: center; padding: 4px 0; border-bottom: 1px solid #e8e8e8;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .calendar-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+        }
+        .calendar-day {
+            min-height: 54px; padding: 3px 4px;
+            border-right: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0;
+            font-size: 0.78em; color: #444; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        .calendar-day:nth-child(7n) { border-right: none; }
+        .calendar-grid > .calendar-day:nth-last-child(-n+7) { border-bottom: none; }
+        .calendar-day.other-month { color: #ccc; background: #fafafa; }
+        .calendar-day.other-month .calendar-day-num { color: #ccc; }
+        .calendar-day-num {
+            font-weight: 600; font-size: 0.85em; color: #555;
+            display: inline-block; min-width: 18px;
+        }
+        .calendar-day.today .calendar-day-num {
+            background: #0056b3; color: #fff; border-radius: 50%;
+            width: 20px; height: 20px; line-height: 20px;
+            text-align: center; font-weight: 700;
+        }
+        .calendar-events {
+            margin-top: 2px; display: flex; flex-direction: column; gap: 2px;
+            min-height: 0;
+        }
+        .calendar-event {
+            font-size: 0.7em; padding: 1px 5px; border-radius: 3px;
+            color: #fff; white-space: nowrap; overflow: hidden;
+            text-overflow: ellipsis; cursor: pointer; line-height: 1.4;
+            font-weight: 500;
+        }
+        .calendar-event:hover { filter: brightness(1.12); }
+        .calendar-event.overdue { box-shadow: inset 0 0 0 1px #d32f2f; }
+        .calendar-more {
+            font-size: 0.68em; color: #888; cursor: pointer; padding: 0 4px;
+        }
+        .calendar-more:hover { color: #0056b3; }
+
+        /* Color swatches in edit project modal */
+        .color-swatches {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+        }
+        .color-swatch {
+            width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
+            border: 2px solid transparent; transition: transform 0.15s;
+        }
+        .color-swatch:hover { transform: scale(1.18); }
+        .color-swatch.selected {
+            border-color: #333; transform: scale(1.18);
+        }
     </style>
 </head>
 <body>
@@ -241,6 +340,21 @@
     </nav>
 
     <div class="container">
+        <!-- Mini calendar -->
+        <div class="calendar-section" id="calendar-section">
+            <div class="calendar-header">
+                <span class="calendar-chevron" onclick="toggleCalendar()" title="Toggle calendar">&#9660;</span>
+                <button class="calendar-nav-btn" onclick="changeMonth(-1)" title="Previous month">&#10094;</button>
+                <button class="calendar-nav-btn" onclick="changeMonth(1)" title="Next month">&#10095;</button>
+                <span class="calendar-title" id="calendar-title">&nbsp;</span>
+                <button class="calendar-today-btn" onclick="goToToday()">Today</button>
+            </div>
+            <div class="calendar-weekdays">
+                <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            </div>
+            <div class="calendar-grid" id="calendar-grid"></div>
+        </div>
+
         <!-- Toolbar -->
         <div class="toolbar">
             <input type="text" class="search-box" id="search" placeholder="Search tasks...">
@@ -352,6 +466,10 @@
             <div class="form-group">
                 <label>Description</label>
                 <input type="text" id="edit-project-desc">
+            </div>
+            <div class="form-group">
+                <label>Color</label>
+                <div class="color-swatches" id="edit-project-colors"></div>
             </div>
             <input type="hidden" id="edit-project-original-name">
             <div class="form-actions">
@@ -469,6 +587,137 @@
         saveLocal();
         render();
         toast('Undone');
+    }
+
+    /* ===== Project colors ===== */
+    const PALETTE = [
+        '#1976d2', '#388e3c', '#d32f2f', '#7b1fa2', '#f57c00',
+        '#0097a7', '#c2185b', '#5d4037', '#455a64', '#9c27b0',
+        '#00796b', '#e64a19'
+    ];
+
+    function getProjectColor(name) {
+        const proj = data.projects[name];
+        if (proj && proj.color) return proj.color;
+        const order = getProjectOrder();
+        const idx = order.indexOf(name);
+        return PALETTE[((idx >= 0 ? idx : 0)) % PALETTE.length];
+    }
+
+    /* ===== Mini calendar ===== */
+    let calendarMonth = (() => { const d = new Date(); d.setDate(1); d.setHours(0,0,0,0); return d; })();
+
+    function changeMonth(delta) {
+        calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + delta, 1);
+        renderCalendar();
+    }
+
+    function goToToday() {
+        const d = new Date(); d.setDate(1); d.setHours(0,0,0,0);
+        calendarMonth = d;
+        renderCalendar();
+    }
+
+    function toggleCalendar() {
+        const sec = document.getElementById('calendar-section');
+        sec.classList.toggle('collapsed');
+        localStorage.setItem('calendar-collapsed', sec.classList.contains('collapsed') ? '1' : '0');
+    }
+
+    function renderCalendar() {
+        const titleEl = document.getElementById('calendar-title');
+        const gridEl = document.getElementById('calendar-grid');
+        if (!titleEl || !gridEl) return;
+
+        const year = calendarMonth.getFullYear();
+        const month = calendarMonth.getMonth();
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        titleEl.textContent = monthNames[month] + ' ' + year;
+
+        // Map dueDate -> [{task, project}, ...]
+        const eventsByDate = {};
+        for (const [pn, p] of Object.entries(data.projects)) {
+            for (const t of p.tasks) {
+                if (!t.due || t.status === 'done') continue;
+                if (!eventsByDate[t.due]) eventsByDate[t.due] = [];
+                eventsByDate[t.due].push({ task: t, project: pn });
+            }
+        }
+
+        const startWeekday = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const prevMonthLastDay = new Date(year, month, 0).getDate();
+        const todayStr = today();
+
+        let html = '';
+        const totalCells = 42;
+        for (let i = 0; i < totalCells; i++) {
+            let cellMonth, cellDay, otherMonth = false;
+            if (i < startWeekday) {
+                cellMonth = month - 1;
+                cellDay = prevMonthLastDay - (startWeekday - 1 - i);
+                otherMonth = true;
+            } else if (i >= startWeekday + daysInMonth) {
+                cellMonth = month + 1;
+                cellDay = i - startWeekday - daysInMonth + 1;
+                otherMonth = true;
+            } else {
+                cellMonth = month;
+                cellDay = i - startWeekday + 1;
+            }
+            const cellDate = new Date(year, cellMonth, cellDay);
+            const cellStr = cellDate.getFullYear() + '-' +
+                String(cellDate.getMonth() + 1).padStart(2, '0') + '-' +
+                String(cellDate.getDate()).padStart(2, '0');
+            const isToday = cellStr === todayStr;
+            const events = eventsByDate[cellStr] || [];
+
+            html += '<div class="calendar-day' + (otherMonth ? ' other-month' : '') + (isToday ? ' today' : '') + '">';
+            html += '<div><span class="calendar-day-num">' + cellDay + '</span></div>';
+            if (events.length > 0) {
+                html += '<div class="calendar-events">';
+                const visible = events.slice(0, 2);
+                for (const ev of visible) {
+                    const color = getProjectColor(ev.project);
+                    const overdue = cellStr < todayStr;
+                    const desc = esc(ev.task.description);
+                    const projEsc = esc(ev.project);
+                    html += '<div class="calendar-event' + (overdue ? ' overdue' : '') + '" '
+                         + 'style="background:' + color + ';" '
+                         + 'title="' + projEsc + ': ' + desc.replace(/"/g, '&quot;') + '" '
+                         + 'onclick="focusTask(' + ev.task.id + ')">'
+                         + desc + '</div>';
+                }
+                if (events.length > 2) {
+                    html += '<div class="calendar-more" onclick="focusDate(\'' + cellStr + '\')">+' + (events.length - 2) + ' more</div>';
+                }
+                html += '</div>';
+            }
+            html += '</div>';
+        }
+        gridEl.innerHTML = html;
+    }
+
+    function focusTask(taskId) {
+        for (const [pn, p] of Object.entries(data.projects)) {
+            if (p.tasks.find(t => t.id === taskId)) {
+                localStorage.setItem('proj-collapse-' + pn, '0');
+                break;
+            }
+        }
+        openTaskId = taskId;
+        render();
+        setTimeout(() => {
+            const el = document.getElementById('detail-' + taskId);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 50);
+    }
+
+    function focusDate(dateStr) {
+        document.getElementById('search').value = '';
+        document.getElementById('filter-status').value = 'open';
+        render();
+        toast('Tasks due ' + dateStr);
     }
 
     /* ===== Server sync ===== */
@@ -829,6 +1078,24 @@
         document.getElementById('edit-project-original-name').value = projectName;
         document.getElementById('edit-project-name').value = projectName;
         document.getElementById('edit-project-desc').value = data.projects[projectName].description || '';
+
+        const swatchContainer = document.getElementById('edit-project-colors');
+        const currentColor = getProjectColor(projectName);
+        swatchContainer.innerHTML = '';
+        swatchContainer.dataset.selectedColor = currentColor;
+        for (const c of PALETTE) {
+            const swatch = document.createElement('div');
+            swatch.className = 'color-swatch' + (c === currentColor ? ' selected' : '');
+            swatch.style.background = c;
+            swatch.dataset.color = c;
+            swatch.onclick = () => {
+                swatchContainer.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+                swatch.classList.add('selected');
+                swatchContainer.dataset.selectedColor = c;
+            };
+            swatchContainer.appendChild(swatch);
+        }
+
         openModal('modal-edit-project');
     }
 
@@ -836,14 +1103,19 @@
         const origName = document.getElementById('edit-project-original-name').value;
         const newName = document.getElementById('edit-project-name').value.trim();
         const newDesc = document.getElementById('edit-project-desc').value.trim();
+        const newColor = document.getElementById('edit-project-colors').dataset.selectedColor;
         if (!newName) { toast('Enter a project name'); return; }
         if (newName !== origName && data.projects[newName]) { toast('Project name already exists'); return; }
         snapshot();
         if (newName !== origName) {
             data.projects[newName] = data.projects[origName];
             delete data.projects[origName];
+            // Preserve order if renamed
+            const order = getProjectOrder().map(n => n === origName ? newName : n);
+            saveProjectOrder(order);
         }
         data.projects[newName].description = newDesc;
+        if (newColor) data.projects[newName].color = newColor;
         closeModal('modal-edit-project');
         saveLocal();
         render();
@@ -964,6 +1236,7 @@
         if (projectNames.length === 0) {
             content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">&#128203;</div><div>No projects yet. Click <strong>+ Project</strong> to get started.</div></div>';
             updateExportBtn();
+            renderCalendar();
             return;
         }
 
@@ -986,6 +1259,7 @@
             html += '<div class="project-section' + (collapsed ? ' collapsed' : '') + '" data-project="' + esc(pn) + '">';
             html += '<div class="project-header" onclick="toggleProject(this)">';
             html += '<span class="project-chevron">&#9660;</span>';
+            html += '<span class="project-dot" style="background:' + getProjectColor(pn) + ';" onclick="event.stopPropagation();showEditProject(\'' + esc(pn).replace(/'/g, "\\'") + '\')" title="Click to change color"></span>';
             html += '<span class="project-name">' + esc(pn) + '</span>';
             if (proj.description) html += '<span class="project-desc">— ' + esc(proj.description) + '</span>';
             html += '<span class="project-count' + (hasOverdue ? ' has-overdue' : '') + '">' + openCount + ' open</span>';
@@ -1096,6 +1370,7 @@
         content.innerHTML = html;
         updateExportBtn();
         updateUndoBtn();
+        renderCalendar();
 
         // Restore focus to quick-add if needed
         if (openTaskId) {
@@ -1253,6 +1528,9 @@
 
     /* ===== Init ===== */
     loadLocal();
+    if (localStorage.getItem('calendar-collapsed') === '1') {
+        document.getElementById('calendar-section').classList.add('collapsed');
+    }
     syncFromServer();
     updateSyncStatus();
     render();
