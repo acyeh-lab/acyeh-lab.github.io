@@ -342,6 +342,14 @@
           "created": "2026-04-28",
           "notes": [],
           "due": "2026-05-07"
+        },
+        {
+          "id": 108,
+          "description": "gina replacement for P8792 CRC",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-04-28",
+          "notes": []
         }
       ]
     },
