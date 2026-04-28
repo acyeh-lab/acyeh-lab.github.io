@@ -672,12 +672,12 @@
         },
         {
           "id": 35,
-          "description": "d28 Bleed on 4/30",
+          "description": "d35 Bleed on 4/30",
           "status": "open",
           "priority": "medium",
           "created": "2026-04-02",
           "notes": [],
-          "due": "2026-04-30"
+          "due": "2026-04-29"
         },
         {
           "id": 36,
