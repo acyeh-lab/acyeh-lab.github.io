@@ -503,7 +503,8 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-17",
-          "notes": []
+          "notes": [],
+          "due": "2026-05-31"
         }
       ]
     },
@@ -639,6 +640,10 @@
             {
               "date": "2026-04-14",
               "text": "Met with Steph, will try E-CAD staining."
+            },
+            {
+              "date": "2026-04-28",
+              "text": "Steph made new AI classifier that distinguishes LP from IEL pretty well.  Used ECad and CD138. Will proceed with this panel design"
             }
           ]
         },
