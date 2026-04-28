@@ -863,6 +863,15 @@
               "text": "Submitted PO for TWIST 4/28/26"
             }
           ]
+        },
+        {
+          "id": 110,
+          "description": "thaw DC2.4 (LN2  last row (row I) of box 13 in rack 17. Look at spot 3 or 4)",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-28",
+          "notes": [],
+          "due": "2026-04-28"
         }
       ]
     },
