@@ -397,103 +397,6 @@
       "description": "Used for experiment 1487 / 2439T testing B6->B6D2F1 and B6->B6 plasma cell response at day 14 and day 27 takedown.  Note that the BV711 signal (Ly-6G) bleeds quite heavily into the BV785 (CD19) channel, so need heavy compensation.  CD19+ cells should not express Ly-6G so this should not be a problem."
     },
     {
-      "name": "mT/mG MCMV CD4 Bleakley Panel 1 (Mouse)",
-      "created": "2026-04-24T16:39:58.024Z",
-      "updated": "2026-04-24T16:47:45.676Z",
-      "entries": [
-        {
-          "id": 2,
-          "fluor": "tdTomato",
-          "marker": "mT (default)",
-          "clone": "",
-          "volPer100uL": "",
-          "notes": ""
-        },
-        {
-          "id": 3,
-          "fluor": "eGFP",
-          "marker": "mG (Cre activated)",
-          "clone": "",
-          "volPer100uL": "",
-          "notes": ""
-        },
-        {
-          "id": 4,
-          "fluor": "PE-Cy7",
-          "marker": "CD3",
-          "clone": "145-2C11",
-          "volPer100uL": "0.5",
-          "notes": "Biolegend · 100320"
-        },
-        {
-          "id": 5,
-          "fluor": "BUV496",
-          "marker": "CD4",
-          "clone": "GK1.5",
-          "volPer100uL": "0.25",
-          "notes": "BD Bioscience · 612952 · Need 2x backups"
-        },
-        {
-          "id": 6,
-          "fluor": "APC-Cy7",
-          "marker": "CD8a",
-          "clone": "53-6.7",
-          "volPer100uL": "0.5",
-          "notes": "Biolegend · 100714 · $150.50 (100ug)"
-        },
-        {
-          "id": 8,
-          "fluor": "Alexa Fluor 700",
-          "marker": "NK1.1",
-          "clone": "S17016D",
-          "volPer100uL": "0.5",
-          "notes": "Biolegend · 156512"
-        },
-        {
-          "id": 9,
-          "fluor": "BUV737",
-          "marker": "CD62L",
-          "clone": "MEL-14",
-          "volPer100uL": "0.5",
-          "notes": "BD Bioscience · 612833"
-        },
-        {
-          "id": 10,
-          "fluor": "BUV661",
-          "marker": "CD44",
-          "clone": "IM7",
-          "volPer100uL": "0.2",
-          "notes": "BD Bioscience · 741471"
-        },
-        {
-          "id": 11,
-          "fluor": "BV605",
-          "marker": "CD27",
-          "clone": "LG.3A10",
-          "volPer100uL": "0.5",
-          "notes": "BD Bioscience · 563365 · BL ab (below) is cheaper"
-        },
-        {
-          "id": 12,
-          "fluor": "PE-Dazzle 594",
-          "marker": "Granzyme B (IC)",
-          "clone": "QA16A02",
-          "volPer100uL": "2.5",
-          "notes": "Biolegend · 372216"
-        },
-        {
-          "id": 13,
-          "fluor": "Alexa Fluor 647",
-          "marker": "CD49d",
-          "clone": "R1-2",
-          "volPer100uL": "0.5",
-          "notes": "Biolegend · 103614"
-        }
-      ],
-      "spilloverNotes": {},
-      "description": "This panel was used in Exp 2436 / 1492 for Marie to try and track her CD4+ CD56+ T cell phenotype she sees post TnD in patients with CMV reactivation.  Since mice do not express CD56 in the same fashion as humans do, we have to use other markers, including NK1.1 (CD161 equivalent) (hi), CD49d (ITGA4) (hi), CD27 (low), and granzymeB (hi)"
-    },
-    {
       "name": "mT/mG MCMV m09 CD4 Bleakley Panel 1 (Mouse)",
       "created": "2026-04-24T18:09:06.229Z",
       "updated": "2026-04-24T18:09:06.229Z",
@@ -599,5 +502,5 @@
       "description": "This panel was used in Exp 2436 / 1492 for Marie to try and track her CD4+ CD56+ T cell phenotype she sees post TnD in patients with CMV reactivation.  Since mice do not express CD56 in the same fashion as humans do, we have to use other markers, including NK1.1 (CD161 equivalent) (hi), CD49d (ITGA4) (hi), CD27 (low), and granzymeB (hi)"
     }
   ],
-  "updated": "2026-04-24T18:09:08.184Z"
+  "updated": "2026-04-28T16:34:22.817Z"
 }
