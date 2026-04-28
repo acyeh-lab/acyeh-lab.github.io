@@ -399,10 +399,10 @@
     {
       "name": "mT/mG MCMV m09 CD4 Bleakley Panel 1 (Mouse)",
       "created": "2026-04-24T18:09:06.229Z",
-      "updated": "2026-04-24T18:09:06.229Z",
+      "updated": "2026-04-28T20:37:11.198Z",
       "entries": [
         {
-          "id": 12,
+          "id": 1,
           "fluor": "tdTomato",
           "marker": "mT (default)",
           "clone": "",
@@ -410,7 +410,7 @@
           "notes": ""
         },
         {
-          "id": 13,
+          "id": 2,
           "fluor": "eGFP",
           "marker": "mG (Cre activated)",
           "clone": "",
@@ -418,7 +418,7 @@
           "notes": ""
         },
         {
-          "id": 14,
+          "id": 3,
           "fluor": "PE-Cy7",
           "marker": "CD3",
           "clone": "145-2C11",
@@ -426,7 +426,7 @@
           "notes": "Biolegend · 100320"
         },
         {
-          "id": 15,
+          "id": 4,
           "fluor": "BUV496",
           "marker": "CD4",
           "clone": "GK1.5",
@@ -434,7 +434,7 @@
           "notes": "BD Bioscience · 612952 · Need 2x backups"
         },
         {
-          "id": 16,
+          "id": 5,
           "fluor": "APC-Cy7",
           "marker": "CD8a",
           "clone": "53-6.7",
@@ -442,7 +442,7 @@
           "notes": "Biolegend · 100714 · $150.50 (100ug)"
         },
         {
-          "id": 17,
+          "id": 6,
           "fluor": "Alexa Fluor 700",
           "marker": "NK1.1",
           "clone": "S17016D",
@@ -450,7 +450,7 @@
           "notes": "Biolegend · 156512"
         },
         {
-          "id": 18,
+          "id": 7,
           "fluor": "BUV737",
           "marker": "CD62L",
           "clone": "MEL-14",
@@ -458,7 +458,7 @@
           "notes": "BD Bioscience · 612833"
         },
         {
-          "id": 19,
+          "id": 8,
           "fluor": "BUV661",
           "marker": "CD44",
           "clone": "IM7",
@@ -466,7 +466,7 @@
           "notes": "BD Bioscience · 741471"
         },
         {
-          "id": 20,
+          "id": 9,
           "fluor": "BV605",
           "marker": "CD27",
           "clone": "LG.3A10",
@@ -474,7 +474,7 @@
           "notes": "BD Bioscience · 563365 · BL ab (below) is cheaper"
         },
         {
-          "id": 21,
+          "id": 10,
           "fluor": "PE-Dazzle 594",
           "marker": "Granzyme B (IC)",
           "clone": "QA16A02",
@@ -482,7 +482,7 @@
           "notes": "Biolegend · 372216"
         },
         {
-          "id": 22,
+          "id": 11,
           "fluor": "Alexa Fluor 647",
           "marker": "CD49d",
           "clone": "R1-2",
@@ -490,7 +490,7 @@
           "notes": "Biolegend · 103614"
         },
         {
-          "id": 23,
+          "id": 12,
           "fluor": "BV421",
           "marker": "m09 tet (I-Ab GYLYIYPSAGNSFDL)",
           "clone": "",
@@ -502,5 +502,5 @@
       "description": "This panel was used in Exp 2436 / 1492 for Marie to try and track her CD4+ CD56+ T cell phenotype she sees post TnD in patients with CMV reactivation.  Since mice do not express CD56 in the same fashion as humans do, we have to use other markers, including NK1.1 (CD161 equivalent) (hi), CD49d (ITGA4) (hi), CD27 (low), and granzymeB (hi)"
     }
   ],
-  "updated": "2026-04-28T16:34:22.817Z"
+  "updated": "2026-04-28T20:37:12.398Z"
 }
