@@ -850,6 +850,19 @@
           "notes": [],
           "due": "2026-04-26",
           "completed": "2026-04-25"
+        },
+        {
+          "id": 109,
+          "description": "New scaffolds to test",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-04-28",
+          "notes": [
+            {
+              "date": "2026-04-28",
+              "text": "Submitted PO for TWIST 4/28/26"
+            }
+          ]
         }
       ]
     },
