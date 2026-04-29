@@ -502,5 +502,5 @@
       "description": "This panel was used in Exp 2436 / 1492 for Marie to try and track her CD4+ CD56+ T cell phenotype she sees post TnD in patients with CMV reactivation.  Since mice do not express CD56 in the same fashion as humans do, we have to use other markers, including NK1.1 (CD161 equivalent) (hi), CD49d (ITGA4) (hi), CD27 (low), and granzymeB (hi).\n\nNote that for B6->F1 experiments, we don't need to add in H2-Dd, as we can use mT/mG (if B6 donors) to distinguish donor from host!"
     }
   ],
-  "updated": "2026-04-29T15:10:11.359Z"
+  "updated": "2026-04-29T15:10:15.266Z"
 }
