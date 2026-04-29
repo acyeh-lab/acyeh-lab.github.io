@@ -307,10 +307,11 @@
         {
           "id": 85,
           "description": "Geoff's R01 summary - human spatial data",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-15",
-          "notes": []
+          "notes": [],
+          "completed": "2026-04-29"
         },
         {
           "id": 93,
