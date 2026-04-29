@@ -500,7 +500,64 @@
       ],
       "spilloverNotes": {},
       "description": "This panel was used in Exp 2436 / 1492 for Marie to try and track her CD4+ CD56+ T cell phenotype she sees post TnD in patients with CMV reactivation.  Since mice do not express CD56 in the same fashion as humans do, we have to use other markers, including NK1.1 (CD161 equivalent) (hi), CD49d (ITGA4) (hi), CD27 (low), and granzymeB (hi).\n\nNote that for B6->F1 experiments, we don't need to add in H2-Dd, as we can use mT/mG (if B6 donors) to distinguish donor from host!"
+    },
+    {
+      "name": "MCMV Tetramer Panel 1 (Mouse)",
+      "created": "2026-04-29T15:17:05.662Z",
+      "updated": "2026-04-29T15:17:05.662Z",
+      "entries": [
+        {
+          "id": 13,
+          "fluor": "PE",
+          "marker": "H-2K(b) MCMV m38 316-323 SSPPMFRV",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "1:3200 dilution, 37C x 30 minutes"
+        },
+        {
+          "id": 14,
+          "fluor": "APC",
+          "marker": "H-2D(b) MCMV M45 985-993 HGIRNASFI",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "1:200 dilution, 37C x 30 minutes"
+        },
+        {
+          "id": 15,
+          "fluor": "BV421",
+          "marker": "I-Ab MCMV m09 GYLYIYPSAGNSFDL",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "1:800 dilution, 37C x 30 minutes"
+        },
+        {
+          "id": 16,
+          "fluor": "mVenus",
+          "marker": "",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "Recipient XCR1 KO"
+        },
+        {
+          "id": 17,
+          "fluor": "mCherry",
+          "marker": "",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "Donor"
+        },
+        {
+          "id": 18,
+          "fluor": "7-AAD",
+          "marker": "",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "Viability"
+        }
+      ],
+      "spilloverNotes": {},
+      "description": "Panel used for experiment 2438T / 1481.  Tetramers include m09, m45, m38. Note that m38 and m45 are class I tetramers while m09 is a class II tetramer."
     }
   ],
-  "updated": "2026-04-29T15:10:15.266Z"
+  "updated": "2026-04-29T15:17:05.954Z"
 }
