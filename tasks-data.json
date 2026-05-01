@@ -159,10 +159,11 @@
         {
           "id": 115,
           "description": "send tomas best dsSeq reads",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-05-01",
-          "notes": []
+          "notes": [],
+          "completed": "2026-05-01"
         },
         {
           "id": 116,
