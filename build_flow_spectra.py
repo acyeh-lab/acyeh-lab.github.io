@@ -32,6 +32,7 @@ MAPPING = {
     "BUV661":             ("dye",     "BD Horizon BUV661"),
     "BUV737":             ("dye",     "BD Horizon BUV737"),
     "BUV805":             ("dye",     "BD Horizon BUV805"),
+    "FVS440UV":           None,
     "DAPI":               ("dye",     "DAPI"),
     "Hoechst 33342":      ("dye",     "Hoechst 33342"),
     "Indo-1 (free)":      None,
