@@ -504,14 +504,14 @@
     {
       "name": "APC Panel 1 (Mouse)",
       "created": "2026-05-02T03:38:49.702Z",
-      "updated": "2026-05-02T03:58:22.614Z",
+      "updated": "2026-05-02T04:00:14.480Z",
       "entries": [
         {
           "id": 1,
           "fluor": "FITC",
           "marker": "Ea52-68 peptide (YAe)",
           "clone": "eBioY-Ae",
-          "volPer100uL": "",
+          "volPer100uL": "0.5",
           "notes": "eBioscience (Fisher) · 11-5741-82 · New for AY 11/25"
         },
         {
@@ -519,7 +519,7 @@
           "fluor": "PE-Cy5",
           "marker": "CD19",
           "clone": "6D5",
-          "volPer100uL": "",
+          "volPer100uL": "0.25",
           "notes": "Biolegend · 115510"
         },
         {
@@ -527,7 +527,7 @@
           "fluor": "PE-Dazzle 594",
           "marker": "CD3",
           "clone": "145-2C11",
-          "volPer100uL": "",
+          "volPer100uL": "0.5",
           "notes": "Biolegend · 100348"
         },
         {
@@ -535,7 +535,7 @@
           "fluor": "BUV563",
           "marker": "Anti-CD49b",
           "clone": "HMα2",
-          "volPer100uL": "",
+          "volPer100uL": "0.5",
           "notes": "BD Bioscience · 741280 · Opti-Build (approved)"
         },
         {
@@ -543,7 +543,7 @@
           "fluor": "BV510",
           "marker": "NK1.1",
           "clone": "PK136",
-          "volPer100uL": "",
+          "volPer100uL": "0.75",
           "notes": "BD Bioscience · 563096"
         },
         {
@@ -551,7 +551,7 @@
           "fluor": "PerCP-Cy5.5",
           "marker": "CD11b",
           "clone": "M1/70",
-          "volPer100uL": "",
+          "volPer100uL": "0.5",
           "notes": "Biolegend · 101228 · cross reacts mouse/human $189 (100ug) Need 2x backups"
         },
         {
@@ -559,7 +559,7 @@
           "fluor": "BUV737",
           "marker": "Siglec-H",
           "clone": "440c",
-          "volPer100uL": "",
+          "volPer100uL": "0.25",
           "notes": "BD Bioscience · 748293 · Need 2x backups; OptiBuild Motoko."
         },
         {
@@ -567,7 +567,7 @@
           "fluor": "Alexa Fluor 700",
           "marker": "Ly-6C",
           "clone": "HK1.4",
-          "volPer100uL": "",
+          "volPer100uL": "0.2",
           "notes": "Biolegend · 128024 · $173.60 (100ug)"
         },
         {
@@ -575,7 +575,7 @@
           "fluor": "APC-Cy7",
           "marker": "Ly-6G",
           "clone": "1A8",
-          "volPer100uL": "",
+          "volPer100uL": "0.5",
           "notes": "Biolegend · 127624 · $212.10 (100ug)"
         },
         {
@@ -583,7 +583,7 @@
           "fluor": "BV605",
           "marker": "CD11c",
           "clone": "N418",
-          "volPer100uL": "",
+          "volPer100uL": "0.5",
           "notes": "Biolegend · 117334 · Equivalent to BD Ab, but cheaper"
         },
         {
@@ -591,7 +591,7 @@
           "fluor": "PE-Cy7",
           "marker": "CD64",
           "clone": "X54-5/7.1",
-          "volPer100uL": "",
+          "volPer100uL": "0.5",
           "notes": "Biolegend · 139314"
         },
         {
@@ -599,7 +599,7 @@
           "fluor": "Pacific Blue",
           "marker": "IA/IE",
           "clone": "M5/114.15.2",
-          "volPer100uL": "",
+          "volPer100uL": "0.25",
           "notes": "Biolegend · 107620"
         },
         {
@@ -607,7 +607,7 @@
           "fluor": "PE",
           "marker": "CD80",
           "clone": "16-10A1",
-          "volPer100uL": "",
+          "volPer100uL": "0.5",
           "notes": "Biolegend · 104708"
         }
       ],
@@ -615,5 +615,5 @@
       "description": "Panel used to characterize YAe / APC subsets with Adonai 5/1/26."
     }
   ],
-  "updated": "2026-05-02T03:58:24.046Z"
+  "updated": "2026-05-02T04:00:15.527Z"
 }
