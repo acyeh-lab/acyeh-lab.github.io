@@ -168,18 +168,20 @@
         {
           "id": 116,
           "description": "look at PDF from arunima",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-05-01",
-          "notes": []
+          "notes": [],
+          "completed": "2026-05-03"
         },
         {
           "id": 117,
           "description": "freeze samples for adonai",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-05-01",
-          "notes": []
+          "notes": [],
+          "completed": "2026-05-03"
         },
         {
           "id": 118,
