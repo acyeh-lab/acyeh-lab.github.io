@@ -195,7 +195,7 @@
           "id": 119,
           "description": "freeze DC 2.4s",
           "status": "open",
-          "priority": "low",
+          "priority": "high",
           "created": "2026-05-03",
           "notes": []
         }
