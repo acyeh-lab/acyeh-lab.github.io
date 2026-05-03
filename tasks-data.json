@@ -337,7 +337,7 @@
           "priority": "high",
           "created": "2026-04-12",
           "notes": [],
-          "due": "2026-05-01"
+          "due": "2026-05-28"
         },
         {
           "id": 78,
@@ -372,11 +372,12 @@
         {
           "id": 105,
           "description": "Data for Geoff",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-28",
           "notes": [],
-          "due": "2026-04-30"
+          "due": "2026-04-30",
+          "completed": "2026-05-03"
         },
         {
           "id": 106,
