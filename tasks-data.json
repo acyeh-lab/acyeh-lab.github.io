@@ -988,6 +988,19 @@
         }
       ]
     },
+    "CCR4 - CCL17/22 Mechanism": {
+      "description": "Based on SILP data",
+      "tasks": [
+        {
+          "id": 121,
+          "description": "Sequence Taconic CD64 Mac and DC cell subsets to pair with SILP findings.",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-05-04",
+          "notes": []
+        }
+      ]
+    },
     "Cardiac CMV": {
       "description": "clinical dataset + murine TTE; most recently Exp 1436 and 1439",
       "tasks": [
@@ -1093,27 +1106,6 @@
           "created": "2026-04-08",
           "notes": [],
           "completed": "2026-04-25"
-        }
-      ]
-    },
-    "Job Talk Ideas": {
-      "description": "",
-      "tasks": [
-        {
-          "id": 86,
-          "description": "Studying the microbe-immune interface, building computational tools",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-15",
-          "notes": []
-        },
-        {
-          "id": 91,
-          "description": "Talk not just about my work in Immunity (Transplant); show Nature paper (epitope spreading), recent Sci Immunol paper",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-16",
-          "notes": []
         }
       ]
     },
