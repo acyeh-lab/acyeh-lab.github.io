@@ -117,8 +117,13 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-04-17",
-          "notes": [],
-          "due": "2026-05-04"
+          "notes": [
+            {
+              "date": "2026-05-05",
+              "text": "5/4 - interviewed; she is on Visa.  Did not get into Coding for Cancer; told her I'd wait to hear back from FHCC summer programs"
+            }
+          ],
+          "due": "2026-05-25"
         },
         {
           "id": 98,
@@ -194,10 +199,11 @@
         {
           "id": 119,
           "description": "freeze DC 2.4s",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-05-05"
         },
         {
           "id": 120,
