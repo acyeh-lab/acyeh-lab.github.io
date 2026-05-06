@@ -185,10 +185,11 @@
         {
           "id": 118,
           "description": "reserve room for chalk talk  5/6 wed 1pm",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-01",
-          "notes": []
+          "notes": [],
+          "completed": "2026-05-06"
         },
         {
           "id": 119,
@@ -431,6 +432,14 @@
           "created": "2026-04-30",
           "notes": [],
           "due": "2026-05-18"
+        },
+        {
+          "id": 125,
+          "description": "apply for Singular pilot 1000 sample pilot?",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-06",
+          "notes": []
         }
       ]
     },
