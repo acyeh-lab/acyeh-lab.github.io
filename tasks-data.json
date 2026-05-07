@@ -421,11 +421,12 @@
         {
           "id": 106,
           "description": "K08 Data",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-28",
           "notes": [],
-          "due": "2026-05-07"
+          "due": "2026-05-07",
+          "completed": "2026-05-07"
         },
         {
           "id": 108,
@@ -1022,6 +1023,14 @@
           "status": "open",
           "priority": "low",
           "created": "2026-04-30",
+          "notes": []
+        },
+        {
+          "id": 127,
+          "description": "LIPSTIC tech to track antigen-specfic SFB (CD40L/SRTA donors and CD40G5/G5 recips): https://www.jax.org/strain/037113",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-07",
           "notes": []
         }
       ]
