@@ -212,11 +212,12 @@
         {
           "id": 123,
           "description": "culture for adonai",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-05",
           "notes": [],
-          "due": "2026-05-05"
+          "due": "2026-05-05",
+          "completed": "2026-05-07"
         },
         {
           "id": 125,
