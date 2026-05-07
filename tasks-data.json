@@ -186,10 +186,11 @@
         {
           "id": 118,
           "description": "reserve room for chalk talk  5/6 wed 1pm",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-01",
-          "notes": []
+          "notes": [],
+          "completed": "2026-05-07"
         },
         {
           "id": 119,
