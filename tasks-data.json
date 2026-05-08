@@ -623,6 +623,14 @@
           "priority": "medium",
           "created": "2026-05-08",
           "notes": []
+        },
+        {
+          "id": 129,
+          "description": "E.coli T cells in IBD: https://pmc.ncbi.nlm.nih.gov/articles/PMC7385044/",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-05-08",
+          "notes": []
         }
       ]
     },
