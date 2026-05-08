@@ -615,6 +615,14 @@
           "created": "2026-04-17",
           "notes": [],
           "due": "2026-05-31"
+        },
+        {
+          "id": 128,
+          "description": "Look a bacterial_peptides vs. bacterial_mouse_peptides (latter are peptides shared between bacterial genomes and mouse genomes!)",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-05-08",
+          "notes": []
         }
       ]
     },
