@@ -631,6 +631,14 @@
           "priority": "low",
           "created": "2026-05-08",
           "notes": []
+        },
+        {
+          "id": 130,
+          "description": "Order TGMAFRVPTPNVSVVD peptide (shared E.coli / B6) and NIH tetramer!  Strongest of them all.",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-09",
+          "notes": []
         }
       ]
     },
