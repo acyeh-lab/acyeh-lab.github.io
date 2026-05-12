@@ -237,6 +237,22 @@
           "created": "2026-05-07",
           "notes": [],
           "due": "2026-05-15"
+        },
+        {
+          "id": 131,
+          "description": "send intro to marie!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-12",
+          "notes": []
+        },
+        {
+          "id": 132,
+          "description": "Help geoff with BCMA dataset",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-05-12",
+          "notes": []
         }
       ]
     },
