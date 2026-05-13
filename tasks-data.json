@@ -617,6 +617,22 @@
           "priority": "low",
           "created": "2026-05-04",
           "notes": []
+        },
+        {
+          "id": 134,
+          "description": "stereo-seq V2! https://www.cell.com/cell/fulltext/S0092-8674(25)00922-5",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-05-13",
+          "notes": []
+        },
+        {
+          "id": 135,
+          "description": "Look at J-chain repertoire and compare metrics between singular and scSeq! Sanity check",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-13",
+          "notes": []
         }
       ]
     },
