@@ -793,17 +793,18 @@
         {
           "id": 4,
           "description": "Takedown #2 — mouse organ harvest (day 28 post-transplant)",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-26",
           "notes": [],
-          "due": "2026-04-23"
+          "due": "2026-04-23",
+          "completed": "2026-05-18"
         },
         {
           "id": 17,
-          "description": "VECTRA Panel",
+          "description": "VECTRA Panel Analysis",
           "status": "open",
-          "priority": "low",
+          "priority": "high",
           "created": "2026-03-30",
           "notes": [
             {
@@ -840,11 +841,12 @@
         {
           "id": 103,
           "description": "Transfer to EH",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-25",
           "notes": [],
-          "due": "2026-04-27"
+          "due": "2026-04-27",
+          "completed": "2026-05-18"
         }
       ]
     },
