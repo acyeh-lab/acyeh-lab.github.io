@@ -252,7 +252,7 @@
           "id": 132,
           "description": "Help geoff with BCMA dataset",
           "status": "open",
-          "priority": "low",
+          "priority": "medium",
           "created": "2026-05-12",
           "notes": []
         }
@@ -592,7 +592,7 @@
           "id": 79,
           "description": "look at VCAN activated macrophages? BUY Antibodies and Test IN VITRO!",
           "status": "open",
-          "priority": "high",
+          "priority": "medium",
           "created": "2026-04-13",
           "notes": []
         },
@@ -607,11 +607,12 @@
         },
         {
           "id": 112,
-          "description": "order next xenium slides!",
+          "description": "Give David layout!",
           "status": "open",
           "priority": "high",
           "created": "2026-04-30",
-          "notes": []
+          "notes": [],
+          "due": "2026-05-18"
         },
         {
           "id": 122,
@@ -633,7 +634,7 @@
           "id": 135,
           "description": "Look at J-chain repertoire and compare metrics between singular and scSeq! Sanity check",
           "status": "open",
-          "priority": "high",
+          "priority": "medium",
           "created": "2026-05-13",
           "notes": []
         }
