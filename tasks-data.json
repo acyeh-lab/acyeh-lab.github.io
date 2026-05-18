@@ -203,10 +203,11 @@
         {
           "id": 120,
           "description": "help with CONGA (LT-GDTs)",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-05-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-05-18"
         },
         {
           "id": 123,
@@ -1080,11 +1081,12 @@
         {
           "id": 110,
           "description": "Split DC2.4 and freeze",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-28",
           "notes": [],
-          "due": "2026-05-01"
+          "due": "2026-05-01",
+          "completed": "2026-05-18"
         },
         {
           "id": 114,
