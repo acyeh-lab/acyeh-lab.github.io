@@ -222,28 +222,31 @@
         {
           "id": 125,
           "description": "Job talk!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-07",
           "notes": [],
-          "due": "2026-05-14"
+          "due": "2026-05-14",
+          "completed": "2026-05-18"
         },
         {
           "id": 126,
           "description": "Chalk talk!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-07",
           "notes": [],
-          "due": "2026-05-15"
+          "due": "2026-05-15",
+          "completed": "2026-05-18"
         },
         {
           "id": 131,
           "description": "send intro to marie!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-12",
-          "notes": []
+          "notes": [],
+          "completed": "2026-05-18"
         },
         {
           "id": 132,
