@@ -189,7 +189,7 @@
           "priority": "high",
           "created": "2026-05-01",
           "notes": [],
-          "completed": "2026-05-06"
+          "completed": "2026-05-07"
         },
         {
           "id": 119,
@@ -203,11 +203,11 @@
         {
           "id": 120,
           "description": "help with CONGA (LT-GDTs)",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-05-03",
           "notes": [],
-          "due": "2026-05-18"
+          "completed": "2026-05-18"
         },
         {
           "id": 123,
@@ -217,23 +217,65 @@
           "created": "2026-05-05",
           "notes": [],
           "due": "2026-05-05",
-          "completed": "2026-05-06"
+          "completed": "2026-05-07"
         },
         {
-          "id": 124,
-          "description": "Reply to FHCC summer program / coding for cancer!",
-          "status": "open",
+          "id": 125,
+          "description": "Job talk!",
+          "status": "done",
           "priority": "high",
-          "created": "2026-05-05",
+          "created": "2026-05-07",
+          "notes": [],
+          "due": "2026-05-14",
+          "completed": "2026-05-18"
+        },
+        {
+          "id": 126,
+          "description": "Chalk talk!",
+          "status": "done",
+          "priority": "high",
+          "created": "2026-05-07",
+          "notes": [],
+          "due": "2026-05-15",
+          "completed": "2026-05-18"
+        },
+        {
+          "id": 131,
+          "description": "send intro to marie!",
+          "status": "done",
+          "priority": "high",
+          "created": "2026-05-12",
+          "notes": [],
+          "completed": "2026-05-18"
+        },
+        {
+          "id": 132,
+          "description": "Help geoff with BCMA dataset",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-05-12",
           "notes": []
         },
         {
-          "id": 127,
-          "description": "Use MCMV mice!",
+          "id": 136,
+          "description": "reply to anika",
           "status": "open",
-          "priority": "low",
+          "priority": "medium",
           "created": "2026-05-18",
           "notes": []
+        },
+        {
+          "id": 137,
+          "description": "Update Patrick Shelby with IP!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-18",
+          "notes": [
+            {
+              "date": "2026-05-18",
+              "text": "Commercial interest: Signios Bio - definitely interested"
+            }
+          ]
         }
       ]
     },
@@ -418,11 +460,12 @@
         {
           "id": 106,
           "description": "K08 Data",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-28",
           "notes": [],
-          "due": "2026-05-07"
+          "due": "2026-05-07",
+          "completed": "2026-05-07"
         },
         {
           "id": 108,
@@ -435,19 +478,21 @@
         {
           "id": 113,
           "description": "Blood Review",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-30",
           "notes": [],
-          "due": "2026-05-18"
+          "due": "2026-05-18",
+          "completed": "2026-05-19"
         },
         {
-          "id": 125,
-          "description": "apply for Singular pilot 1000 sample pilot?",
+          "id": 133,
+          "description": "blood advances review!",
           "status": "open",
           "priority": "high",
-          "created": "2026-05-06",
-          "notes": []
+          "created": "2026-05-12",
+          "notes": [],
+          "due": "2026-05-26"
         }
       ]
     },
@@ -569,7 +614,7 @@
           "id": 79,
           "description": "look at VCAN activated macrophages? BUY Antibodies and Test IN VITRO!",
           "status": "open",
-          "priority": "high",
+          "priority": "medium",
           "created": "2026-04-13",
           "notes": []
         },
@@ -584,11 +629,12 @@
         },
         {
           "id": 112,
-          "description": "order next xenium slides!",
+          "description": "Give David layout!",
           "status": "open",
           "priority": "high",
           "created": "2026-04-30",
-          "notes": []
+          "notes": [],
+          "due": "2026-05-18"
         },
         {
           "id": 122,
@@ -599,11 +645,19 @@
           "notes": []
         },
         {
-          "id": 126,
-          "description": "Run samples week of 5/25!",
+          "id": 134,
+          "description": "stereo-seq V2! https://www.cell.com/cell/fulltext/S0092-8674(25)00922-5",
           "status": "open",
-          "priority": "high",
-          "created": "2026-05-06",
+          "priority": "medium",
+          "created": "2026-05-13",
+          "notes": []
+        },
+        {
+          "id": 135,
+          "description": "Look at J-chain repertoire and compare metrics between singular and scSeq! Sanity check",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-05-13",
           "notes": []
         }
       ]
@@ -627,6 +681,30 @@
           "created": "2026-04-17",
           "notes": [],
           "due": "2026-05-31"
+        },
+        {
+          "id": 128,
+          "description": "Look a bacterial_peptides vs. bacterial_mouse_peptides (latter are peptides shared between bacterial genomes and mouse genomes!)",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-05-08",
+          "notes": []
+        },
+        {
+          "id": 129,
+          "description": "E.coli T cells in IBD: https://pmc.ncbi.nlm.nih.gov/articles/PMC7385044/",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-05-08",
+          "notes": []
+        },
+        {
+          "id": 130,
+          "description": "Order TGMAFRVPTPNVSVVD peptide (shared E.coli / B6) and NIH tetramer!  Strongest of them all.",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-09",
+          "notes": []
         }
       ]
     },
@@ -738,17 +816,18 @@
         {
           "id": 4,
           "description": "Takedown #2 — mouse organ harvest (day 28 post-transplant)",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-03-26",
           "notes": [],
-          "due": "2026-04-23"
+          "due": "2026-04-23",
+          "completed": "2026-05-18"
         },
         {
           "id": 17,
-          "description": "VECTRA Panel",
+          "description": "VECTRA Panel Analysis",
           "status": "open",
-          "priority": "low",
+          "priority": "high",
           "created": "2026-03-30",
           "notes": [
             {
@@ -785,11 +864,12 @@
         {
           "id": 103,
           "description": "Transfer to EH",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-25",
           "notes": [],
-          "due": "2026-04-27"
+          "due": "2026-04-27",
+          "completed": "2026-05-18"
         }
       ]
     },
@@ -1023,11 +1103,12 @@
         {
           "id": 110,
           "description": "Split DC2.4 and freeze",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-28",
           "notes": [],
-          "due": "2026-05-01"
+          "due": "2026-05-01",
+          "completed": "2026-05-18"
         },
         {
           "id": 114,
@@ -1035,6 +1116,14 @@
           "status": "open",
           "priority": "low",
           "created": "2026-04-30",
+          "notes": []
+        },
+        {
+          "id": 127,
+          "description": "LIPSTIC tech to track antigen-specfic SFB (CD40L/SRTA donors and CD40G5/G5 recips): https://www.jax.org/strain/037113",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-07",
           "notes": []
         }
       ]
@@ -1048,6 +1137,14 @@
           "status": "open",
           "priority": "medium",
           "created": "2026-05-04",
+          "notes": []
+        },
+        {
+          "id": 124,
+          "description": "Restain / check protein expression on CCR4!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-07",
           "notes": []
         }
       ]
@@ -1228,27 +1325,6 @@
           "created": "2026-04-28",
           "notes": [],
           "due": "2026-05-25"
-        }
-      ]
-    },
-    "Job Talk Ideas": {
-      "description": "",
-      "tasks": [
-        {
-          "id": 86,
-          "description": "Studying the microbe-immune interface, building computational tools",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-15",
-          "notes": []
-        },
-        {
-          "id": 91,
-          "description": "Talk not just about my work in Immunity (Transplant); show Nature paper (epitope spreading), recent Sci Immunol paper",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-16",
-          "notes": []
         }
       ]
     }
