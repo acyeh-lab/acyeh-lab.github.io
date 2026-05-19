@@ -259,10 +259,11 @@
         {
           "id": 136,
           "description": "reply to anika",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-05-18",
-          "notes": []
+          "notes": [],
+          "completed": "2026-05-19"
         },
         {
           "id": 137,
