@@ -493,6 +493,14 @@
           "created": "2026-05-12",
           "notes": [],
           "due": "2026-05-26"
+        },
+        {
+          "id": 138,
+          "description": "Apply DP2 grant (per Kate!)",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-19",
+          "notes": []
         }
       ]
     },
