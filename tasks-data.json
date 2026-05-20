@@ -685,6 +685,14 @@
           "priority": "high",
           "created": "2026-05-20",
           "notes": []
+        },
+        {
+          "id": 141,
+          "description": "need to find original genome that i used to purchase the e.coli probes!",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-05-20",
+          "notes": []
         }
       ]
     },
