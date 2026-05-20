@@ -29,6 +29,55 @@
         nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
         nav a:hover { text-decoration: underline; }
         .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .project { margin: 30px 0; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .project:last-child { border-bottom: none; }
+        .project h3 { color: #0056b3; margin-bottom: 10px; }
+        .project-media {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .project-media a.thumb {
+            position: relative;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .project-media a.thumb img {
+            width: 280px;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            display: block;
+        }
+        .project-media a.thumb::after {
+            content: "\25B6";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.55);
+            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+            line-height: 64px;
+            text-align: center;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+        .project-media a.thumb:hover::after { opacity: 1; background: rgba(0, 86, 179, 0.85); }
+        .project-media .media-caption {
+            font-size: 0.95rem;
+            color: #444;
+            max-width: 500px;
+        }
+        .project-media .media-caption .seminar-title {
+            font-style: italic;
+            color: #222;
+        }
         footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
     </style>
 </head>
@@ -50,7 +99,36 @@
 
     <div class="container">
         <h2>Our Projects</h2>
-        <p>Details about ongoing research and upcoming initiatives will be available soon.</p>
+
+        <div class="project">
+            <h3>Microbial T cells in Stem Cell Transplantation</h3>
+            <p>
+                Allogeneic stem cell transplantation exposes the new donor immune system to a vast microbial
+                community in the recipient gut. We are investigating how T cells recognize microbial antigens
+                in this setting and how those responses shape graft-versus-host disease (GVHD), immune
+                reconstitution, and post-transplant outcomes. Current work combines pangenome analyses of
+                commensal bacteria, identification of conserved candidate T-cell epitopes, and murine
+                transplant models.
+            </p>
+            <div class="project-media">
+                <a class="thumb"
+                   href="https://fredhutch.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=54536e83-f55d-4e34-b345-b44b00ef2ae2"
+                   target="_blank" rel="noopener"
+                   title="Watch the seminar on Panopto">
+                    <img src="images/Seminar_MicrobialTcells_2026.jpg"
+                         alt="Seminar title slide: Beyond Donor-Host Disparity">
+                </a>
+                <div class="media-caption">
+                    <strong>Seminar:</strong>
+                    <span class="seminar-title">"Beyond Donor&ndash;Host Disparity: Microbial Antigens Shape
+                    T Cell Responses in Graft-vs-Host Disease"</span><br>
+                    Albert Yeh, MD &middot; May 14, 2026<br>
+                    <a href="https://fredhutch.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=54536e83-f55d-4e34-b345-b44b00ef2ae2"
+                       target="_blank" rel="noopener">Watch on Panopto &rarr;</a>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <footer>
