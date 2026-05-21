@@ -69,6 +69,15 @@
             transition: opacity 0.2s;
         }
         .project-media a.thumb:hover::after { opacity: 1; background: rgba(0, 86, 179, 0.85); }
+        .project-media video.seminar-video {
+            width: 480px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            background: #000;
+            flex-shrink: 0;
+        }
         .project-media .media-caption {
             font-size: 0.95rem;
             color: #444;
@@ -109,20 +118,17 @@
                 reconstitution, and post-transplant outcomes.
             </p>
             <div class="project-media">
-                <a class="thumb"
-                   href="https://fredhutch.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=54536e83-f55d-4e34-b345-b44b00ef2ae2"
-                   target="_blank" rel="noopener"
-                   title="Watch the seminar on Panopto">
-                    <img src="images/Seminar_MicrobialTcells_2026.jpg"
-                         alt="Seminar title slide: Beyond Donor-Host Disparity">
-                </a>
+                <video class="seminar-video" controls preload="metadata"
+                       poster="images/Seminar_MicrobialTcells_2026.jpg">
+                    <source src="media/seminar-2026-05-14.mp4" type="video/mp4">
+                    Your browser does not support embedded video.
+                    <a href="media/seminar-2026-05-14.mp4">Download the seminar video</a>.
+                </video>
                 <div class="media-caption">
                     <strong>Seminar:</strong>
                     <span class="seminar-title">"Beyond Donor&ndash;Host Disparity: Microbial Antigens Shape
                     T Cell Responses in Graft-vs-Host Disease"</span><br>
-                    Albert Yeh, MD &middot; May 14, 2026<br>
-                    <a href="https://fredhutch.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=54536e83-f55d-4e34-b345-b44b00ef2ae2"
-                       target="_blank" rel="noopener">Watch on Panopto &rarr;</a>
+                    Albert Yeh, MD &middot; May 14, 2026
                 </div>
             </div>
         </div>
