@@ -295,6 +295,23 @@
           "created": "2026-05-21",
           "notes": [],
           "due": "2026-06-01"
+        },
+        {
+          "id": 143,
+          "description": "pending singular 3D grant",
+          "status": "done",
+          "priority": "medium",
+          "created": "2026-05-21",
+          "notes": [],
+          "completed": "2026-05-21"
+        },
+        {
+          "id": 144,
+          "description": "pending Singular Genomics 3D Grant (Submitted 5/21/26)",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-05-21",
+          "notes": []
         }
       ]
     },
