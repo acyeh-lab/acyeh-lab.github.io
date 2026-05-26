@@ -252,7 +252,7 @@
           "id": 132,
           "description": "Help geoff with BCMA dataset",
           "status": "open",
-          "priority": "medium",
+          "priority": "high",
           "created": "2026-05-12",
           "notes": []
         },
@@ -281,16 +281,15 @@
         {
           "id": 139,
           "description": "Xenium",
-          "status": "done",
+          "status": "open",
           "priority": "high",
           "created": "2026-05-20",
           "notes": [],
-          "due": "2026-05-21",
-          "completed": "2026-05-22"
+          "due": "2026-05-21"
         },
         {
           "id": 142,
-          "description": "funding report",
+          "description": "ASH funding report",
           "status": "open",
           "priority": "high",
           "created": "2026-05-21",
@@ -312,14 +311,6 @@
           "status": "open",
           "priority": "low",
           "created": "2026-05-21",
-          "notes": []
-        },
-        {
-          "id": 145,
-          "description": "HPC for arunima",
-          "status": "open",
-          "priority": "high",
-          "created": "2026-05-22",
           "notes": []
         }
       ]
