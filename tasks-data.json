@@ -454,9 +454,9 @@
         },
         {
           "id": 77,
-          "description": "apply for CCR grant due June!",
+          "description": "apply for CCR grant due Dec 1!  Apply 1 month in advance!",
           "status": "open",
-          "priority": "high",
+          "priority": "medium",
           "created": "2026-04-12",
           "notes": [
             {
@@ -464,7 +464,7 @@
               "text": "https://www.cancer.org/research/we-fund-cancer-research/apply-research-grant/grant-types/research-scholar-grants.html"
             }
           ],
-          "due": "2026-05-28"
+          "due": "2026-11-01"
         },
         {
           "id": 78,
@@ -687,11 +687,12 @@
         {
           "id": 112,
           "description": "Give David layout!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-30",
           "notes": [],
-          "due": "2026-05-18"
+          "due": "2026-05-18",
+          "completed": "2026-05-26"
         },
         {
           "id": 122,
