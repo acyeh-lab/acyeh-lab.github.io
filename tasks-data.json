@@ -870,6 +870,14 @@
           "priority": "low",
           "created": "2026-04-14",
           "notes": []
+        },
+        {
+          "id": 150,
+          "description": "Ask michelle for samples / tissue curls we can do bulk T/B VDJ!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-05-29",
+          "notes": []
         }
       ]
     },
