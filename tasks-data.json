@@ -1365,9 +1365,9 @@
         },
         {
           "id": 149,
-          "description": "plan next MCMV exp",
+          "description": "plan next MCMV exp - use B/T cell phenotype as readout instead of survival!",
           "status": "open",
-          "priority": "low",
+          "priority": "high",
           "created": "2026-05-28",
           "notes": []
         }
