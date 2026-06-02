@@ -337,6 +337,15 @@
           "priority": "medium",
           "created": "2026-05-28",
           "notes": []
+        },
+        {
+          "id": 151,
+          "description": "Lab recruitment",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-06-02",
+          "notes": [],
+          "due": "2026-06-12"
         }
       ]
     },
