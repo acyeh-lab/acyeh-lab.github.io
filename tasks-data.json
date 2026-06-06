@@ -1411,7 +1411,33 @@
     },
     "Collab with Anika / Andres Lieber": {
       "description": "Viral-targeting HSCs",
-      "tasks": []
+      "tasks": [
+        {
+          "id": 157,
+          "description": "Brainstorm ideas for collab - they have HDad (modified adenovirus vectors) with fiber protein that can enter HSCs (facilitated by human CD46-mice).",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-06-06",
+          "notes": [
+            {
+              "date": "2026-06-06",
+              "text": "Comments: -We can transduce HSCs in vivo and restrict expression to specific T cell subsets using certain promoters, but we cannot directly transduce T cells. This can be done to express TCRs or CARs."
+            },
+            {
+              "date": "2026-06-06",
+              "text": "-The advantage of our approach is continuous expression of these T cells -We use a suicide system to arrest T cells."
+            },
+            {
+              "date": "2026-06-06",
+              "text": "We have tested this using Ganciclovir.  -There is enough space in our vector to express immunostimulatory cytokines (CD40, IL2, etc)"
+            },
+            {
+              "date": "2026-06-06",
+              "text": "- We need humanized BLT mice (we have CD46 transgenic mice) for this and are not sure what mice models you have or if the microbes work here."
+            }
+          ]
+        }
+      ]
     },
     "Collaborations with Kate Markey": {
       "description": "Update data/figs",
@@ -1465,8 +1491,20 @@
             {
               "date": "2026-04-28",
               "text": "David glass recommended: https://apps.allenimmunology.org/aifi/resources/imm-health-atlas/cell-type-descriptions/b-cells-and-plasma-cells/"
+            },
+            {
+              "date": "2026-06-06",
+              "text": "Shifted Arunima to NUS Collab project"
             }
           ]
+        },
+        {
+          "id": 156,
+          "description": "?Collab with Phil - need to ask Michelle for frozen samples!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-06-06",
+          "notes": []
         }
       ]
     },
@@ -1481,6 +1519,14 @@
           "created": "2026-04-28",
           "notes": [],
           "due": "2026-05-25"
+        },
+        {
+          "id": 155,
+          "description": "Ask Aruinima to work on it",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-06-06",
+          "notes": []
         }
       ]
     }
