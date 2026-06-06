@@ -1409,6 +1409,10 @@
         }
       ]
     },
+    "Collab with Anika / Andres Lieber": {
+      "description": "Viral-targeting HSCs",
+      "tasks": []
+    },
     "Collaborations with Kate Markey": {
       "description": "Update data/figs",
       "tasks": [
@@ -1477,27 +1481,6 @@
           "created": "2026-04-28",
           "notes": [],
           "due": "2026-05-25"
-        }
-      ]
-    },
-    "Job Talk Ideas": {
-      "description": "",
-      "tasks": [
-        {
-          "id": 86,
-          "description": "Studying the microbe-immune interface, building computational tools",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-15",
-          "notes": []
-        },
-        {
-          "id": 91,
-          "description": "Talk not just about my work in Immunity (Transplant); show Nature paper (epitope spreading), recent Sci Immunol paper",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-04-16",
-          "notes": []
         }
       ]
     }
