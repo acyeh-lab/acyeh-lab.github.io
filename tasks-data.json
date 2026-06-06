@@ -333,11 +333,12 @@
         {
           "id": 147,
           "description": "lunch with tony and hugh",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-05-28",
           "notes": [],
-          "due": "2026-06-03"
+          "due": "2026-06-03",
+          "completed": "2026-06-06"
         },
         {
           "id": 151,
