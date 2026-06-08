@@ -913,7 +913,12 @@
           "status": "open",
           "priority": "high",
           "created": "2026-05-29",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-06-08",
+              "text": "Got candidate sequencing samples (K96, K102 and part of K77) - awaiting to see if Phil has summer student."
+            }
+          ]
         }
       ]
     },
