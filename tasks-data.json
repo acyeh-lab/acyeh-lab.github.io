@@ -1449,15 +1449,20 @@
             },
             {
               "date": "2026-06-08",
-              "text": "Uses retinoic acid receptor (RARE) reporter - drive a4/b7 gut imprint. - h"
+              "text": "Uses retinoic acid receptor (RARE) reporter - drive a4/b7 gut imprint. -"
             },
             {
               "date": "2026-06-08",
-              "text": "Retinoic acid:"
+              "text": "Retinoic acid:-"
+            },
+            {
+              "date": "2026-06-08",
+              "text": "RA imprints gut Immunity, Vol. 21, 527–538, October, 2004,"
             }
           ]
         }
-      ]
+      ],
+      "color": "#1976d2"
     },
     "Collaborations with Kate Markey": {
       "description": "Update data/figs",
