@@ -1434,6 +1434,10 @@
             {
               "date": "2026-06-06",
               "text": "- We need humanized BLT mice (we have CD46 transgenic mice) for this and are not sure what mice models you have or if the microbes work here."
+            },
+            {
+              "date": "2026-06-08",
+              "text": "Maybe use HDAd to create \"deletable\" T cells"
             }
           ]
         }
