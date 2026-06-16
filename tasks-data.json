@@ -251,10 +251,11 @@
         {
           "id": 132,
           "description": "Help geoff with BCMA dataset",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-12",
-          "notes": []
+          "notes": [],
+          "completed": "2026-06-16"
         },
         {
           "id": 136,
@@ -352,27 +353,30 @@
         {
           "id": 152,
           "description": "e-mail michelle about samples",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-06-02",
-          "notes": []
+          "notes": [],
+          "completed": "2026-06-16"
         },
         {
           "id": 153,
           "description": "chat with arunima",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-06-02",
           "notes": [],
-          "due": "2026-06-09"
+          "due": "2026-06-09",
+          "completed": "2026-06-16"
         },
         {
           "id": 154,
           "description": "reply to patent people!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-06-02",
-          "notes": []
+          "notes": [],
+          "completed": "2026-06-16"
         }
       ]
     },
