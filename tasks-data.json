@@ -291,11 +291,12 @@
         {
           "id": 142,
           "description": "ASH funding report",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-21",
           "notes": [],
-          "due": "2026-06-08"
+          "due": "2026-06-08",
+          "completed": "2026-06-18"
         },
         {
           "id": 143,
@@ -317,10 +318,11 @@
         {
           "id": 145,
           "description": "ASH article update!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-26",
-          "notes": []
+          "notes": [],
+          "completed": "2026-06-18"
         },
         {
           "id": 146,
