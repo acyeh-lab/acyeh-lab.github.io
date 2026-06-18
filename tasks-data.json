@@ -803,7 +803,12 @@
           "status": "open",
           "priority": "high",
           "created": "2026-06-18",
-          "notes": []
+          "notes": [
+            {
+              "date": "2026-06-18",
+              "text": "Student;: Aidan Koshinsky - rising senior from PLU"
+            }
+          ]
         }
       ]
     },
