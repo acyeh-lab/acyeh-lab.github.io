@@ -498,18 +498,20 @@
         {
           "id": 74,
           "description": "?2 summer undergrads",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-11",
-          "notes": []
+          "notes": [],
+          "completed": "2026-06-18"
         },
         {
           "id": 75,
           "description": "Arunima status",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-11",
-          "notes": []
+          "notes": [],
+          "completed": "2026-06-18"
         },
         {
           "id": 77,
@@ -578,10 +580,11 @@
         {
           "id": 108,
           "description": "gina replacement for P8792 CRC",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-28",
-          "notes": []
+          "notes": [],
+          "completed": "2026-06-18"
         },
         {
           "id": 113,
@@ -792,6 +795,14 @@
           "status": "open",
           "priority": "low",
           "created": "2026-05-20",
+          "notes": []
+        },
+        {
+          "id": 158,
+          "description": "EDRN samples from neel - he has 16S!  14 Normal   36 Adenoma (average-risk)   42 Advanced Adenoma (high-risk)   36 Cancer",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-06-18",
           "notes": []
         }
       ]
@@ -1233,7 +1244,7 @@
         {
           "id": 109,
           "description": "New scaffolds to test",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-28",
           "notes": [
@@ -1245,7 +1256,8 @@
               "date": "2026-04-29",
               "text": "TWIST order into production 4/29/26"
             }
-          ]
+          ],
+          "completed": "2026-06-18"
         },
         {
           "id": 110,
