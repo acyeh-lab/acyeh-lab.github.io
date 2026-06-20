@@ -385,7 +385,7 @@
           "id": 159,
           "description": "Reply to Blood Reviews editorial board!",
           "status": "open",
-          "priority": "low",
+          "priority": "high",
           "created": "2026-06-20",
           "notes": []
         }
