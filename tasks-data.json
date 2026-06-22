@@ -1523,6 +1523,10 @@
             {
               "date": "2026-04-15",
               "text": "I helped with providing SMH Data"
+            },
+            {
+              "date": "2026-06-22",
+              "text": "Provided revision for SMH plot"
             }
           ]
         },
@@ -1530,7 +1534,7 @@
           "id": 87,
           "description": "Diet Paper (Blood Adv) Review",
           "status": "open",
-          "priority": "medium",
+          "priority": "low",
           "created": "2026-04-15",
           "notes": []
         }
