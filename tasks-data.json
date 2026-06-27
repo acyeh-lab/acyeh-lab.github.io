@@ -397,6 +397,23 @@
           "created": "2026-06-22",
           "notes": [],
           "due": "2026-07-03"
+        },
+        {
+          "id": 161,
+          "description": "Pick up thermofisher badge 7/2!  Yeah most likely. I’ll confirm with you next week.   Best, Julio",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-06-23",
+          "notes": [],
+          "due": "2026-07-02"
+        },
+        {
+          "id": 162,
+          "description": "order gibson primers for adonai",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-06-27",
+          "notes": []
         }
       ]
     },
