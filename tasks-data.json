@@ -414,6 +414,15 @@
           "priority": "high",
           "created": "2026-06-27",
           "notes": []
+        },
+        {
+          "id": 163,
+          "description": "For Marie: Grant about microbial T cells for B2B pilot",
+          "status": "open",
+          "priority": "medium",
+          "created": "2026-07-02",
+          "notes": [],
+          "due": "2026-07-10"
         }
       ]
     },
