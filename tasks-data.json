@@ -51,11 +51,12 @@
         {
           "id": 57,
           "description": "Aditya - FHCC internship offers mid-June",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-07",
           "notes": [],
-          "due": "2026-05-26"
+          "due": "2026-05-26",
+          "completed": "2026-07-02"
         },
         {
           "id": 63,
@@ -384,10 +385,11 @@
         {
           "id": 159,
           "description": "Reply to Blood Reviews editorial board!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-06-20",
-          "notes": []
+          "notes": [],
+          "completed": "2026-07-02"
         },
         {
           "id": 160,
