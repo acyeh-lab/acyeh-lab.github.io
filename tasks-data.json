@@ -1231,6 +1231,27 @@
         }
       ]
     },
+    "Aiden/Neel EDRN Collab": {
+      "description": "EDRN Collab",
+      "tasks": [
+        {
+          "id": 164,
+          "description": "NGS of stool and tissue analysis of EDRN samples",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-06",
+          "notes": []
+        },
+        {
+          "id": 165,
+          "description": "Select EDRN samples",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-06",
+          "notes": []
+        }
+      ]
+    },
     "Bacterial Engineering": {
       "description": "Work with Adonai",
       "tasks": [
