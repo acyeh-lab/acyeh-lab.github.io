@@ -886,6 +886,14 @@
           "priority": "low",
           "created": "2026-07-06",
           "notes": []
+        },
+        {
+          "id": 167,
+          "description": "Toxins: Fad-A, PKS, BAI (bile-acid inducible), BFT",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-06",
+          "notes": []
         }
       ]
     },
