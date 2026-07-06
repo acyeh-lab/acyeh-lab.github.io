@@ -348,11 +348,12 @@
         {
           "id": 151,
           "description": "Lab recruitment",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-06-02",
           "notes": [],
-          "due": "2026-06-12"
+          "due": "2026-06-12",
+          "completed": "2026-07-06"
         },
         {
           "id": 152,
@@ -394,11 +395,12 @@
         {
           "id": 160,
           "description": "Blood Review!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-06-22",
           "notes": [],
-          "due": "2026-07-03"
+          "due": "2026-07-03",
+          "completed": "2026-07-06"
         },
         {
           "id": 161,
