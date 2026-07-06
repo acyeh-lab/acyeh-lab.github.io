@@ -860,6 +860,35 @@
         }
       ]
     },
+    "Aiden/Neel EDRN Collab": {
+      "description": "EDRN Collab",
+      "tasks": [
+        {
+          "id": 164,
+          "description": "NGS of stool and tissue analysis of EDRN samples",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-06",
+          "notes": []
+        },
+        {
+          "id": 165,
+          "description": "Select EDRN samples",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-06",
+          "notes": []
+        },
+        {
+          "id": 166,
+          "description": "Corncob tool",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-06",
+          "notes": []
+        }
+      ]
+    },
     "Microbe Immunopeptidomics": {
       "description": "",
       "tasks": [
@@ -1228,27 +1257,6 @@
           "created": "2026-04-28",
           "notes": [],
           "due": "2026-05-04"
-        }
-      ]
-    },
-    "Aiden/Neel EDRN Collab": {
-      "description": "EDRN Collab",
-      "tasks": [
-        {
-          "id": 164,
-          "description": "NGS of stool and tissue analysis of EDRN samples",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-07-06",
-          "notes": []
-        },
-        {
-          "id": 165,
-          "description": "Select EDRN samples",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-07-06",
-          "notes": []
         }
       ]
     },
