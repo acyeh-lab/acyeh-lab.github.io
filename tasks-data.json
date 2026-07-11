@@ -270,7 +270,7 @@
         {
           "id": 137,
           "description": "Update Patrick Shelby with IP!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-18",
           "notes": [
@@ -279,7 +279,8 @@
               "text": "Commercial interest: Signios Bio - definitely interested"
             }
           ],
-          "due": "2026-06-25"
+          "due": "2026-06-25",
+          "completed": "2026-07-11"
         },
         {
           "id": 139,
@@ -329,11 +330,12 @@
         {
           "id": 146,
           "description": "chat with Vedant Vikramaditya - schedule next meeting",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-28",
           "notes": [],
-          "due": "2026-06-03"
+          "due": "2026-06-03",
+          "completed": "2026-07-11"
         },
         {
           "id": 147,
