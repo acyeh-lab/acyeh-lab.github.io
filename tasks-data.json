@@ -981,10 +981,11 @@
         {
           "id": 33,
           "description": "Work on VDJ matching of melanoma dataset provided Francesco/Alessandro, then send report to Evan",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-02",
-          "notes": []
+          "notes": [],
+          "completed": "2026-07-13"
         },
         {
           "id": 38,
@@ -1036,6 +1037,23 @@
               "text": "Got candidate sequencing samples (K96, K102 and part of K77) - awaiting to see if Phil has summer student."
             }
           ]
+        },
+        {
+          "id": 169,
+          "description": "TRUST4 vs. VDJ analysis",
+          "status": "done",
+          "priority": "low",
+          "created": "2026-07-13",
+          "notes": [],
+          "completed": "2026-07-13"
+        },
+        {
+          "id": 170,
+          "description": "TRUST4 vs. VDJ analysis",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-07-13",
+          "notes": []
         }
       ]
     },
