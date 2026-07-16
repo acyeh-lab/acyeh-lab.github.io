@@ -772,17 +772,27 @@
         {
           "id": 170,
           "description": "TRUST4 vs. VDJ analysis",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-07-13",
-          "notes": []
+          "notes": [],
+          "completed": "2026-07-16"
         },
         {
           "id": 171,
           "description": "E-mai Singular to chat about directseq error rates",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-13",
+          "notes": [],
+          "completed": "2026-07-16"
+        },
+        {
+          "id": 173,
+          "description": "Questions for singular: 1) image data (are they the .jp2 files), 2) How were dsSeq reads assigned to cell barcodes, 3) error rates (are hey cumulative?)",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-07-16",
           "notes": []
         }
       ]
