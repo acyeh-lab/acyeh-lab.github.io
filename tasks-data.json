@@ -433,10 +433,11 @@
         {
           "id": 168,
           "description": "update crystal IP",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-07-11",
-          "notes": []
+          "notes": [],
+          "completed": "2026-07-16"
         }
       ]
     },
