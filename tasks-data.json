@@ -410,7 +410,12 @@
           "status": "open",
           "priority": "low",
           "created": "2026-06-23",
-          "notes": [],
+          "notes": [
+            {
+              "date": "2026-07-20",
+              "text": "Sent another note to Julio 7/20"
+            }
+          ],
           "due": "2026-07-02"
         },
         {
