@@ -60,9 +60,9 @@
         },
         {
           "id": 63,
-          "description": "George Camps Lake Union Swim",
+          "description": "George Camps",
           "status": "open",
-          "priority": "high",
+          "priority": "medium",
           "created": "2026-04-08",
           "notes": [
             {
@@ -410,12 +410,7 @@
           "status": "open",
           "priority": "low",
           "created": "2026-06-23",
-          "notes": [
-            {
-              "date": "2026-07-20",
-              "text": "Sent another note to Julio 7/20"
-            }
-          ],
+          "notes": [],
           "due": "2026-07-02"
         },
         {
@@ -802,7 +797,7 @@
         },
         {
           "id": 173,
-          "description": "Questions for singular: 1) image data (are they the .jp2 files), 2) How were dsSeq reads assigned to cell barcodes, 3) error rates (are hey cumulative?)",
+          "description": "Questions for singular: 1) image data (are they the .jp2 files), 2) How were dsSeq reads assigned to cell barcodes (?Cell ID), 3) error rates (are hey cumulative?)",
           "status": "open",
           "priority": "high",
           "created": "2026-07-16",
