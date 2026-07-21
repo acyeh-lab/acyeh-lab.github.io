@@ -446,6 +446,14 @@
           "priority": "high",
           "created": "2026-07-17",
           "notes": []
+        },
+        {
+          "id": 175,
+          "description": "Dual signature for patent!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-07-21",
+          "notes": []
         }
       ]
     },
