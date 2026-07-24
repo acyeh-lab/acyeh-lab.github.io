@@ -734,7 +734,120 @@
       ],
       "spilloverNotes": {},
       "description": "This is used for  Exp 2601T-MCMV / 1566.  Avoid CD3 as this may activate T cells. This was used on d0 on Biomag T panel."
+    },
+    {
+      "name": "MCMV Tpre - CD4",
+      "created": "2026-07-24T05:52:20.781Z",
+      "updated": "2026-07-24T05:52:20.781Z",
+      "entries": [
+        {
+          "id": 3,
+          "fluor": "eFluor 660",
+          "marker": "TOX",
+          "clone": "TXRX10",
+          "volPer100uL": "1",
+          "notes": "eBioscience (Fisher) · 50-6502-82"
+        },
+        {
+          "id": 4,
+          "fluor": "PE-Cy7",
+          "marker": "Eomes",
+          "clone": "Dan11mag",
+          "volPer100uL": "0.25",
+          "notes": "eBioscience (Thermo) · 25-4875-82"
+        },
+        {
+          "id": 5,
+          "fluor": "Alexa Fluor 488",
+          "marker": "TCF-7/TCF-1",
+          "clone": "S33-966",
+          "volPer100uL": "1",
+          "notes": "BD Bioscience · 567018"
+        },
+        {
+          "id": 6,
+          "fluor": "BUV737",
+          "marker": "PD-1 (CD279)",
+          "clone": "J43",
+          "volPer100uL": "1",
+          "notes": "BD Bioscience · 568362 · Need 2x backups"
+        },
+        {
+          "id": 7,
+          "fluor": "BV605",
+          "marker": "CD183 (CXCR3)",
+          "clone": "CXCR3-173",
+          "volPer100uL": "1",
+          "notes": "Biolegend · 126523"
+        },
+        {
+          "id": 9,
+          "fluor": "BV711",
+          "marker": "CD186 (CXCR6)",
+          "clone": "SA051D1",
+          "volPer100uL": "1",
+          "notes": "Biolegend · 151111"
+        },
+        {
+          "id": 10,
+          "fluor": "BUV496",
+          "marker": "CD4",
+          "clone": "GK1.5",
+          "volPer100uL": "0.25",
+          "notes": "BD Bioscience · 612952 · Need 2x backups"
+        },
+        {
+          "id": 12,
+          "fluor": "BUV805",
+          "marker": "CD8a",
+          "clone": "53-6.7",
+          "volPer100uL": "0.25",
+          "notes": "BD Bioscience · 612898 · Need 2x backups; Opti-Build (approved)"
+        },
+        {
+          "id": 14,
+          "fluor": "Alexa Fluor 700",
+          "marker": "CD62L",
+          "clone": "MEL-14",
+          "volPer100uL": "0.2",
+          "notes": "Biolegend · 104426"
+        },
+        {
+          "id": 15,
+          "fluor": "PerCP-Cy5.5",
+          "marker": "CD44",
+          "clone": "IM7",
+          "volPer100uL": "0.2",
+          "notes": "Biolegend · 103032"
+        },
+        {
+          "id": 16,
+          "fluor": "BV510",
+          "marker": "TCR Beta chain",
+          "clone": "H57-597",
+          "volPer100uL": "",
+          "notes": "BD Bioscience · 563221"
+        },
+        {
+          "id": 17,
+          "fluor": "FVS440UV",
+          "marker": "LIVE/DEAD",
+          "clone": "",
+          "volPer100uL": "",
+          "notes": "LIVE/DEAD stain"
+        },
+        {
+          "id": 18,
+          "fluor": "PE",
+          "marker": "CD319 (SLAMF7)",
+          "clone": "4G2",
+          "volPer100uL": "",
+          "notes": "Biolegend · 152006 (100ug)"
+        }
+      ],
+      "spilloverNotes": {},
+      "description": "This is used for  Exp 2601T-MCMV / 1566.  Avoid CD3 as this may activate T cells. This was used on d0 on Biomag T panel."
     }
   ],
-  "updated": "2026-07-24T05:51:39.315Z"
+  "updated": "2026-07-24T05:52:20.981Z"
 }
