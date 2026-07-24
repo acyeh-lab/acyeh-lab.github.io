@@ -60,9 +60,9 @@
         },
         {
           "id": 63,
-          "description": "George Camps",
+          "description": "George Camps Lake Union Swim",
           "status": "open",
-          "priority": "medium",
+          "priority": "high",
           "created": "2026-04-08",
           "notes": [
             {
@@ -407,31 +407,33 @@
         {
           "id": 161,
           "description": "Pick up thermofisher badge 7/2!  Yeah most likely. I’ll confirm with you next week.   Best, Julio",
-          "status": "done",
+          "status": "open",
           "priority": "low",
           "created": "2026-06-23",
-          "notes": [],
-          "due": "2026-07-02",
-          "completed": "2026-07-24"
+          "notes": [
+            {
+              "date": "2026-07-20",
+              "text": "Sent another note to Julio 7/20"
+            }
+          ],
+          "due": "2026-07-02"
         },
         {
           "id": 162,
           "description": "order gibson primers for adonai",
-          "status": "done",
+          "status": "open",
           "priority": "high",
           "created": "2026-06-27",
-          "notes": [],
-          "completed": "2026-07-24"
+          "notes": []
         },
         {
           "id": 163,
           "description": "For Marie: CV and Grant blurb about microbial T cells for B2B pilot",
-          "status": "done",
+          "status": "open",
           "priority": "medium",
           "created": "2026-07-02",
           "notes": [],
-          "due": "2026-07-10",
-          "completed": "2026-07-24"
+          "due": "2026-07-10"
         },
         {
           "id": 168,
@@ -445,56 +447,14 @@
         {
           "id": 174,
           "description": "injection sheet",
-          "status": "done",
+          "status": "open",
           "priority": "high",
           "created": "2026-07-17",
-          "notes": [],
-          "completed": "2026-07-24"
+          "notes": []
         },
         {
           "id": 175,
-          "description": "Dual signature for patent!",
-          "status": "done",
-          "priority": "high",
-          "created": "2026-07-21",
-          "notes": [],
-          "completed": "2026-07-24"
-        },
-        {
-          "id": 176,
-          "description": "Andrew portuguese abstract",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-07-24",
-          "notes": []
-        },
-        {
-          "id": 177,
-          "description": "Stephanie Lee manuscript",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-07-24",
-          "notes": []
-        },
-        {
-          "id": 178,
-          "description": "GVHD abstract",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-07-24",
-          "notes": []
-        },
-        {
-          "id": 179,
-          "description": "CV u/s abstract",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-07-24",
-          "notes": []
-        },
-        {
-          "id": 180,
-          "description": "Marie grant and updated SciEnv CV",
+          "description": "buy superfi master mix for PCR pre-gibson",
           "status": "open",
           "priority": "low",
           "created": "2026-07-24",
@@ -850,7 +810,7 @@
         },
         {
           "id": 173,
-          "description": "Questions for singular: 1) image data (are they the .jp2 files), 2) How were dsSeq reads assigned to cell barcodes (?Cell ID), 3) error rates (are hey cumulative?)",
+          "description": "Questions for singular: 1) image data (are they the .jp2 files), 2) How were dsSeq reads assigned to cell barcodes, 3) error rates (are hey cumulative?)",
           "status": "open",
           "priority": "high",
           "created": "2026-07-16",
