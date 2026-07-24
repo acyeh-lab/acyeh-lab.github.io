@@ -407,28 +407,31 @@
         {
           "id": 161,
           "description": "Pick up thermofisher badge 7/2!  Yeah most likely. I’ll confirm with you next week.   Best, Julio",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-06-23",
           "notes": [],
-          "due": "2026-07-02"
+          "due": "2026-07-02",
+          "completed": "2026-07-24"
         },
         {
           "id": 162,
           "description": "order gibson primers for adonai",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-06-27",
-          "notes": []
+          "notes": [],
+          "completed": "2026-07-24"
         },
         {
           "id": 163,
           "description": "For Marie: CV and Grant blurb about microbial T cells for B2B pilot",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-07-02",
           "notes": [],
-          "due": "2026-07-10"
+          "due": "2026-07-10",
+          "completed": "2026-07-24"
         },
         {
           "id": 168,
@@ -442,17 +445,59 @@
         {
           "id": 174,
           "description": "injection sheet",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-07-17",
-          "notes": []
+          "notes": [],
+          "completed": "2026-07-24"
         },
         {
           "id": 175,
           "description": "Dual signature for patent!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-07-21",
+          "notes": [],
+          "completed": "2026-07-24"
+        },
+        {
+          "id": 176,
+          "description": "Andrew portuguese abstract",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-24",
+          "notes": []
+        },
+        {
+          "id": 177,
+          "description": "Stephanie Lee manuscript",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-24",
+          "notes": []
+        },
+        {
+          "id": 178,
+          "description": "GVHD abstract",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-24",
+          "notes": []
+        },
+        {
+          "id": 179,
+          "description": "CV u/s abstract",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-24",
+          "notes": []
+        },
+        {
+          "id": 180,
+          "description": "Marie grant and updated SciEnv CV",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-24",
           "notes": []
         }
       ]
