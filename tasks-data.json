@@ -525,6 +525,22 @@
           "created": "2026-07-24",
           "notes": [],
           "completed": "2026-07-30"
+        },
+        {
+          "id": 186,
+          "description": "send luis / patcha something",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-30",
+          "notes": []
+        },
+        {
+          "id": 187,
+          "description": "send peter birthday",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-30",
+          "notes": []
         }
       ]
     },
