@@ -495,10 +495,11 @@
         {
           "id": 180,
           "description": "Marie grant and updated SciEnv CV",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-24",
-          "notes": []
+          "notes": [],
+          "completed": "2026-07-30"
         },
         {
           "id": 181,
@@ -519,10 +520,11 @@
         {
           "id": 183,
           "description": "order superfi!",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-24",
-          "notes": []
+          "notes": [],
+          "completed": "2026-07-30"
         }
       ]
     },
