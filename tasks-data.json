@@ -1583,6 +1583,22 @@
           "created": "2026-04-07",
           "notes": [],
           "completed": "2026-04-25"
+        },
+        {
+          "id": 184,
+          "description": "Check anterior wall measurements",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-07-30",
+          "notes": []
+        },
+        {
+          "id": 185,
+          "description": "As julien about excel file outputs for manual drawing",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-07-30",
+          "notes": []
         }
       ]
     },
