@@ -537,10 +537,11 @@
         {
           "id": 187,
           "description": "send peter birthday",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-30",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-01"
         }
       ]
     },
