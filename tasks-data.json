@@ -566,6 +566,14 @@
           "priority": "low",
           "created": "2026-08-03",
           "notes": []
+        },
+        {
+          "id": 191,
+          "description": "add in structural selection",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-08-03",
+          "notes": []
         }
       ]
     },
