@@ -582,6 +582,14 @@
           "priority": "low",
           "created": "2026-08-03",
           "notes": []
+        },
+        {
+          "id": 193,
+          "description": "have an option to subset strains - e.g. exclude colibactin",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-08-03",
+          "notes": []
         }
       ]
     },
