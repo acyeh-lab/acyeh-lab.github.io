@@ -504,10 +504,11 @@
         {
           "id": 181,
           "description": "e-mail liz welniak",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-24",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-03"
         },
         {
           "id": 182,
@@ -542,6 +543,14 @@
           "created": "2026-07-30",
           "notes": [],
           "completed": "2026-08-01"
+        },
+        {
+          "id": 188,
+          "description": "SLAMF7 antibody - can't do it as ",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-08-03",
+          "notes": []
         }
       ]
     },
