@@ -558,6 +558,14 @@
           "priority": "low",
           "created": "2026-08-03",
           "notes": []
+        },
+        {
+          "id": 190,
+          "description": "select out strains to filter",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-08-03",
+          "notes": []
         }
       ]
     },
