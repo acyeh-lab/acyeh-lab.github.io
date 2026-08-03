@@ -574,6 +574,14 @@
           "priority": "low",
           "created": "2026-08-03",
           "notes": []
+        },
+        {
+          "id": 192,
+          "description": "e.coli / fuso - can get strain exclusion",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-08-03",
+          "notes": []
         }
       ]
     },
