@@ -554,18 +554,20 @@
         {
           "id": 189,
           "description": "group probe feature",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-08-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-03"
         },
         {
           "id": 190,
           "description": "select out strains to filter",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-08-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-03"
         },
         {
           "id": 191,
