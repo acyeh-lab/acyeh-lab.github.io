@@ -504,11 +504,10 @@
         {
           "id": 181,
           "description": "e-mail liz welniak",
-          "status": "done",
+          "status": "open",
           "priority": "low",
           "created": "2026-07-24",
-          "notes": [],
-          "completed": "2026-08-03"
+          "notes": []
         },
         {
           "id": 182,
@@ -546,7 +545,15 @@
         },
         {
           "id": 188,
-          "description": "SLAMF7 antibody - can't do it as ",
+          "description": "c. scidens - BAI add in",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-08-03",
+          "notes": []
+        },
+        {
+          "id": 189,
+          "description": "group probe feature",
           "status": "open",
           "priority": "low",
           "created": "2026-08-03",
