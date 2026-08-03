@@ -614,6 +614,14 @@
           "priority": "low",
           "created": "2026-08-03",
           "notes": []
+        },
+        {
+          "id": 197,
+          "description": "neel has colibactin+ E.coli, Nissle",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-08-03",
+          "notes": []
         }
       ]
     },
