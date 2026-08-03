@@ -590,22 +590,6 @@
           "priority": "low",
           "created": "2026-08-03",
           "notes": []
-        },
-        {
-          "id": 194,
-          "description": "search whole genome of bacteria with certain genes",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-08-03",
-          "notes": []
-        },
-        {
-          "id": 195,
-          "description": "or exclude things with certain genes",
-          "status": "open",
-          "priority": "low",
-          "created": "2026-08-03",
-          "notes": []
         }
       ]
     },
