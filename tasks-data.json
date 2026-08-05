@@ -632,6 +632,15 @@
           "priority": "low",
           "created": "2026-08-05",
           "notes": []
+        },
+        {
+          "id": 199,
+          "description": "mentoring committee!",
+          "status": "open",
+          "priority": "high",
+          "created": "2026-08-05",
+          "notes": [],
+          "due": "2026-10-02"
         }
       ]
     },
