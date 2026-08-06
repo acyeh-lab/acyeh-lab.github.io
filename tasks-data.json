@@ -463,10 +463,11 @@
         {
           "id": 176,
           "description": "Andrew portuguese abstract",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-24",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         },
         {
           "id": 177,
@@ -479,10 +480,11 @@
         {
           "id": 178,
           "description": "GVHD abstract",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-24",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         },
         {
           "id": 179,
@@ -504,18 +506,20 @@
         {
           "id": 181,
           "description": "e-mail liz welniak",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-24",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         },
         {
           "id": 182,
           "description": "e-mail faculty about my promotion!",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-24",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         },
         {
           "id": 183,
