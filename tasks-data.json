@@ -546,10 +546,11 @@
         {
           "id": 188,
           "description": "c. scidens - BAI add in",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-08-03",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         },
         {
           "id": 189,
@@ -1084,10 +1085,11 @@
         {
           "id": 53,
           "description": "look at gmrepo v3!",
-          "status": "open",
+          "status": "done",
           "priority": "medium",
           "created": "2026-04-07",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         },
         {
           "id": 56,
@@ -1168,10 +1170,11 @@
         {
           "id": 140,
           "description": "get the file on my old laptop with %similarity runs!",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-05-20",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         },
         {
           "id": 141,
@@ -1210,10 +1213,11 @@
         {
           "id": 165,
           "description": "Select EDRN samples",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-06",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         },
         {
           "id": 166,
@@ -1226,10 +1230,11 @@
         {
           "id": 167,
           "description": "Toxins: Fad-A, PKS, BAI (bile-acid inducible), BFT",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-07-06",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         }
       ]
     },
@@ -1479,7 +1484,7 @@
         {
           "id": 97,
           "description": "Takedown analysis",
-          "status": "open",
+          "status": "done",
           "priority": "high",
           "created": "2026-04-20",
           "notes": [
@@ -1496,7 +1501,8 @@
               "text": "Organs: Collect Sp"
             }
           ],
-          "due": "2026-05-18"
+          "due": "2026-05-18",
+          "completed": "2026-08-06"
         },
         {
           "id": 101,
@@ -1515,6 +1521,14 @@
           "created": "2026-04-28",
           "notes": [],
           "due": "2026-05-04"
+        },
+        {
+          "id": 200,
+          "description": "plan follow-up exp",
+          "status": "open",
+          "priority": "low",
+          "created": "2026-08-06",
+          "notes": []
         }
       ]
     },
@@ -1612,10 +1626,11 @@
         {
           "id": 114,
           "description": "grab glyerol from saranya",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-04-30",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         },
         {
           "id": 127,
@@ -1896,7 +1911,7 @@
         {
           "id": 90,
           "description": "Ask Arunima to work on it as no FHCC data allowed for sharing.  She will have to e independent collaborator",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-04-16",
           "notes": [
@@ -1912,7 +1927,8 @@
               "date": "2026-06-06",
               "text": "Shifted Arunima to NUS Collab project"
             }
-          ]
+          ],
+          "completed": "2026-08-06"
         },
         {
           "id": 156,
@@ -1939,10 +1955,11 @@
         {
           "id": 155,
           "description": "Ask Aruinima to work on it",
-          "status": "open",
+          "status": "done",
           "priority": "low",
           "created": "2026-06-06",
-          "notes": []
+          "notes": [],
+          "completed": "2026-08-06"
         }
       ]
     }
