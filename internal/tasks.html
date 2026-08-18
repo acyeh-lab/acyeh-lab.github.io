@@ -733,9 +733,12 @@
                 headers: { 'Authorization': 'token ' + getToken(),
                            'Accept': 'application/vnd.github.v3+json' }
             });
-            if (!resp.ok) throw new Error(resp.status === 404
-                ? 'Not found (token lacks access to ' + GH_REPO + '?)'
-                : 'HTTP ' + resp.status);
+            if (resp.status === 401 || resp.status === 403 || resp.status === 404) {
+                authFailed(resp.status);
+                render();
+                return;
+            }
+            if (!resp.ok) throw new Error('HTTP ' + resp.status);
             const info = await resp.json();
             const serverData = JSON.parse(
                 decodeURIComponent(escape(atob((info.content || '').replace(/\n/g, '')))));
@@ -801,6 +804,15 @@
 
     function getToken() { return localStorage.getItem(TOKEN_KEY); }
 
+    // A token that is missing, expired, or scoped to the wrong repo should not
+    // wedge the page — clear it and re-prompt. (The old token was scoped to the
+    // deleted acyeh-lab.github.io repo and silently failed against lab-internal.)
+    function authFailed(status) {
+        localStorage.removeItem(TOKEN_KEY);
+        toast('Token rejected (HTTP ' + status + ') — enter a new one');
+        showSetupToken();
+    }
+
     function showSetupToken() {
         const current = getToken();
         const msg = current
@@ -830,7 +842,12 @@
             const getResp = await fetch('https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE, {
                 headers: { 'Authorization': 'token ' + getToken(), 'Accept': 'application/vnd.github.v3+json' }
             });
-            if (!getResp.ok) throw new Error('Could not read repo (check token permissions)');
+            if (getResp.status === 401 || getResp.status === 403 || getResp.status === 404) {
+                authFailed(getResp.status);
+                btn.textContent = 'Sync'; btn.disabled = false;
+                return;
+            }
+            if (!getResp.ok) throw new Error('Could not read repo (HTTP ' + getResp.status + ')');
             const fileInfo = await getResp.json();
 
             // Push updated data
