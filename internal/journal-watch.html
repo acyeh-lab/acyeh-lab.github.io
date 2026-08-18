@@ -157,22 +157,42 @@ function ghSetupToken() {
     if (t.trim()) localStorage.setItem(TOKEN_KEY, t.trim());
 }
 // Uses the raw media type so files >1MB work (the JSON contents API caps at 1MB).
+// Caches the body + ETag in localStorage and revalidates with If-None-Match:
+// GitHub answers 304 with an empty body when nothing changed, so repeat loads
+// cost one round-trip instead of re-downloading the whole file uncompressed.
 async function ghFetchJSON(file) {
     if (!localStorage.getItem(TOKEN_KEY)) {
         ghSetupToken();
         if (!localStorage.getItem(TOKEN_KEY)) throw new Error('No token provided');
     }
+    const CK = 'ghcache:' + file;
+    let cached = null;
+    try { cached = JSON.parse(localStorage.getItem(CK) || 'null'); } catch (e) { cached = null; }
+
+    const headers = { 'Authorization': 'token ' + localStorage.getItem(TOKEN_KEY),
+                      'Accept': 'application/vnd.github.raw' };
+    if (cached && cached.etag) headers['If-None-Match'] = cached.etag;
+
     const r = await fetch('https://api.github.com/repos/' + GH_REPO_INT + '/contents/' + file
-                          + '?ref=main&t=' + Date.now(), {
-        headers: { 'Authorization': 'token ' + localStorage.getItem(TOKEN_KEY),
-                   'Accept': 'application/vnd.github.raw' }
-    });
+                          + '?ref=main', { headers: headers });
+
+    if (r.status === 304 && cached) return JSON.parse(cached.body);
     if (r.status === 401 || r.status === 403 || r.status === 404) {
         localStorage.removeItem(TOKEN_KEY);
         throw new Error('Token rejected (HTTP ' + r.status + ') — reload the page to re-enter it');
     }
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
+    if (!r.ok) {
+        if (cached) return JSON.parse(cached.body);   // serve stale rather than fail
+        throw new Error('HTTP ' + r.status);
+    }
+    const text = await r.text();
+    const etag = r.headers.get('ETag');
+    if (etag) {
+        // localStorage is ~5MB per origin; drop this cache entry rather than break the page
+        try { localStorage.setItem(CK, JSON.stringify({ etag: etag, body: text })); }
+        catch (e) { try { localStorage.removeItem(CK); } catch (e2) {} }
+    }
+    return JSON.parse(text);
 }
 
     const COLORS = {
