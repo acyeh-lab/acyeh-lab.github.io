@@ -14,6 +14,8 @@
         nav { text-align: center; margin: 10px 0; background-color: #fff; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
         nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
         nav a:hover { text-decoration: underline; }
+        nav a.active { color: #fff; background-color: #0056b3; padding: 6px 14px; border-radius: 4px; text-decoration: none; }
+        nav a.active:hover { text-decoration: none; }
         .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
         footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
 
@@ -116,6 +118,12 @@
         <h2>Journal Watch — Article Archive</h2>
     </header>
 
+
+    <nav>
+        <a href="tasks.html">Task Tracker</a>
+        <a href="flow.html">Flow</a>
+        <a href="journal-watch.html" class="active">Journal Watch</a>
+    </nav>
     <div class="container">
         <div class="controls">
             <input type="text" class="search-box" id="search" placeholder="Search titles, authors, abstracts...">
