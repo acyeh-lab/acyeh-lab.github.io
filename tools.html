@@ -1,0 +1,161 @@
+
+<!-- tools.htm -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Albert Yeh Lab</title>
+    <style>
+        body { font-family: 'Roboto', sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
+        header { background-color: #0056b3; color: #fff; padding: 20px 10px; text-align: center; }
+        header h1 {
+            font-size: 48px; /* Increase the font size */
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 2px;
+            /*text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);*/
+        }
+        header h2 {
+            font-size: 24px; /* Increase the font size */
+            margin: 0;
+            font-weight: 400;
+            /*letter-spacing: 2px;*/
+            /*text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);*/
+        }
+        nav { text-align: center; margin: 10px 0; background-color: #fff; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
+        nav a:hover { text-decoration: underline; }
+        .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
+        .tool {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+        .tool img {
+            width: 120px;
+            height: 120px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        .tool-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .tool-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        .tool-title a {
+            color: black;
+            text-decoration: none;
+        }
+        .tool-title a:hover {
+            color: red;
+            text-decoration: underline;
+        }
+        .tool-title2 {
+            /*font-weight: bold;*/
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        .tool-title2 a {
+            color: black;
+            text-decoration: none;
+        }
+        .tool-title2 a:hover {
+            color: red;
+            text-decoration: underline;
+        }
+        .tool-authors {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .tool-date {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .tool-journal {
+            font-size: 0.85rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Albert Yeh Lab</h1>
+        <h2>Commonly employed tools and tutorials on how to use them.</h2>
+    </header>
+
+    <nav>
+        <a href="index.html">Main Page</a>
+        <a href="publications.html">Publications</a>
+        <a href="projects.html">Projects</a>
+        <a href="tools.html">Tools</a>
+        <a href="team.html">Team</a>
+        <a href="journal-watch.html">Journal Watch</a>
+        <a href="flow.html">Flow</a>
+    </nav>
+
+    <div class="container">
+        <h2>Toolkit</h2>
+        <p>Below are descriptions and tutorials on tools that we use.</p>
+        <div class="tool">
+            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/BLASTp.png" alt="Tool Icon">
+            <div class="tool-details">
+                <div class="tool-title">
+                    <a href="https://github.com/acyeh-lab/BLAST" target="_blank">Basic Local Alignment Search Tool (BLAST)</a>
+                </div>
+                <div class="tool-authors">NCBI</div>
+                <div class="tool-journal"><a href=https://blast.ncbi.nlm.nih.gov/Blast.cgi>BLAST</a></div>
+            </div>
+        </div>
+
+        <div class="tool">
+            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/NetMHCIIPan.png" alt="Tool Icon">
+            <div class="tool-details">
+                <div class="tool-title">
+                    <a href="https://github.com/acyeh-lab/NetMHCIIPan" target="_blank">NetMHCIIPan 4.3</a>
+                </div>
+                <div class="tool-authors">Nilsson JB, et al</div>
+                <div class="tool-journal"><a href="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/papers/(2023%20Science%20Advances)%20Accurate%20prediction%20of%20HLA%20class%20II%20antigen%20presentation.pdf">NetMHCIIPan 4.3</a></div>
+            </div>
+        </div>
+
+        <div class="tool">
+            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/NCBI_Datasets_logo.png" alt="Tool Icon">
+            <div class="tool-details">
+                <div class="tool-title">
+                    <a href="https://github.com/acyeh-lab/NCBIDatasets" target="_blank">NCBI Datasets</a>
+                </div>
+                <div class="tool-authors">O'Leary NA, et al</div>
+                <div class="tool-journal"><a href="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/papers/(2024%20Scientific%20Data)%20NCBI%20Datasets.pdf">NCBI Datasets</a></div>
+            </div>
+        </div>
+        
+        <div class="tool">
+            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Prokka.png" alt="Tool Icon">
+            <div class="tool-details">
+                <div class="tool-title">
+                    <a href="https://github.com/acyeh-lab/Prokka" target="_blank">Prokka (rapid prokaryotic genome annotator)</a>
+                </div>
+                <div class="tool-authors">Seeman T, et al</div>
+                <div class="tool-journal"><a href="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/papers/(2014%20Bioinformatics)%20Prokka.pdf">Prokka</a></div>
+            </div>
+        </div>
+        
+    </div>
+
+    
+
+        
+    <footer>
+        <p>&copy; 2024 Albert Yeh Lab. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
