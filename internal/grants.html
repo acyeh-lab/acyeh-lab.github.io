@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="robots" content="noindex, nofollow">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,8 @@
         nav { text-align: center; margin: 10px 0; background-color: #fff; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
         nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
         nav a:hover { text-decoration: underline; }
+        nav a.active { color: #fff; background-color: #0056b3; padding: 6px 14px; border-radius: 4px; text-decoration: none; }
+        nav a.active:hover { text-decoration: none; }
         .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
         footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
 
@@ -252,14 +255,13 @@
         <h2>Grant Watch Archive</h2>
     </header>
 
-    <nav>
-        <a href="index.html">Main Page</a>
-        <a href="publications.html">Publications</a>
-        <a href="projects.html">Projects</a>
-        <a href="tools.html">Tools</a>
-        <a href="team.html">Team</a>
-    </nav>
 
+    <nav>
+        <a href="tasks.html">Task Tracker</a>
+        <a href="flow.html">Flow</a>
+        <a href="journal-watch.html">Journal Watch</a>
+        <a href="grants.html" class="active">Grants</a>
+    </nav>
     <div class="container">
         <div class="summary-bar" id="summary-bar"></div>
         <div class="controls">
@@ -288,6 +290,19 @@
     </footer>
 
     <script>
+const TOKEN_KEY = 'ayeh-lab-gh-token';
+/* ===== Private data access (lab-internal repo, authenticated) ===== */
+const GH_REPO_INT = 'acyeh-lab/lab-internal';
+function ghSetupToken() {
+    const cur = localStorage.getItem(TOKEN_KEY);
+    const msg = cur
+        ? 'GitHub token is set. Enter a new one to replace, or leave blank to keep current:'
+        : 'This page reads private lab data.\n\nCreate a FINE-GRAINED token at github.com/settings/personal-access-tokens/new\nRepository access = acyeh-lab/lab-internal\nPermissions > Contents = Read and write\n\nPaste token:';
+    const t = prompt(msg);
+    if (t === null) return;
+    if (t.trim()) localStorage.setItem(TOKEN_KEY, t.trim());
+}
+
     const CATEGORY_COLORS = {
         "Federal Grants":                {accent:"#1565c0", bg:"#e3f2fd"},
         "Hematology & Transplant":       {accent:"#b71c1c", bg:"#ffcdd2"},
@@ -731,8 +746,7 @@
 
     // Load data
     loadStatus();
-    fetch('grants-data.json')
-        .then(r => r.json())
+    ghFetchJSON('grants-data.json')
         .then(data => {
             allGrants = data.grants || [];
             // Default sort by relevance score
