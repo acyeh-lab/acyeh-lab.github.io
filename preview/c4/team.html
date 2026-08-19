@@ -129,6 +129,14 @@
             display:block;margin-top:.4rem}
   .plist .j{color:var(--body)}
   @media(max-width:620px){.plist li{grid-template-columns:4.5rem 1fr;gap:.9rem}}
+  /* ---- PI block ---- */
+  .pi-full{display:grid;gap:.5rem;max-width:56ch}
+  .pi-full .nm{font-size:1.28rem;font-weight:600;color:var(--ink);line-height:1.3}
+  .pi-full .rl{font-family:var(--mono);font-size:.78rem;color:var(--muted);
+               margin-bottom:.5rem}
+  .pi-full p{margin:0 0 .85rem;font-size:.97rem}
+  .pi-full .links{font-family:var(--mono);font-size:.8rem;margin:.3rem 0 0}
+  .pi-full .links a{margin-right:.15rem}
 </style>
 </head>
 <body>
@@ -153,7 +161,23 @@
     <p>The passionate individuals driving innovative research.</p>
   </div>
 
-  <h2 class="sec">Our team</h2>
+  <h2 class="sec">Principal investigator</h2>
+  <div class="pi-full">
+    <div class="nm">Albert C. Yeh, MD</div>
+    <div class="rl">Translational Science &amp; Therapeutics · Fred Hutchinson Cancer Center</div>
+    <p>Albert is a physician-scientist at Fred Hutchinson Cancer Center, where he cares for
+    patients undergoing allogeneic stem cell transplantation and leads a laboratory studying
+    microbial antigen recognition after transplant.</p>
+    <p>His work has appeared in <em>Immunity</em>, <em>Blood</em>, <em>Science Immunology</em>,
+    and the <em>Journal of Clinical Investigation</em>.</p>
+    <p class="links">
+      <a href="https://scholar.google.com/citations?user=h-FgOqQAAAAJ&amp;hl=en">Google Scholar</a> ·
+      <a href="https://www.fredhutch.org/en/provider-directory/albert-c-yeh.html">Fred Hutch profile</a> ·
+      <a href="https://www.linkedin.com/in/albert-yeh-90674b10">LinkedIn</a>
+    </p>
+  </div>
+
+  <h2 class="sec" style="margin-top:2.6rem">Our team</h2>
   <p style="max-width:52ch">We are a diverse group of scientists and researchers dedicated to
   understanding the immune system and advancing oncology research. If you're interested in joining
   our team, please contact us at <a href="mailto:ayeh@fredhutch.org">ayeh@fredhutch.org</a>.</p>
