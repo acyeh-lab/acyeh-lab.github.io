@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yeh Lab — Fred Hutchinson Cancer Center</title>
+<meta name="description" content="Yeh Lab — microbial antigen recognition after allogeneic stem cell transplantation.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F5F0; --rail:#1B3A34; --ink:#15201D; --body:#4A554F;
+    --muted:#8A938D; --line:#DFDAD0; --brand:#2F7D6B; --accent:#C96A3F;
+    --display:'Fraunces',Georgia,serif;
+    --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);
+       font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:var(--brand);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  h1,h2,h3{font-family:var(--display);color:var(--ink);font-weight:500;letter-spacing:-.01em}
+
+  .shell{display:block}
+  @media(min-width:960px){
+    .shell{display:grid;grid-template-columns:22rem 1fr;min-height:100vh}
+    .rail{position:sticky;top:0;height:100vh;overflow-y:auto}
+  }
+
+  /* left rail */
+  .rail{background:var(--rail);color:#C6D6D0;padding:3rem 2.5rem;display:flex;
+        flex-direction:column;gap:2.5rem}
+  .rail .mark{font-family:var(--display);font-size:1.75rem;font-weight:600;color:#fff;
+              line-height:1.1;margin:0}
+  .rail .mark small{display:block;font-family:var(--sans);font-size:.76rem;font-weight:500;
+                    letter-spacing:.1em;text-transform:uppercase;color:#7FA69C;margin-top:.65rem}
+  .rail nav{display:flex;flex-direction:column;gap:.1rem}
+  .rail nav a{color:#C6D6D0;font-size:.95rem;font-weight:500;padding:.5rem 0;
+              border-bottom:1px solid rgba(255,255,255,.09)}
+  .rail nav a:hover{color:#fff;text-decoration:none;padding-left:.4rem;transition:padding .15s}
+  .rail .pi img{width:100%;border-radius:3px;display:block;margin-bottom:.9rem;filter:saturate(.9)}
+  .rail .pi .n{font-family:var(--display);font-size:1.05rem;color:#fff;font-weight:500}
+  .rail .pi .r{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:#7FA69C;margin:.2rem 0 .7rem}
+  .rail .pi p{font-size:.88rem;margin:0;color:#A9BFB8;line-height:1.55}
+  .rail .links{font-size:.85rem;margin-top:.8rem}
+  .rail .links a{color:#8FCBBA}
+  .rail .foot{margin-top:auto;font-size:.78rem;color:#6B8B82;line-height:1.7}
+
+  /* right content */
+  .content{padding:4.5rem 3rem 5rem;max-width:56rem}
+  @media(max-width:620px){.content{padding:3rem 1.5rem 4rem}.rail{padding:2.5rem 1.5rem}}
+
+  .lede h1{font-size:clamp(1.9rem,4vw,2.9rem);line-height:1.2;margin:0 0 1.4rem;max-width:19ch;font-weight:300}
+  .lede h1 em{font-style:italic;color:var(--accent)}
+  .lede p{font-size:1.1rem;max-width:36rem;margin:0 0 1.1rem}
+
+  h2.sec{font-size:.75rem;font-family:var(--sans);font-weight:600;letter-spacing:.16em;
+         text-transform:uppercase;color:var(--muted);margin:4rem 0 1.8rem;
+         padding-bottom:.6rem;border-bottom:1px solid var(--line)}
+
+  .theme{padding:1.6rem 0;border-bottom:1px solid var(--line);display:grid;gap:.4rem 1.5rem}
+  @media(min-width:700px){.theme{grid-template-columns:2.5rem 1fr}}
+  .theme .n{font-family:var(--display);font-size:1.1rem;color:var(--accent);font-weight:600}
+  .theme h3{font-size:1.22rem;margin:0 0 .5rem;line-height:1.3;font-weight:500}
+  .theme p{margin:0;font-size:1rem}
+
+  .pub{padding:1.15rem 0;border-bottom:1px solid var(--line)}
+  .pub .t{color:var(--ink);font-size:1.02rem;line-height:1.45;display:block}
+  .pub .m{font-size:.86rem;color:var(--muted);margin-top:.3rem}
+  .pub .j{font-family:var(--display);font-style:italic;color:var(--body);font-size:.95rem}
+  .lead-tag{display:inline-block;font-size:.65rem;font-weight:600;letter-spacing:.09em;
+            text-transform:uppercase;color:#fff;background:var(--accent);
+            padding:.15rem .45rem;border-radius:2px;margin-left:.5rem;vertical-align:2px}
+
+  .joinbox{background:#fff;border:1px solid var(--line);border-radius:4px;padding:2.2rem;margin-top:1rem}
+  .joinbox h3{font-size:1.4rem;margin:0 0 1rem}
+  .joinbox p{margin:0 0 1rem;font-size:1rem}
+  .cta{display:inline-block;background:var(--rail);color:#fff !important;padding:.75rem 1.5rem;
+       border-radius:3px;font-weight:600;font-size:.92rem;margin-top:.6rem}
+  .cta:hover{text-decoration:none;background:var(--brand)}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <div class="rail">
+    <div>
+      <p class="mark">Yeh Lab<small>Fred Hutchinson Cancer Center</small></p>
+    </div>
+
+    <nav>
+      <a href="#research">Research</a>
+      <a href="#publications">Publications</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../tools.html">Tools</a>
+      <a href="../../team.html">People</a>
+      <a href="#join">Join the lab</a>
+    </nav>
+
+    <div class="pi">
+      <img src="../../images/people/albert-yeh.jpg" alt="Albert C. Yeh">
+      <div class="n">Albert C. Yeh, MD</div>
+      <div class="r">Principal Investigator</div>
+      <p>Physician-scientist caring for patients through allogeneic transplant while studying how
+      T cells recognize microbial antigens.</p>
+      <p class="links">
+        <a href="https://scholar.google.com/citations?user=h-FgOqQAAAAJ&hl=en">Scholar</a> ·
+        <a href="https://www.fredhutch.org/en/provider-directory/albert-c-yeh.html">Hutch</a> ·
+        <a href="https://github.com/acyeh-lab">GitHub</a></p>
+    </div>
+
+    <div class="foot">
+      1100 Fairview Ave N<br>Seattle, WA 98109<br>
+      <a href="mailto:ayeh@fredhutch.org" style="color:#8FCBBA">ayeh@fredhutch.org</a>
+    </div>
+  </div>
+
+  <main class="content">
+    <div class="lede">
+      <h1>The donor immune system meets <em>a trillion microbial strangers</em>.</h1>
+      <p>Allogeneic stem cell transplantation transfers a naïve immune system into a body already
+      colonized by a vast microbial community. We work out how T cells read that community — which
+      antigens they see, which clones expand, and why those choices decide between graft-versus-host
+      disease and durable immunity.</p>
+    </div>
+
+    <h2 class="sec" id="research">Research</h2>
+    <div class="theme"><span class="n">01</span>
+      <div><h3>Microbial antigens and T cell clonal selection</h3>
+      <p>Graft-versus-host disease has long been explained by genetic disparity between donor and
+      host. We showed that the microbiota independently shapes which T cell clones expand after
+      transplant — meaning some of the immune conflict is directed at microbes, not the patient.</p></div></div>
+    <div class="theme"><span class="n">02</span>
+      <div><h3>Microbial immunopeptidomics</h3>
+      <p>If T cells respond to bacterial antigens, which ones? We combine mass spectrometry, MHC
+      binding prediction and bacterial genomics to identify the specific peptides presented after
+      transplant, and to test whether they drive disease.</p></div></div>
+    <div class="theme"><span class="n">03</span>
+      <div><h3>Spatial biology of the gut interface</h3>
+      <p>Host and microbe meet across a few hundred microns of intestinal tissue. Using spatial
+      transcriptomics with custom bacterial probes, we map immune cells and the microbes they
+      encounter in the same section of tissue.</p></div></div>
+    <div class="theme"><span class="n">04</span>
+      <div><h3>Engineering better cellular therapy</h3>
+      <p>What we learn about antigen recognition feeds back into treatment — targeted T cell
+      therapies, smarter conditioning, and strategies that separate graft-versus-tumor benefit from
+      graft-versus-host toxicity.</p></div></div>
+
+    <h2 class="sec" id="publications">Selected publications</h2>
+    <div class="pub"><span class="t">Microbiota dictate T cell clonal selection to augment
+      graft-versus-host disease after stem cell transplant<span class="lead-tag">lab-led</span></span>
+      <div class="m">Yeh AC, et al. · <span class="j">Immunity</span> · 2024</div></div>
+    <div class="pub"><span class="t">Eomesodermin<sup>+</sup> CD4<sup>+</sup> T cells are critical for
+      curative immunotherapy outcomes</span>
+      <div class="m">Zhang P, et al. · <span class="j">Immunity</span> · 2025</div></div>
+    <div class="pub"><span class="t">Targeting donor XCR1<sup>+</sup> and CD11b<sup>+</sup> dendritic
+      cells prevents Th1- and Th17-dependent GVHD within the gastrointestinal tract</span>
+      <div class="m">Takahashi S, et al. · <span class="j">Blood</span> · 2026</div></div>
+    <div class="pub"><span class="t">Depletion of exhausted alloreactive T cells enables targeting of
+      stem-like memory T cells to generate tumor-specific immunity</span>
+      <div class="m">Minnie SA, et al. · <span class="j">Science Immunology</span> · 2022</div></div>
+    <div class="pub"><span class="t">CMV exposure drives long-term CD57<sup>+</sup> CD4 memory T-cell
+      inflation following allogeneic stem cell transplantation<span class="lead-tag">lab-led</span></span>
+      <div class="m">Yeh AC, et al. · <span class="j">Blood</span> · 2021</div></div>
+    <p style="margin-top:1.5rem;font-size:.92rem"><a href="../../publications.html">All publications →</a></p>
+
+    <h2 class="sec" id="join">Join the lab</h2>
+    <div class="joinbox">
+      <h3>We are hiring our founding members.</h3>
+      <p>We are a new group, which means the people who join now will shape what it becomes. Projects
+      are genuinely their own, the questions are open, and you will work directly with the PI rather
+      than three layers removed.</p>
+      <p>We are recruiting postdoctoral fellows and research technicians with interests in immunology,
+      microbiology or computational biology. Graduate students at UW and Fred Hutch are welcome to
+      enquire about rotations.</p>
+      <a class="cta" href="mailto:ayeh@fredhutch.org">Write to ayeh@fredhutch.org</a>
+    </div>
+  </main>
+
+</div>
+</body>
+</html>

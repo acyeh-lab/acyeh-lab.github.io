@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yeh Lab — Fred Hutchinson Cancer Center</title>
+<meta name="description" content="Decoding how T cells recognize microbial antigens after stem cell transplantation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF; --ink:#0B1220; --body:#41505F; --muted:#8494A4;
+    --line:#E6EBF0; --brand:#0E7C86; --brand-dk:#0A5C64; --wash:#F4F8F8;
+    --deep:#0B1F26;
+    --display:'Space Grotesk',-apple-system,sans-serif;
+    --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);
+       font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:var(--brand);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  .wrap{max-width:72rem;margin:0 auto;padding:0 2rem}
+  h1,h2,h3{font-family:var(--display);color:var(--ink);letter-spacing:-.02em}
+
+  /* nav */
+  header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);
+         backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 0;gap:2rem}
+  .mark{font-family:var(--display);font-weight:700;font-size:1.15rem;color:var(--ink);letter-spacing:-.03em}
+  .mark b{color:var(--brand)}
+  nav{display:flex;gap:2rem;align-items:center}
+  nav a{font-size:.9rem;font-weight:500;color:var(--body)}
+  nav a:hover{color:var(--brand);text-decoration:none}
+  .btn{display:inline-block;background:var(--brand);color:#fff !important;
+       padding:.6rem 1.15rem;border-radius:6px;font-size:.88rem;font-weight:600}
+  .btn:hover{background:var(--brand-dk);text-decoration:none}
+
+  /* hero */
+  .hero{position:relative;background:var(--deep);color:#fff;overflow:hidden}
+  .hero::after{content:"";position:absolute;inset:0;
+    background:url('../../images/Immunity2024_Graphical_Abstract.png') right center/contain no-repeat;
+    opacity:.13;filter:grayscale(1) contrast(1.1)}
+  .hero .wrap{position:relative;z-index:2;padding:7rem 2rem 6rem}
+  .kicker{font-size:.78rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+          color:#6FD3DC;margin:0 0 1.5rem}
+  .hero h1{font-size:clamp(2.3rem,5.6vw,4.1rem);line-height:1.08;font-weight:700;
+           color:#fff;margin:0;max-width:17ch}
+  .hero p{max-width:38rem;margin:1.9rem 0 2.6rem;font-size:1.13rem;color:#B9CBD2}
+  .btn-lt{display:inline-block;background:#fff;color:var(--deep) !important;padding:.8rem 1.5rem;
+          border-radius:6px;font-weight:600;font-size:.95rem}
+  .btn-lt:hover{text-decoration:none;background:#DFF3F5}
+  .btn-gh{display:inline-block;border:1px solid #33555F;color:#fff !important;padding:.8rem 1.5rem;
+          border-radius:6px;font-weight:600;font-size:.95rem;margin-left:.7rem}
+  .btn-gh:hover{text-decoration:none;border-color:#6FD3DC}
+
+  /* logos */
+  .partners{border-bottom:1px solid var(--line);background:var(--wash)}
+  .partners .wrap{padding:1.6rem 2rem;display:flex;gap:2.5rem;flex-wrap:wrap;
+                  align-items:center;justify-content:center}
+  .partners span{font-size:.82rem;font-weight:600;letter-spacing:.08em;
+                 text-transform:uppercase;color:var(--muted)}
+
+  section{padding:5.5rem 0}
+  .lead-h{font-size:2.1rem;font-weight:700;margin:0 0 .8rem}
+  .sub{max-width:40rem;margin:0 0 3.5rem;font-size:1.05rem}
+
+  /* research cards */
+  .grid{display:grid;gap:1.5rem}
+  @media(min-width:820px){.grid{grid-template-columns:repeat(2,1fr)}}
+  .card{border:1px solid var(--line);border-radius:12px;padding:2rem;background:#fff;
+        transition:border-color .18s, transform .18s}
+  .card:hover{border-color:var(--brand);transform:translateY(-2px)}
+  .card .ic{width:38px;height:38px;border-radius:9px;background:var(--wash);
+            display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;
+            font-family:var(--display);font-weight:700;color:var(--brand);font-size:.95rem}
+  .card h3{font-size:1.18rem;font-weight:600;margin:0 0 .6rem;line-height:1.3}
+  .card p{margin:0;font-size:.97rem}
+
+  /* news */
+  .news{background:var(--wash);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .ngrid{display:grid;gap:1.2rem}
+  @media(min-width:820px){.ngrid{grid-template-columns:repeat(3,1fr)}}
+  .nitem{background:#fff;border:1px solid var(--line);border-radius:10px;padding:1.4rem}
+  .nitem time{font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--brand)}
+  .nitem p{margin:.6rem 0 0;font-size:.95rem;color:var(--ink);line-height:1.45}
+
+  /* pubs */
+  .pub{display:flex;gap:1.5rem;padding:1.4rem 0;border-top:1px solid var(--line);align-items:baseline}
+  .pub:first-child{border-top:none}
+  .pub .yr{font-family:var(--display);font-weight:700;color:var(--muted);font-size:.95rem;min-width:3.2rem}
+  .pub .t{color:var(--ink);font-size:1.02rem;line-height:1.45;margin:0}
+  .pub .m{font-size:.87rem;color:var(--muted);margin:.3rem 0 0}
+  .pub .j{font-weight:600;color:var(--brand)}
+
+  /* pi */
+  .pi{display:grid;gap:2.5rem;align-items:center}
+  @media(min-width:820px){.pi{grid-template-columns:16rem 1fr;gap:3.5rem}}
+  .pi img{width:100%;border-radius:12px;display:block}
+
+  /* join */
+  .join{background:var(--deep);color:#B9CBD2}
+  .join h2{color:#fff;font-size:2.1rem;margin:0 0 1rem}
+  .join p{max-width:38rem;font-size:1.05rem}
+  footer{padding:3rem 0;font-size:.88rem;color:var(--muted);border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="mark">Yeh<b>Lab</b></div>
+    <nav>
+      <a href="#research">Research</a>
+      <a href="#publications">Publications</a>
+      <a href="#people">People</a>
+      <a class="btn" href="#join">Join us</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="kicker">Fred Hutchinson Cancer Center</p>
+    <h1>Decoding how T cells read the microbiome after transplant.</h1>
+    <p>Allogeneic stem cell transplantation drops a naïve immune system into a body already colonized
+    by trillions of microbes. We work out which antigens those T cells see — and why that decides
+    between graft-versus-host disease and durable immunity.</p>
+    <a class="btn-lt" href="#research">Our research</a><a class="btn-gh" href="https://github.com/acyeh-lab">GitHub</a>
+  </div>
+</div>
+
+<div class="partners">
+  <div class="wrap">
+    <span>Fred Hutch</span><span>·</span><span>University of Washington</span><span>·</span>
+    <span>Translational Science &amp; Therapeutics</span><span>·</span><span>NIH / NCI</span>
+  </div>
+</div>
+
+<section id="research">
+  <div class="wrap">
+    <h2 class="lead-h">Our research</h2>
+    <p class="sub">Four connected lines of work, from antigen discovery to the clinic.</p>
+    <div class="grid">
+      <div class="card"><div class="ic">01</div>
+        <h3>Microbial antigens &amp; clonal selection</h3>
+        <p>GVHD has long been explained by donor–host genetic disparity. We showed the microbiota
+        independently shapes which T cell clones expand — some of the conflict is aimed at microbes,
+        not the patient.</p></div>
+      <div class="card"><div class="ic">02</div>
+        <h3>Microbial immunopeptidomics</h3>
+        <p>If T cells respond to bacterial antigens, which ones? Mass spectrometry, MHC binding
+        prediction and bacterial genomics to name the peptides presented after transplant.</p></div>
+      <div class="card"><div class="ic">03</div>
+        <h3>Spatial biology of the gut</h3>
+        <p>Host and microbe meet across a few hundred microns of intestine. Spatial transcriptomics
+        with custom bacterial probes maps immune cells and the microbes they meet in one section.</p></div>
+      <div class="card"><div class="ic">04</div>
+        <h3>Better cellular therapy</h3>
+        <p>What we learn about antigen recognition feeds back into treatment — separating
+        graft-versus-tumor benefit from graft-versus-host toxicity.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="news">
+  <section>
+    <div class="wrap">
+      <h2 class="lead-h">Lab news</h2>
+      <p class="sub">What's happening right now.</p>
+      <div class="ngrid">
+        <div class="nitem"><time>Aug 2026</time><p>The lab is open at Fred Hutch and recruiting its
+          founding postdocs and technicians.</p></div>
+        <div class="nitem"><time>2026</time><p>Custom Xenium probes designed against gut bacterial
+          rRNA — spatial host–microbe imaging is running.</p></div>
+        <div class="nitem"><time>2024</time><p><em>Immunity</em>: microbiota dictate T cell clonal
+          selection to augment GVHD after stem cell transplant.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section id="publications">
+  <div class="wrap">
+    <h2 class="lead-h">Selected publications</h2>
+    <p class="sub">Full list on the <a href="../../publications.html">publications page</a>.</p>
+    <div class="pub"><span class="yr">2024</span><div>
+      <p class="t">Microbiota dictate T cell clonal selection to augment graft-versus-host disease after stem cell transplant</p>
+      <p class="m">Yeh AC, et al. · <span class="j">Immunity</span></p></div></div>
+    <div class="pub"><span class="yr">2025</span><div>
+      <p class="t">Eomesodermin<sup>+</sup> CD4<sup>+</sup> T cells are critical for curative immunotherapy outcomes</p>
+      <p class="m">Zhang P, et al. · <span class="j">Immunity</span></p></div></div>
+    <div class="pub"><span class="yr">2026</span><div>
+      <p class="t">Targeting donor XCR1<sup>+</sup> and CD11b<sup>+</sup> dendritic cells prevents Th1- and Th17-dependent GVHD</p>
+      <p class="m">Takahashi S, et al. · <span class="j">Blood</span></p></div></div>
+    <div class="pub"><span class="yr">2022</span><div>
+      <p class="t">Depletion of exhausted alloreactive T cells enables targeting of stem-like memory T cells</p>
+      <p class="m">Minnie SA, et al. · <span class="j">Science Immunology</span></p></div></div>
+    <div class="pub"><span class="yr">2021</span><div>
+      <p class="t">CMV exposure drives long-term CD57<sup>+</sup> CD4 memory T-cell inflation after allogeneic transplant</p>
+      <p class="m">Yeh AC, et al. · <span class="j">Blood</span></p></div></div>
+  </div>
+</section>
+
+<section id="people" style="background:var(--wash);border-top:1px solid var(--line)">
+  <div class="wrap pi">
+    <img src="../../images/people/albert-yeh.jpg" alt="Albert C. Yeh">
+    <div>
+      <p style="font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);margin:0 0 .5rem">Principal Investigator</p>
+      <h2 style="font-size:1.9rem;margin:0 0 1rem">Albert C. Yeh, MD</h2>
+      <p>A physician-scientist in the Translational Science and Therapeutics Division at Fred Hutch,
+      caring for patients through allogeneic transplant while running a lab on microbial antigen
+      recognition. Published in <em>Immunity</em>, <em>Blood</em>, <em>Science Immunology</em> and the
+      <em>Journal of Clinical Investigation</em>.</p>
+      <p style="font-size:.92rem">
+        <a href="https://scholar.google.com/citations?user=h-FgOqQAAAAJ&hl=en">Google Scholar</a> ·
+        <a href="https://www.fredhutch.org/en/provider-directory/albert-c-yeh.html">Fred Hutch profile</a> ·
+        <a href="https://www.linkedin.com/in/albert-yeh-90674b10">LinkedIn</a></p>
+    </div>
+  </div>
+</section>
+
+<div class="join" id="join">
+  <section>
+    <div class="wrap">
+      <h2>Join the lab</h2>
+      <p>We're a new group — the people who join now will shape what it becomes. Projects are
+      genuinely your own, and you'll work directly with the PI rather than three layers removed.</p>
+      <p>Recruiting postdoctoral fellows and research technicians in immunology, microbiology or
+      computational biology. UW and Fred Hutch students are welcome to ask about rotations.</p>
+      <p style="margin-top:2rem"><a class="btn-lt" href="mailto:ayeh@fredhutch.org">ayeh@fredhutch.org</a></p>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    Yeh Laboratory · Fred Hutchinson Cancer Center · 1100 Fairview Ave N, Seattle, WA 98109
+  </div>
+</footer>
+
+</body>
+</html>
