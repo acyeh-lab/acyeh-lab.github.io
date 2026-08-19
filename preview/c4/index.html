@@ -62,6 +62,17 @@
   /* resource cards in main column */
   .res{display:grid;gap:1.1rem}
   @media(min-width:640px){.res{grid-template-columns:repeat(2,1fr)}}
+  /* ---- seminar ---- */
+  .seminar{display:grid;gap:1rem;align-items:start}
+  @media(min-width:760px){.seminar{grid-template-columns:minmax(0,1.35fr) 1fr;gap:1.6rem}}
+  .seminar video{width:100%;height:auto;display:block;border:1px solid var(--line);
+                 border-radius:4px;background:var(--code)}
+  .seminar .cap .ttl{color:var(--ink);font-weight:500;line-height:1.45;display:block;
+                     margin-bottom:.45rem}
+  .seminar .cap .who{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+  .seminar .cap .kicker{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
+                        text-transform:uppercase;color:var(--brand);display:block;
+                        margin-bottom:.5rem}
   .rcard{border:1px solid var(--line);border-left:3px solid var(--brand);
          border-radius:3px;padding:1.1rem 1.2rem;background:#fff}
   .rcard h3{font-size:.98rem;margin:0 0 .4rem;line-height:1.35}
@@ -152,6 +163,21 @@
       <div class="theme"><h3>Engineering better cellular therapy</h3>
         <p>Separating graft-versus-tumor benefit from graft-versus-host toxicity using what we learn
         about antigen recognition.</p></div>
+    </div>
+
+    <h2 class="sec">Seminar</h2>
+    <div class="seminar">
+      <video controls preload="metadata" poster="../../images/Seminar_MicrobialTcells_2026.jpg">
+        <source src="../../media/seminar-2026-05-14.mp4#t=200" type="video/mp4">
+        Your browser does not support embedded video.
+        <a href="../../media/seminar-2026-05-14.mp4">Download the seminar video</a>.
+      </video>
+      <div class="cap">
+        <span class="kicker">Seminar</span>
+        <span class="ttl">Beyond Donor&ndash;Host Disparity: Microbial Antigens Shape T Cell
+        Responses in Graft-vs-Host Disease</span>
+        <span class="who">Albert C. Yeh, MD · 14 May 2026</span>
+      </div>
     </div>
 
     <h2 class="sec">Selected publications</h2>
