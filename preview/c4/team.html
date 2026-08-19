@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yeh Lab — Fred Hutchinson Cancer Center</title>
-<meta name="description" content="Yeh Lab, Fred Hutchinson Cancer Center — microbial antigen recognition after allogeneic stem cell transplantation.">
+<title>People — Yeh Lab</title>
+<meta name="description" content="The people of the Yeh Lab at Fred Hutchinson Cancer Center.">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -109,6 +109,27 @@
   footer{border-top:2px solid var(--ink);padding:1.5rem 0 3rem;
          font-family:var(--mono);font-size:.76rem;color:var(--muted);line-height:1.7}
 </style>
+<style>
+  /* ---- subpage additions ---- */
+  .pagehead{padding:2.2rem 0 1.4rem;border-bottom:1px solid var(--line);margin-bottom:2rem}
+  .pagehead h1{font-size:1.6rem;line-height:1.3;margin:0 0 .5rem;color:var(--ink)}
+  .pagehead p{margin:0;max-width:52ch}
+  nav a[aria-current]{color:var(--brand);font-weight:600}
+  .plist{list-style:none;margin:0;padding:0}
+  .plist li{display:grid;grid-template-columns:8rem 1fr;gap:1.4rem;align-items:start;
+            padding:1.35rem 0;border-top:1px solid var(--line)}
+  .plist li:first-child{border-top:none}
+  .plist img{width:100%;height:auto;display:block;border:1px solid var(--line);
+             border-radius:3px;background:var(--wash)}
+  .plist .t{display:block;font-size:1rem;line-height:1.45;color:var(--ink);
+            text-decoration:none}
+  .plist .t:hover{color:var(--brand);text-decoration:underline}
+  .plist li.led .t{font-weight:600}
+  .plist .m{font-family:var(--mono);font-size:.78rem;color:var(--muted);
+            display:block;margin-top:.4rem}
+  .plist .j{color:var(--body)}
+  @media(max-width:620px){.plist li{grid-template-columns:4.5rem 1fr;gap:.9rem}}
+</style>
 </head>
 <body>
 
@@ -118,102 +139,24 @@
   <div class="wrap bar">
     <div class="mark">Yeh Lab<small>Fred Hutchinson Cancer Center · Seattle</small></div>
     <nav>
-      <a href="#research">Research</a>
+      <a href="index.html#research">Research</a>
       <a href="publications.html">Publications</a>
-      <a href="team.html">People</a>
-      <a href="#join">Join</a>
+      <a href="team.html" aria-current="page">People</a>
+      <a href="index.html#join">Join</a>
     </nav>
   </div>
 </header>
 
-<div class="wrap cols">
-  <main>
-    <div class="intro">
-      <h1>The donor immune system meets a <em>trillion microbial strangers</em>.
-      We study what happens next.</h1>
-      <p>Allogeneic stem cell transplantation transfers a naïve immune system into a body already
-      colonized by a vast microbial community. We work out how T cells read that community — which
-      antigens they see, which clones expand, and why those choices decide between graft-versus-host
-      disease and durable immunity.</p>
-      <div class="affil">Translational Science &amp; Therapeutics Division · 1100 Fairview Ave N, Seattle WA 98109</div>
-    </div>
+<div class="wrap">
+  <div class="pagehead">
+    <h1>People</h1>
+    <p>The passionate individuals driving innovative research.</p>
+  </div>
 
-    <h2 class="sec" id="research">Research directions</h2>
-    <div class="themes">
-      <div class="theme"><h3>Microbial antigens &amp; T cell clonal selection</h3>
-        <p>The microbiota independently shapes which T cell clones expand after transplant — some of
-        the immune conflict is directed at microbes, not the patient.</p></div>
-      <div class="theme"><h3>Microbial immunopeptidomics</h3>
-        <p>Mass spectrometry, MHC binding prediction and bacterial genomics to identify the specific
-        peptides presented after transplant.</p></div>
-      <div class="theme"><h3>Spatial biology of the gut interface</h3>
-        <p>Spatial transcriptomics with custom bacterial probes, mapping immune cells and the
-        microbes they encounter in the same tissue section.</p></div>
-      <div class="theme"><h3>Engineering better cellular therapy</h3>
-        <p>Separating graft-versus-tumor benefit from graft-versus-host toxicity using what we learn
-        about antigen recognition.</p></div>
-    </div>
-
-    <h2 class="sec">Selected publications</h2>
-    <ul class="pubs">
-      <li><span class="t">Microbiota dictate T cell clonal selection to augment graft-versus-host disease after stem cell transplant<span class="lead">lab-led</span></span>
-        <span class="m">Yeh AC, et al. — Immunity, 2024</span></li>
-      <li><span class="t">Eomesodermin<sup>+</sup> CD4<sup>+</sup> T cells are critical for curative immunotherapy outcomes</span>
-        <span class="m">Zhang P, et al. — Immunity, 2025</span></li>
-      <li><span class="t">Targeting donor XCR1<sup>+</sup> and CD11b<sup>+</sup> dendritic cells prevents Th1- and Th17-dependent GVHD within the GI tract</span>
-        <span class="m">Takahashi S, et al. — Blood, 2026</span></li>
-      <li><span class="t">Depletion of exhausted alloreactive T cells enables targeting of stem-like memory T cells to generate tumor-specific immunity</span>
-        <span class="m">Minnie SA, et al. — Science Immunology, 2022</span></li>
-      <li><span class="t">CMV exposure drives long-term CD57<sup>+</sup> CD4 memory T-cell inflation following allogeneic stem cell transplantation<span class="lead">lab-led</span></span>
-        <span class="m">Yeh AC, et al. — Blood, 2021</span></li>
-    </ul>
-    <p style="font-size:.88rem;margin-top:1rem"><a href="publications.html">All publications →</a></p>
-
-    <h2 class="sec" id="join">Join the lab</h2>
-    <p>We are a new group, so the people who join now will shape what it becomes. Projects are
-    genuinely their own, the questions are open, and you work directly with the PI.</p>
-    <p>Recruiting <strong>postdoctoral fellows</strong> and <strong>research technicians</strong> with
-    interests in immunology, microbiology or computational biology. UW and Fred Hutch graduate
-    students are welcome to enquire about rotations. Write to
-    <a href="mailto:ayeh@fredhutch.org">ayeh@fredhutch.org</a>.</p>
-  </main>
-
-  <aside>
-<!-- SIDEBAR-TOP -->
-    <div class="box news">
-      <h2>News</h2>
-      <ul>
-        <li><time>Aug 2026</time>Lab opens at Fred Hutch; recruiting founding postdocs and technicians.</li>
-        <li><time>2026</time>Custom Xenium probes against gut bacterial rRNA — spatial host–microbe imaging running.</li>
-        <li><time>2026</time>Takahashi et al., dendritic cell targeting in GI GVHD, out in <em>Blood</em>.</li>
-        <li class="press">
-          <img src="../../images/News2024_microbiome.png" alt="">
-          <span><time>Jun 2024</time><a href="https://www.fredhutch.org/en/news/center-news/2024/06/yeh-hill-microbiota-directed-T-cells-GVHD.html">Secret to tamping down GVHD may lie in microbial genetics</a><span class="src">Fred Hutch News</span></span>
-        </li>
-        <li><time>2024</time><em>Immunity</em>: microbiota dictate T cell clonal selection in GVHD.</li>
-      </ul>
-    </div>
-<!-- /SIDEBAR-TOP -->
-
-    <div class="box hiring">
-      <span class="h">We're hiring our founding members.</span>
-      <p>Postdocs and research technicians in immunology, microbiology or computational biology.
-      Rotation students welcome.</p>
-      <a class="btn" href="mailto:ayeh@fredhutch.org">Get in touch</a>
-    </div>
-
-    <div class="box pi-txt">
-      <h2>Principal Investigator</h2>
-      <div class="n">Albert C. Yeh, MD</div>
-      <div class="r">Translational Science &amp; Therapeutics</div>
-      <p>Physician-scientist at Fred Hutch, treating patients through allogeneic transplant and
-      studying microbial antigen recognition.</p>
-      <p style="font-size:.82rem;margin:0">
-        <a href="https://scholar.google.com/citations?user=h-FgOqQAAAAJ&hl=en">Scholar</a> ·
-        <a href="https://www.fredhutch.org/en/provider-directory/albert-c-yeh.html">Hutch</a> ·
-        <a href="team.html">People</a></p>
-    </div>
-  </aside>
+  <h2 class="sec">Our team</h2>
+  <p style="max-width:52ch">We are a diverse group of scientists and researchers dedicated to
+  understanding the immune system and advancing oncology research. If you're interested in joining
+  our team, please contact us at <a href="mailto:ayeh@fredhutch.org">ayeh@fredhutch.org</a>.</p>
 </div>
 
 <footer>
