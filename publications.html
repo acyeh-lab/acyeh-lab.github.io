@@ -1,260 +1,264 @@
-<!-- publications.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publications - Albert Yeh Lab</title>
-    <style>
-        body { font-family: 'Roboto', sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
-        header { background-color: #0056b3; color: #fff; padding: 20px 10px; text-align: center; }
-        header h1 {
-            font-size: 48px; /* Increase the font size */
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 2px;
-            /*text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);*/
-        }
-        header h2 {
-            font-size: 24px; /* Increase the font size */
-            margin: 0;
-            font-weight: 400;
-            /*letter-spacing: 2px;*/
-            /*text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);*/
-        }
-        nav { text-align: center; margin: 10px 0; background-color: #fff; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-        nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
-        nav a:hover { text-decoration: underline; }
-        .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-        .publication {
-            display: flex;
-            align-items: flex-start;
-            margin: 20px 0;
-        }
-        .publication img {
-            width: 120px;
-            height: 120px;
-            margin-right: 20px;
-            border-radius: 5px;
-        }
-        .publication-details {
-            display: flex;
-            flex-direction: column;
-        }
-        .publication-title {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-        .publication-title a {
-            color: black;
-            text-decoration: none;
-        }
-        .publication-title a:hover {
-            color: red;
-            text-decoration: underline;
-        }
-        .publication-title2 {
-            /*font-weight: bold;*/
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-        .publication-title2 a {
-            color: black;
-            text-decoration: none;
-        }
-        .publication-title2 a:hover {
-            color: red;
-            text-decoration: underline;
-        }
-        .publication-authors {
-            font-size: 0.9rem;
-            color: #555;
-            margin-bottom: 5px;
-        }
-        .publication-date {
-            font-size: 0.9rem;
-            color: #555;
-            margin-bottom: 5px;
-        }
-        .publication-journal {
-            font-size: 0.85rem;
-            color: #777;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Publications — Yeh Lab</title>
+<meta name="description" content="Publications from the Yeh Lab at Fred Hutchinson Cancer Center.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fff; --ink:#111418; --body:#3D444C; --muted:#767E88;
+    --line:#E3E7EB; --brand:#7A2E2E; --wash:#FAF7F5; --code:#F4F6F8;
+    --sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);
+       font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--brand)}
+  a:hover{text-decoration:underline;text-underline-offset:2px}
+  .wrap{max-width:70rem;margin:0 auto;padding:0 1.75rem}
+  h1,h2,h3{color:var(--ink);font-weight:600;letter-spacing:-.01em}
 
-        footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
-    </style>
+  header{border-bottom:2px solid var(--ink)}
+  .bar{display:flex;justify-content:space-between;align-items:flex-end;
+       padding:1.25rem 0 .9rem;gap:1.5rem;flex-wrap:wrap}
+  .mark{font-size:1.25rem;font-weight:600;color:var(--ink)}
+  .mark small{display:block;font-family:var(--mono);font-size:.72rem;font-weight:400;
+              color:var(--muted);letter-spacing:.02em;margin-top:.2rem}
+  nav{display:flex;gap:1.4rem;flex-wrap:wrap}
+  nav a{font-size:.88rem;color:var(--body);text-decoration:none;font-weight:500}
+  nav a:hover{color:var(--brand)}
+
+  .cols{display:grid;gap:3rem;padding:2.75rem 0 3rem}
+  @media(min-width:900px){.cols{grid-template-columns:1fr 20rem;gap:4rem}}
+
+  .intro h1{font-size:1.72rem;line-height:1.3;margin:0 0 1rem;max-width:28ch}
+  .intro h1 em{font-style:italic;color:var(--brand)}
+  .intro p{margin:0 0 1rem;max-width:44rem}
+  .affil{font-family:var(--mono);font-size:.8rem;color:var(--muted);
+         padding-top:.9rem;border-top:1px solid var(--line);margin-top:1.5rem}
+
+  h2.sec{font-size:.78rem;font-weight:600;font-family:var(--mono);letter-spacing:.1em;
+         text-transform:uppercase;color:var(--muted);margin:2.75rem 0 1.1rem;
+         padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+
+  .themes{display:grid;gap:1.4rem}
+  @media(min-width:640px){.themes{grid-template-columns:repeat(2,1fr);gap:1.6rem 2rem}}
+  .theme h3{font-size:1rem;margin:0 0 .35rem;line-height:1.35}
+  .theme p{margin:0;font-size:.92rem;color:var(--body)}
+
+  ul.pubs{list-style:none;margin:0;padding:0}
+  ul.pubs li{padding:.75rem 0;border-bottom:1px dotted var(--line);font-size:.94rem}
+  ul.pubs li:last-child{border-bottom:none}
+  ul.pubs .t{color:var(--ink)}
+  ul.pubs .m{font-family:var(--mono);font-size:.79rem;color:var(--muted);display:block;margin-top:.25rem}
+  .lead{display:inline-block;font-family:var(--mono);font-size:.68rem;font-weight:500;
+        color:var(--brand);border:1px solid var(--brand);border-radius:2px;
+        padding:0 .3rem;margin-left:.4rem;vertical-align:1px}
+
+  /* resource cards in main column */
+  .res{display:grid;gap:1.1rem}
+  @media(min-width:640px){.res{grid-template-columns:repeat(2,1fr)}}
+  .rcard{border:1px solid var(--line);border-left:3px solid var(--brand);
+         border-radius:3px;padding:1.1rem 1.2rem;background:#fff}
+  .rcard h3{font-size:.98rem;margin:0 0 .4rem;line-height:1.35}
+  .rcard p{margin:0 0 .7rem;font-size:.88rem;color:var(--body)}
+  .rcard .stat{font-family:var(--mono);font-size:.74rem;color:var(--muted);
+               display:block;margin-bottom:.55rem}
+  .rcard a{font-size:.85rem;font-weight:500}
+  .soon{border-left-color:var(--muted)}
+  .soon .badge{display:inline-block;font-family:var(--mono);font-size:.66rem;
+               background:var(--code);color:var(--muted);border:1px solid var(--line);
+               padding:.05rem .35rem;border-radius:2px;margin-left:.4rem;vertical-align:1.5px}
+
+  /* sidebar */
+  aside .box{border:1px solid var(--line);border-radius:4px;padding:1.1rem 1.2rem;
+             margin-bottom:1.5rem;background:var(--wash)}
+  aside h2{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;
+           color:var(--muted);margin:0 0 .9rem;font-weight:600}
+  .news ul{margin:0;padding:0}
+  .news li{list-style:none;padding:.6rem 0;border-top:1px solid var(--line);font-size:.88rem;line-height:1.5}
+  .news li:first-child{border-top:none;padding-top:0}
+  .news time{font-family:var(--mono);font-size:.72rem;color:var(--brand);display:block}
+  .news li.press{display:grid;grid-template-columns:3.6rem 1fr;gap:.75rem;align-items:start}
+  .news li.press img{width:100%;height:auto;display:block;border-radius:3px;border:1px solid var(--line)}
+  .news li.press a{color:var(--ink);text-decoration:none}
+  .news li.press a:hover{color:var(--brand);text-decoration:underline}
+  .news .src{font-family:var(--mono);font-size:.68rem;color:var(--muted);display:block;margin-top:.3rem}
+  .sidelist li{list-style:none;padding:.55rem 0;border-top:1px solid var(--line);font-size:.87rem;line-height:1.45}
+  .sidelist li:first-child{border-top:none;padding-top:0}
+  .sidelist ul{margin:0;padding:0}
+  .sidelist .n{font-weight:600;color:var(--ink);display:block}
+  .sidelist .d{color:var(--muted);font-size:.82rem}
+  .hiring{background:#fff;border-left:3px solid var(--brand)}
+  .hiring p{font-size:.89rem;margin:0 0 .8rem}
+  .hiring .h{font-weight:600;color:var(--ink);font-size:.98rem;display:block;margin-bottom:.5rem}
+  .btn{display:inline-block;background:var(--brand);color:#fff !important;
+       padding:.5rem 1rem;border-radius:3px;font-size:.85rem;font-weight:500;text-decoration:none}
+  .btn:hover{background:#5E2323;text-decoration:none}
+  .pi-txt .n{font-weight:600;color:var(--ink);font-size:.95rem}
+  .pi-txt .r{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-bottom:.6rem}
+  .pi-txt p{font-size:.86rem;margin:0 0 .7rem}
+
+  .placebanner{height:12rem;background:url('images/Hutch_BG.jpg') center 62%/cover no-repeat;
+               border-bottom:1px solid var(--line)}
+  @media(max-width:620px){.placebanner{height:8rem}}
+  footer{border-top:2px solid var(--ink);padding:1.5rem 0 3rem;
+         font-family:var(--mono);font-size:.76rem;color:var(--muted);line-height:1.7}
+</style>
+<style>
+  /* ---- subpage additions ---- */
+  .pagehead{padding:2.2rem 0 1.4rem;border-bottom:1px solid var(--line);margin-bottom:2rem}
+  .pagehead h1{font-size:1.6rem;line-height:1.3;margin:0 0 .5rem;color:var(--ink)}
+  .pagehead p{margin:0;max-width:52ch}
+  nav a[aria-current]{color:var(--brand);font-weight:600}
+  .plist{list-style:none;margin:0;padding:0}
+  .plist li{display:grid;grid-template-columns:8rem 1fr;gap:1.4rem;align-items:start;
+            padding:1.35rem 0;border-top:1px solid var(--line)}
+  .plist li:first-child{border-top:none}
+  .plist img{width:100%;height:auto;display:block;border:1px solid var(--line);
+             border-radius:3px;background:var(--wash)}
+  .plist .t{display:block;font-size:1rem;line-height:1.45;color:var(--ink);
+            text-decoration:none}
+  .plist .t:hover{color:var(--brand);text-decoration:underline}
+  .plist li.led .t{font-weight:600}
+  .plist .m{font-family:var(--mono);font-size:.78rem;color:var(--muted);
+            display:block;margin-top:.4rem}
+  .plist .j{color:var(--body)}
+  @media(max-width:620px){.plist li{grid-template-columns:4.5rem 1fr;gap:.9rem}}
+</style>
 </head>
-
-
 <body>
-    <header>
-        <h1>Albert Yeh Lab</h1>
-        <h2>Discover our latest research contributions.</h2>
-    </header>
 
+<div class="placebanner"></div>
+
+<header>
+  <div class="wrap bar">
+    <div class="mark">Yeh Lab<small>Fred Hutchinson Cancer Center · Seattle</small></div>
     <nav>
-        <a href="index.html">Main Page</a>
-        <a href="publications.html">Publications</a>
-        <a href="team.html">Team</a>
+      <a href="index.html#research">Research</a>
+      <a href="publications.html" aria-current="page">Publications</a>
+      <a href="team.html">People</a>
+      <a href="index.html#join">Join</a>
     </nav>
+  </div>
+</header>
 
-    <div class="container">
-        Papers in <b>bold</b> are led by Albert Yeh Lab.
-        <h2>Recent Publications</h2>
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/GutMicrobes2026_Figure.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title">
-                    <a href="https://doi.org/10.1080/19490976.2026.2631224" target="_blank">The gut microbiome in graft-versus-host disease: mechanisms of immune modulation and therapeutic approaches</a>
-                </div>
-                <div class="publication-authors">Moses AB, Yeh AC, 2026</div>
-                <div class="publication-journal">Gut Microbes</div>
-            </div>
+<div class="wrap">
+  <div class="pagehead">
+    <h1>Publications</h1>
+    <p>Papers led by the Yeh Lab are shown in <strong>bold</strong>.</p>
+  </div>
+
+  <h2 class="sec">Recent publications</h2>
+  <ul class="plist">
+      <li class="led">
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/GutMicrobes2026_Figure.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1080/19490976.2026.2631224" target="_blank" rel="noopener">The gut microbiome in graft-versus-host disease: mechanisms of immune modulation and therapeutic approaches</a>
+          <span class="m">Moses AB, Yeh AC, 2026 · <span class="j">Gut Microbes</span></span>
         </div>
-
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Blood2026_Figure.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title2">
-                    <a href="https://doi.org/10.1182/blood.2025029431" target="_blank">Targeting donor XCR1+ and CD11b+ dendritic cells prevents Th1 and Th17-dependent GVHD within the Gastrointestinal Tract</a>
-                </div>
-                <div class="publication-authors">Takahashi S, et al., 2026</div>
-                <div class="publication-journal">Blood</div>
-            </div>
+      </li>
+      <li>
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Blood2026_Figure.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1182/blood.2025029431" target="_blank" rel="noopener">Targeting donor XCR1+ and CD11b+ dendritic cells prevents Th1 and Th17-dependent GVHD within the Gastrointestinal Tract</a>
+          <span class="m">Takahashi S, et al., 2026 · <span class="j">Blood</span></span>
         </div>
-
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Immunity2025_Figure.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title2">
-                    <a href="https://doi.org/10.1016/j.immuni.2025.09.004" target="_blank">Eomesodermin+ CD4+ T cells are critical for curative immunotherapy outcomes</a>
-                </div>
-                <div class="publication-authors">Zhang P, et al., 2025</div>
-                <div class="publication-journal">Immunity</div>
-            </div>
+      </li>
+      <li>
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Immunity2025_Figure.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1016/j.immuni.2025.09.004" target="_blank" rel="noopener">Eomesodermin+ CD4+ T cells are critical for curative immunotherapy outcomes</a>
+          <span class="m">Zhang P, et al., 2025 · <span class="j">Immunity</span></span>
         </div>
-
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Immunity2024_Graphical_Abstract.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title">
-                    <a href="https://doi.org/10.1016/j.immuni.2024.05.018" target="_blank">Microbiota dictate T cell clonal selection to augment graft-versus-host disease after stem cell transplant</a>
-                </div>
-                <div class="publication-authors">Yeh AC, et al., 2024</div>
-                <div class="publication-journal">Immunity</div>
-            </div>
+      </li>
+      <li class="led">
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Immunity2024_Graphical_Abstract.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1016/j.immuni.2024.05.018" target="_blank" rel="noopener">Microbiota dictate T cell clonal selection to augment graft-versus-host disease after stem cell transplant</a>
+          <span class="m">Yeh AC, et al., 2024 · <span class="j">Immunity</span></span>
         </div>
-        
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Blood2024_Fig1A.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title2">
-                    <a href="https://doi.org/10.1182/blood.2024024105" target="_blank">HA-1–targeted T-cell receptor T-cell therapy for recurrent leukemia after hematopoietic stem cell transplantation</a>
-                </div>
-                <div class="publication-authors">Krakow EF, et al., 2024</div>
-                <div class="publication-journal">Blood</div>
-            </div>
+      </li>
+      <li>
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Blood2024_Fig1A.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1182/blood.2024024105" target="_blank" rel="noopener">HA-1–targeted T-cell receptor T-cell therapy for recurrent leukemia after hematopoietic stem cell transplantation</a>
+          <span class="m">Krakow EF, et al., 2024 · <span class="j">Blood</span></span>
         </div>
-
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/JCI2024_Fig8L.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title2">
-                    <a href="https://doi.org/10.1172/jci170125" target="_blank">Calcineurin inhibition rescues alloantigen-specific central memory T cell subsets that promote chronic GVHD</a>
-                </div>
-                <div class="publication-authors">Wang YW, et al., 2024</div>
-                <div class="publication-journal">The Journal of Clinical Investigation</div>
-            </div>
+      </li>
+      <li>
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/JCI2024_Fig8L.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1172/jci170125" target="_blank" rel="noopener">Calcineurin inhibition rescues alloantigen-specific central memory T cell subsets that promote chronic GVHD</a>
+          <span class="m">Wang YW, et al., 2024 · <span class="j">The Journal of Clinical Investigation</span></span>
         </div>
-
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/TCT2024_Fig3B.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title2">
-                    <a href="https://doi.org/10.1016/j.jtct.2024.05.016" target="_blank">Optimizing Autologous Stem Cell Transplantation in Multiple Myeloma: The Impact of Intensive Chemomobilization</a>
-                </div>
-                <div class="publication-authors">Portuguese AJ, et al., 2024</div>
-                <div class="publication-journal">Transplantation and Cellular Therapy</div>
-            </div>
+      </li>
+      <li>
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/TCT2024_Fig3B.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1016/j.jtct.2024.05.016" target="_blank" rel="noopener">Optimizing Autologous Stem Cell Transplantation in Multiple Myeloma: The Impact of Intensive Chemomobilization</a>
+          <span class="m">Portuguese AJ, et al., 2024 · <span class="j">Transplantation and Cellular Therapy</span></span>
         </div>
-
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/TCT2023_Fig.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title">
-                    <a href="https://doi.org/10.1016/j.jtct.2023.08.021" target="_blank">Revisiting the utility of G-CSF post-autologous hematopoietic stem cell transplantation for outpatient-based transplants</a>
-                </div>
-                <div class="publication-authors">Portuguese AJ, et al., 2023</div>
-                <div class="publication-journal">Transplantation and Cellular Therapy</div>
-            </div>
+      </li>
+      <li class="led">
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/TCT2023_Fig.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1016/j.jtct.2023.08.021" target="_blank" rel="noopener">Revisiting the utility of G-CSF post-autologous hematopoietic stem cell transplantation for outpatient-based transplants</a>
+          <span class="m">Portuguese AJ, et al., 2023 · <span class="j">Transplantation and Cellular Therapy</span></span>
         </div>
-        
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Immunity2023_Figure.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title2">
-                    <a href="https://doi.org/10.1016/j.immuni.2023.06.024" target="_blank">Intestinal microbiota controls graft-versus-host disease independent of donor-host genetic disparity</a>
-                </div>
-                <div class="publication-authors">Koyama M, et al., 2023</div>
-                <div class="publication-journal">Immunity</div>
-            </div>
+      </li>
+      <li>
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Immunity2023_Figure.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1016/j.immuni.2023.06.024" target="_blank" rel="noopener">Intestinal microbiota controls graft-versus-host disease independent of donor-host genetic disparity</a>
+          <span class="m">Koyama M, et al., 2023 · <span class="j">Immunity</span></span>
         </div>
-
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/SciImmunol2022_Figure.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title2">
-                    <a href="https://doi.org/10.1126/sciimmunol.abo3420" target="_blank">Depletion of exhausted alloreactive T cells enables targeting of stem-like memory T cells to generate tumor-specific immunity</a>
-                </div>
-                <div class="publication-authors">Minnie SA, et al., 2022</div>
-                <div class="publication-journal">Science Immunology</div>
-            </div>
-        </div>        
-        
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Blood2021_Fig1B.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title">
-                    <a href="https://doi.org/10.1182/blood.2020009492" target="_blank">CMV exposure drives long-term CD57+ CD4 memory T-cell inflation following allogeneic stem cell transplantation</a>
-                </div>
-                <div class="publication-authors">Yeh AC, et al., 2021</div>
-                <div class="publication-journal">Blood</div>
-            </div>
+      </li>
+      <li>
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/SciImmunol2022_Figure.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1126/sciimmunol.abo3420" target="_blank" rel="noopener">Depletion of exhausted alloreactive T cells enables targeting of stem-like memory T cells to generate tumor-specific immunity</a>
+          <span class="m">Minnie SA, et al., 2022 · <span class="j">Science Immunology</span></span>
         </div>
-
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/BMT2021_FIgure.png" alt="Publication Icon">
-            <div class="publication-details">
-                <div class="publication-title">
-                    <a href="https://doi.org/10.1038/s41409-021-01518-0" target="_blank">Long-term survival with mixed chimerism in patients with AML and MDS transplanted after conditioning with targeted busulfan, fludarabine, and thymoglobulin</a>
-                </div>
-                <div class="publication-authors">Yeh AC, et al., 2021</div>
-                <div class="publication-journal">Bone Marrow Transplantation</div>
-            </div>
+      </li>
+      <li class="led">
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/Blood2021_Fig1B.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1182/blood.2020009492" target="_blank" rel="noopener">CMV exposure drives long-term CD57+ CD4 memory T-cell inflation following allogeneic stem cell transplantation</a>
+          <span class="m">Yeh AC, et al., 2021 · <span class="j">Blood</span></span>
         </div>
-
-        
-        
-        <h2>In the News</h2>
-        <div class="publication">
-            <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/News2024_microbiome.png" alt="Publication Icon">
-            <div class="publication-details">
-                    <div class="publication-title">
-                        <a href="https://www.fredhutch.org/en/news/center-news/2024/06/yeh-hill-microbiota-directed-T-cells-GVHD.html" target="_blank">Secret to tamping down GVHD may lie in microbial genetics</a>
-                    </div>
-                    <div class="publication-date">June 2024</div>
-            </div>
+      </li>
+      <li class="led">
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/BMT2021_FIgure.png" alt="">
+        <div>
+          <a class="t" href="https://doi.org/10.1038/s41409-021-01518-0" target="_blank" rel="noopener">Long-term survival with mixed chimerism in patients with AML and MDS transplanted after conditioning with targeted busulfan, fludarabine, and thymoglobulin</a>
+          <span class="m">Yeh AC, et al., 2021 · <span class="j">Bone Marrow Transplantation</span></span>
         </div>
+      </li>
+  </ul>
 
-        
-        </section>
+  <h2 class="sec" style="margin-top:2.6rem">In the news</h2>
+  <ul class="plist">
+      <li class="led">
+        <img src="https://raw.githubusercontent.com/acyeh-lab/acyeh-lab.github.io/main/images/News2024_microbiome.png" alt="">
+        <div>
+          <a class="t" href="https://www.fredhutch.org/en/news/center-news/2024/06/yeh-hill-microbiota-directed-T-cells-GVHD.html" target="_blank" rel="noopener">Secret to tamping down GVHD may lie in microbial genetics</a>
+          <span class="m">June 2024</span>
+        </div>
+      </li>
+  </ul>
+</div>
 
-    </div>
+<footer>
+  <div class="wrap">
+    Yeh Laboratory · Translational Science &amp; Therapeutics · Fred Hutchinson Cancer Center<br>
+    <a href="mailto:ayeh@fredhutch.org">ayeh@fredhutch.org</a> · <a href="https://github.com/acyeh-lab">github.com/acyeh-lab</a>
+  </div>
+</footer>
 
-    <footer>
-        <p>&copy; 2024 Albert Yeh Lab. All Rights Reserved.</p>
-    </footer>
 </body>
 </html>
