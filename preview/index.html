@@ -31,14 +31,21 @@
   .opt .tags{padding-left:2.5rem;margin-top:.7rem;display:flex;gap:.5rem;flex-wrap:wrap}
   .opt .tag{font-size:.74rem;color:var(--body);background:#F4F4F5;border:1px solid var(--line);
             padding:.15rem .5rem;border-radius:3px}
+  .grp{border-left:2px solid var(--line);padding-left:1.4rem;margin:0 0 1.1rem}
+  .grp-h{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+         color:var(--muted);margin:0 0 .9rem}
+  .opt.sub{padding:1.1rem 1.3rem;margin-bottom:.7rem}
+  .opt.sub h2{font-size:1rem}
+  .opt.sub p{padding-left:2.5rem;font-size:.9rem;margin-top:.4rem}
   .note{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--line);font-size:.92rem}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Homepage layouts</h1>
-  <p class="sub">Five directions, same content — real copy, real publications, real figures. Open each
-  and see which one feels like your lab. Your live site at
+  <p class="sub">Same content throughout — real copy, real publications, real numbers. <strong>No
+  headshot on any of them.</strong> C has been rebuilt around the resources you actually maintain,
+  and has three variants showing different things in place of a face. Your live site at
   <a href="https://acyeh-lab.github.io/">acyeh-lab.github.io</a> is untouched.</p>
 
   <a class="opt" href="a/">
@@ -56,11 +63,30 @@
   </a>
 
   <a class="opt" href="c/">
-    <div class="row"><span class="k">C</span><h2>Dense</h2><span class="ref">after Satija</span></div>
-    <p>Everything above the fold. Two columns: research on the left, a sidebar with PI, dated news
-    and the tools you actually use. No hero at all — information first.</p>
-    <div class="tags"><span class="tag">IBM Plex</span><span class="tag">sidebar</span><span class="tag">tools + news</span></div>
+    <div class="row"><span class="k">C</span><h2>Dense</h2><span class="ref">after Satija · rebuilt</span></div>
+    <p>Everything above the fold. Two columns: research and <strong>the resources you actually
+    maintain</strong> on the left — the microbe-directed TCR catalogue and the HCT evidence table —
+    with a sidebar of news, open resources and a hiring callout. No hero, information first.</p>
+    <div class="tags"><span class="tag">IBM Plex</span><span class="tag">sidebar</span><span class="tag">your catalogues</span><span class="tag">no image</span></div>
   </a>
+
+  <div class="grp">
+    <p class="grp-h">C, with something other than a face as the visual anchor</p>
+    <a class="opt sub" href="c2/">
+      <div class="row"><span class="k">C2</span><h2>+ figure banner</h2></div>
+      <p>Your <em>Immunity</em> 2024 graphical abstract, full width under the headline, captioned.
+      Leads with the finding.</p>
+    </a>
+    <a class="opt sub" href="c3/">
+      <div class="row"><span class="k">C3</span><h2>+ numbers</h2></div>
+      <p>23 clones / 38 taxa / 8 organisms as large type. No image at all — leads with what you give
+      the field.</p>
+    </a>
+    <a class="opt sub" href="c4/">
+      <div class="row"><span class="k">C4</span><h2>+ place</h2></div>
+      <p>A Fred Hutch campus band across the top. The Bhatt move: institution, not person.</p>
+    </a>
+  </div>
 
   <a class="opt" href="d/">
     <div class="row"><span class="k">D</span><h2>Figure-forward</h2><span class="ref">the visual one</span></div>
@@ -77,9 +103,9 @@
   </a>
 
   <div class="note">
-    <strong>What to tell me:</strong> which layout, and separately whether the research copy is right —
-    it is still my draft from your papers, not your words. Layout and copy are independent choices, so
-    picking a favourite here doesn't lock in the wording.
+    <strong>What to tell me:</strong> which layout, which visual anchor, and separately whether the
+    research copy is right — it is still my draft from your papers, not your words. All three are
+    independent choices, so picking a favourite here doesn't lock in the wording.
   </div>
 </div>
 </body>

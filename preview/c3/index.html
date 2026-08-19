@@ -97,6 +97,14 @@
   .pi-txt .r{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-bottom:.6rem}
   .pi-txt p{font-size:.86rem;margin:0 0 .7rem}
 
+  .nums{display:grid;gap:0;margin:2rem 0 0;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  @media(min-width:560px){.nums{grid-template-columns:repeat(3,1fr)}}
+  .nums div{padding:1.4rem 1.2rem;background:var(--wash);border-right:1px solid var(--line)}
+  .nums div:last-child{border-right:none}
+  .nums .v{font-size:2.4rem;font-weight:600;color:var(--brand);line-height:1;display:block;
+           letter-spacing:-.03em}
+  .nums .l{font-family:var(--mono);font-size:.74rem;color:var(--muted);display:block;
+           margin-top:.5rem;line-height:1.45}
   footer{border-top:2px solid var(--ink);padding:1.5rem 0 3rem;
          font-family:var(--mono);font-size:.76rem;color:var(--muted);line-height:1.7}
 </style>
@@ -129,6 +137,12 @@
       microbe-directed T cell receptors, an evidence table of the taxa that shape GVHD, and probe
       designs that let us see host and microbe in the same tissue section.</p>
       <div class="affil">Translational Science &amp; Therapeutics Division · 1100 Fairview Ave N, Seattle WA 98109</div>
+    </div>
+
+    <div class="nums">
+      <div><span class="v">23</span><span class="l">published microbe-directed<br>TCR clones catalogued</span></div>
+      <div><span class="v">38</span><span class="l">taxa scored for GVHD risk<br>and mechanism</span></div>
+      <div><span class="v">8</span><span class="l">target organisms across<br>10 antigen specificities</span></div>
     </div>
 
     <h2 class="sec" id="research">Research directions</h2>
