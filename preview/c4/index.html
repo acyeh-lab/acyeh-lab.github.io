@@ -35,7 +35,8 @@
   .cols{display:grid;gap:3rem;padding:2.75rem 0 3rem}
   @media(min-width:900px){.cols{grid-template-columns:1fr 20rem;gap:4rem}}
 
-  .intro h1{font-size:1.72rem;line-height:1.3;margin:0 0 1rem;max-width:26ch}
+  .intro h1{font-size:1.72rem;line-height:1.3;margin:0 0 1rem;max-width:28ch}
+  .intro h1 em{font-style:italic;color:var(--brand)}
   .intro p{margin:0 0 1rem;max-width:44rem}
   .affil{font-family:var(--mono);font-size:.8rem;color:var(--muted);
          padding-top:.9rem;border-top:1px solid var(--line);margin-top:1.5rem}
@@ -82,6 +83,11 @@
   .news li{list-style:none;padding:.6rem 0;border-top:1px solid var(--line);font-size:.88rem;line-height:1.5}
   .news li:first-child{border-top:none;padding-top:0}
   .news time{font-family:var(--mono);font-size:.72rem;color:var(--brand);display:block}
+  .news li.press{display:grid;grid-template-columns:3.6rem 1fr;gap:.75rem;align-items:start}
+  .news li.press img{width:100%;height:auto;display:block;border-radius:3px;border:1px solid var(--line)}
+  .news li.press a{color:var(--ink);text-decoration:none}
+  .news li.press a:hover{color:var(--brand);text-decoration:underline}
+  .news .src{font-family:var(--mono);font-size:.68rem;color:var(--muted);display:block;margin-top:.3rem}
   .sidelist li{list-style:none;padding:.55rem 0;border-top:1px solid var(--line);font-size:.87rem;line-height:1.45}
   .sidelist li:first-child{border-top:none;padding-top:0}
   .sidelist ul{margin:0;padding:0}
@@ -113,11 +119,9 @@
     <div class="mark">Yeh Lab<small>Fred Hutchinson Cancer Center · Seattle</small></div>
     <nav>
       <a href="#research">Research</a>
-      <a href="#resources">Resources</a>
       <a href="../../publications.html">Publications</a>
       <a href="../../team.html">People</a>
       <a href="#join">Join</a>
-      <a href="https://github.com/acyeh-lab">GitHub</a>
     </nav>
   </div>
 </header>
@@ -125,14 +129,12 @@
 <div class="wrap cols">
   <main>
     <div class="intro">
-      <h1>How does a transplanted immune system learn to read the microbiome?</h1>
+      <h1>The donor immune system meets a <em>trillion microbial strangers</em>.
+      We study what happens next.</h1>
       <p>Allogeneic stem cell transplantation transfers a naïve immune system into a body already
       colonized by a vast microbial community. We work out how T cells read that community — which
       antigens they see, which clones expand, and why those choices decide between graft-versus-host
       disease and durable immunity.</p>
-      <p>We build the resources this question needs and give them away: a curated catalogue of
-      microbe-directed T cell receptors, an evidence table of the taxa that shape GVHD, and probe
-      designs that let us see host and microbe in the same tissue section.</p>
       <div class="affil">Translational Science &amp; Therapeutics Division · 1100 Fairview Ave N, Seattle WA 98109</div>
     </div>
 
@@ -151,41 +153,6 @@
         <p>Separating graft-versus-tumor benefit from graft-versus-host toxicity using what we learn
         about antigen recognition.</p></div>
     </div>
-
-    <h2 class="sec" id="resources">Resources we maintain</h2>
-    <div class="res">
-      <div class="rcard">
-        <h3>Microbe-directed TCR catalogue</h3>
-        <span class="stat">23 clones · 10 antigen specificities · 8 organisms</span>
-        <p>Every published microbe-specific T cell receptor we can find, with its peptide, source
-        protein, target organism, restricting MHC and citation — SFB 7B8, CBir1, HH7-2, Amuc124 and
-        the rest, in one table.</p>
-        <a href="https://github.com/acyeh-lab/microbes">Browse the catalogue →</a>
-      </div>
-      <div class="rcard">
-        <h3>Microbes in HCT: evidence table</h3>
-        <span class="stat">38 taxa · direction of effect · mechanism · strength</span>
-        <p>Taxa associated with graft-versus-host disease after transplant, each with the timing of
-        association, whether it raises or lowers risk, the proposed mechanism, and how strong the
-        evidence actually is.</p>
-        <a href="https://github.com/acyeh-lab/microbes">Browse the table →</a>
-      </div>
-      <div class="rcard soon">
-        <h3>Bacterial probe design<span class="badge">in prep</span></h3>
-        <span class="stat">16S / 23S rRNA · conservation + specificity screening</span>
-        <p>A pipeline for designing custom spatial-transcriptomics probes that hit one gut species
-        and nothing else: k-mer conservation across strains, then cross-species screening against a
-        bacterial pan-genome database.</p>
-      </div>
-      <div class="rcard soon">
-        <h3>Spatial pipeline for host + microbe<span class="badge">in prep</span></h3>
-        <span class="stat">Xenium · ProSeg re-segmentation · STAlign</span>
-        <p>Scripts and conventions for running custom segmentation on Xenium data and registering
-        tissue layers, so host cells and bacterial signal can be read from one section.</p>
-      </div>
-    </div>
-    <p style="font-size:.88rem;margin-top:1.1rem">
-      Software we run and how we run it lives on the <a href="../../tools.html">protocols page</a>.</p>
 
     <h2 class="sec">Selected publications</h2>
     <ul class="pubs">
@@ -219,20 +186,14 @@
         <li><time>Aug 2026</time>Lab opens at Fred Hutch; recruiting founding postdocs and technicians.</li>
         <li><time>2026</time>Custom Xenium probes against gut bacterial rRNA — spatial host–microbe imaging running.</li>
         <li><time>2026</time>Takahashi et al., dendritic cell targeting in GI GVHD, out in <em>Blood</em>.</li>
+        <li class="press">
+          <img src="../../images/News2024_microbiome.png" alt="">
+          <span><time>Jun 2024</time><a href="https://www.fredhutch.org/en/news/center-news/2024/06/yeh-hill-microbiota-directed-T-cells-GVHD.html">Secret to tamping down GVHD may lie in microbial genetics</a><span class="src">Fred Hutch News</span></span>
+        </li>
         <li><time>2024</time><em>Immunity</em>: microbiota dictate T cell clonal selection in GVHD.</li>
       </ul>
     </div>
 <!-- /SIDEBAR-TOP -->
-
-    <div class="box sidelist">
-      <h2>Open resources</h2>
-      <ul>
-        <li><span class="n">Microbe-directed TCRs</span><span class="d">23 published clones, with peptide, MHC and citation.</span></li>
-        <li><span class="n">Microbes in HCT</span><span class="d">38 taxa scored for GVHD risk and mechanism.</span></li>
-        <li><span class="n">Spatial probe design</span><span class="d">Species-specific rRNA probes — in preparation.</span></li>
-      </ul>
-      <p style="font-size:.84rem;margin:.9rem 0 0"><a href="https://github.com/acyeh-lab">github.com/acyeh-lab →</a></p>
-    </div>
 
     <div class="box hiring">
       <span class="h">We're hiring our founding members.</span>
