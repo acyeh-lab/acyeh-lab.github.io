@@ -324,9 +324,123 @@
         .color-swatch.selected {
             border-color: #333; transform: scale(1.18);
         }
+
+        /* ===== Password gate (see the note in the script below) ===== */
+        body.locked > header, body.locked > nav, body.locked > .container,
+        body.locked > footer, body.locked > .modal-overlay, body.locked > .toast,
+        body.locked > .fab { display: none !important; }
+        #lockscreen { position: fixed; inset: 0; z-index: 9999; display: none;
+            align-items: center; justify-content: center; background: #0056b3;
+            background-image: linear-gradient(160deg, #0056b3, #003b7a); }
+        body.locked #lockscreen { display: flex; }
+        .lockbox { background: #fff; border-radius: 10px; padding: 30px 34px;
+            width: min(400px, 90vw); box-shadow: 0 8px 30px rgba(0,0,0,.3);
+            text-align: center; }
+        .lockbox h1 { font-size: 1.5em; margin: 0 0 2px; color: #0056b3; letter-spacing: 1px; }
+        .lockbox h2 { font-size: .95em; margin: 0 0 18px; color: #778; font-weight: 400; }
+        .lockbox input { width: 100%; box-sizing: border-box; padding: 10px 14px;
+            border: 1px solid #ccd; border-radius: 6px; font-size: 1em;
+            font-family: 'Roboto', sans-serif; text-align: center; letter-spacing: 3px; }
+        .lockbox input:focus { outline: none; border-color: #0056b3; }
+        .lockbox button { width: 100%; margin-top: 12px; padding: 10px;
+            background: #0056b3; color: #fff; border: none; border-radius: 6px;
+            font-size: .95em; font-family: 'Roboto', sans-serif; cursor: pointer; }
+        .lockbox button:hover { background: #003d80; }
+        .lockerr { color: #b00020; font-size: .85em; min-height: 1.2em;
+            margin: 10px 0 0; visibility: hidden; }
+        .lockerr.show { visibility: visible; }
+        .lockback { display: inline-block; margin-top: 14px; font-size: .82em;
+            color: #889; text-decoration: none; }
+        .lockback:hover { color: #0056b3; }
+        .locknote { font-size: .74em; color: #aab; margin: 16px 0 0; line-height: 1.4; }
+        #lockbtn { border: none; background: none; color: #0056b3; font-weight: bold;
+            cursor: pointer; font-family: 'Roboto', sans-serif; font-size: 1em;
+            margin: 0 15px; padding: 0; }
+        #lockbtn:hover { text-decoration: underline; }
     </style>
 </head>
-<body>
+<body class="locked">
+    <div id="lockscreen">
+      <div class="lockbox">
+        <h1>Yeh Lab</h1>
+        <h2>Task Tracker &mdash; locked</h2>
+        <form onsubmit="return tryUnlock(event)">
+          <input type="password" id="lockpw" placeholder="Password"
+                 autocomplete="current-password" autofocus>
+          <button type="submit">Unlock</button>
+        </form>
+        <p class="lockerr" id="lockerr">Wrong password</p>
+        <a class="lockback" href="index.html">&larr; Back to the internal site</a>
+        <p class="locknote">This lock keeps the page out of casual view on a shared
+        machine. It is not real security &mdash; the task data itself is protected by
+        living in the private <code>lab-internal</code> repo behind a GitHub token.</p>
+      </div>
+    </div>
+
+    <script>
+    /* ===== Password gate =====================================================
+       A deliberately simple, local-only lock so the task list is not sitting in
+       plain view on a shared or unattended machine.
+
+       It is NOT security, and is not meant to be: the check runs in the browser,
+       so anyone who opens dev tools or disables JavaScript walks straight past
+       it.  What actually protects the tasks is that the data lives in the
+       PRIVATE acyeh-lab/lab-internal repo and is fetched with a personal access
+       token held in this browser's localStorage - without that token this page
+       has nothing to show.  The password is stored XOR-obfuscated rather than in
+       plain text purely so it is not greppable in a public repository.
+       ======================================================================== */
+    (function () {
+        var KEY  = 'yehlab-internal';
+        var BLOB = 'OFNdWlZWGF8=';
+        var FLAG = 'yeh-tasks-unlocked';
+
+        function secret() {
+            var raw = atob(BLOB), out = '';
+            for (var i = 0; i < raw.length; i++) {
+                out += String.fromCharCode(
+                    raw.charCodeAt(i) ^ KEY.charCodeAt(i % KEY.length));
+            }
+            return out;
+        }
+
+        window.tryUnlock = function (ev) {
+            ev.preventDefault();
+            var box = document.getElementById('lockpw');
+            if (box.value === secret()) {
+                try { sessionStorage.setItem(FLAG, '1'); } catch (e) {}
+                unlock();
+            } else {
+                document.getElementById('lockerr').classList.add('show');
+                box.value = '';
+                box.focus();
+            }
+            return false;
+        };
+
+        window.lockPage = function () {
+            try { sessionStorage.removeItem(FLAG); } catch (e) {}
+            location.reload();
+        };
+
+        function unlock() {
+            document.body.classList.remove('locked');
+            window.__tasksUnlocked = true;
+            if (typeof window.bootTasks === 'function') window.bootTasks();
+        }
+
+        var already = false;
+        try { already = sessionStorage.getItem(FLAG) === '1'; } catch (e) {}
+        if (already) {
+            unlock();
+        } else {
+            document.getElementById('lockpw').focus();
+            document.getElementById('lockpw').addEventListener('input', function () {
+                document.getElementById('lockerr').classList.remove('show');
+            });
+        }
+    })();
+    </script>
     <header>
         <h1>Yeh Lab Internal Site</h1>
         <h2>Task Tracker</h2>
@@ -335,10 +449,11 @@
     <nav>
         <a href="index.html">Home</a>
         <a href="methods.html">Methods</a>
-        <a href="tasks.html" class="active">Task Tracker</a>
         <a href="flow.html">Flow</a>
         <a href="journal-watch.html">Journal Watch</a>
         <a href="grants.html">Grants</a>
+        <a href="tasks.html" class="active">Task Tracker</a>
+        <button id="lockbtn" onclick="lockPage()" title="Lock this page">Lock</button>
     </nav>
     <div class="container">
         <!-- Mini calendar -->
@@ -1556,14 +1671,19 @@
         if (e.key === 'Enter') createProject();
     });
 
-    /* ===== Init ===== */
-    loadLocal();
-    if (localStorage.getItem('calendar-collapsed') === '1') {
-        document.getElementById('calendar-section').classList.add('collapsed');
-    }
-    syncFromServer();
-    updateSyncStatus();
-    render();
+    /* ===== Init =====
+       Nothing is read, fetched or rendered until the password gate opens -
+       otherwise the task list would flash on screen before the lock drew. */
+    window.bootTasks = function () {
+        loadLocal();
+        if (localStorage.getItem('calendar-collapsed') === '1') {
+            document.getElementById('calendar-section').classList.add('collapsed');
+        }
+        syncFromServer();
+        updateSyncStatus();
+        render();
+    };
+    if (window.__tasksUnlocked) window.bootTasks();
     </script>
 </body>
 </html>
