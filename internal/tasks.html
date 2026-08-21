@@ -16,6 +16,10 @@
         nav a:hover { text-decoration: underline; }
         nav a.active { color: #fff; background-color: #0056b3; padding: 6px 14px; border-radius: 4px; text-decoration: none; }
         nav a.active:hover { text-decoration: none; }
+        /* password-gated tab marker */
+        nav a .lockicon { width: .72em; height: .72em; fill: currentColor;
+            opacity: .5; margin-left: 5px; vertical-align: -1px; }
+        nav a:hover .lockicon, nav a.active .lockicon { opacity: .85; }
         .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
         footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
 
@@ -452,7 +456,7 @@
         <a href="flow.html">Flow</a>
         <a href="journal-watch.html">Journal Watch</a>
         <a href="grants.html">Grants</a>
-        <a href="tasks.html" class="active">Task Tracker</a>
+        <a href="tasks.html" class="active">Task Tracker<svg class="lockicon" viewBox="0 0 24 24" role="img" aria-label="password protected"><title>Password protected</title><path d="M12 2a5 5 0 0 0-5 5v3H6a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V11a1 1 0 0 0-1-1h-1V7a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V7a3 3 0 0 1 3-3z"/></svg></a>
         <button id="lockbtn" onclick="lockPage()" title="Lock this page">Lock</button>
     </nav>
     <div class="container">
