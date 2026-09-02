@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transplants - Yeh Lab Internal Site</title>
+    <style>
+        body { font-family: 'Roboto', sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
+        header { background-color: #0056b3; color: #fff; padding: 20px 10px; text-align: center; }
+        header h1 { font-size: 48px; margin: 0; font-weight: 700; letter-spacing: 2px; }
+        header h2 { font-size: 24px; margin: 0; font-weight: 400; }
+        nav { text-align: center; margin: 10px 0; background-color: #fff; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
+        nav a:hover { text-decoration: underline; }
+        nav a.active { color: #fff; background-color: #0056b3; padding: 6px 14px; border-radius: 4px; text-decoration: none; }
+        nav a.active:hover { text-decoration: none; }
+        nav a .lockicon { width: .72em; height: .72em; fill: currentColor;
+            opacity: .5; margin-left: 5px; vertical-align: -1px; }
+        nav a:hover .lockicon, nav a.active .lockicon { opacity: .85; }
+        .container { max-width: 1100px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
+
+        .intro { background: #eef4fb; border-left: 4px solid #0056b3; border-radius: 0 6px 6px 0;
+            padding: 12px 16px; margin: 4px 0 16px; font-size: .87em; color: #445; }
+        .intro p { margin: 0 0 8px; }
+        .intro p:last-child { margin-bottom: 0; }
+        .intro code { background: #dce8f6; padding: 1px 5px; border-radius: 3px; font-size: .95em; }
+
+        /* ---- summary strip ---- */
+        .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px; margin: 0 0 16px; }
+        .kpi { background: #f7f9fc; border: 1px solid #e3e9f0; border-radius: 8px;
+            padding: 10px 12px; text-align: center; }
+        .kpi .v { font-size: 1.5em; font-weight: 700; color: #0056b3; line-height: 1.15;
+            font-variant-numeric: tabular-nums; }
+        .kpi .k { font-size: .72em; text-transform: uppercase; letter-spacing: .6px; color: #7a8794; }
+
+        /* ---- year histogram ---- */
+        .chart { border: 1px solid #e3e9f0; border-radius: 8px; padding: 12px 14px 8px;
+            margin: 0 0 16px; background: #fafbfd; }
+        .chart h4 { margin: 0 0 10px; font-size: .74em; text-transform: uppercase;
+            letter-spacing: .7px; color: #0056b3; font-weight: 700; }
+        .bars { display: flex; align-items: flex-end; gap: 8px; height: 110px; }
+        .bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end;
+            align-items: center; cursor: pointer; height: 100%; }
+        .bar .fill { width: 100%; background: #9fc0e4; border-radius: 3px 3px 0 0;
+            transition: background .18s, height .3s; min-height: 2px; }
+        .bar:hover .fill { background: #0056b3; }
+        .bar.on .fill { background: #0056b3; }
+        .bar .n { font-size: .72em; color: #556; font-variant-numeric: tabular-nums; }
+        .bar .y { font-size: .72em; color: #7a8794; margin-top: 2px; }
+        .bar.on .y, .bar.on .n { color: #0056b3; font-weight: 700; }
+
+        /* ---- controls ---- */
+        .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 10px; }
+        .search-box { flex: 1 1 260px; padding: 8px 14px; border: 1px solid #ccc; border-radius: 20px;
+            font-size: 0.9em; font-family: 'Roboto', sans-serif; outline: none; transition: border-color .2s; }
+        .search-box:focus { border-color: #0056b3; }
+        .reset-btn { padding: 7px 14px; border: 1px solid #ccc; border-radius: 8px; background: #fff;
+            cursor: pointer; font-size: .85em; font-family: 'Roboto', sans-serif; color: #666; }
+        .reset-btn:hover { background: #f0f0f0; }
+        .controls select, .controls label { font-size: .85em; font-family: 'Roboto', sans-serif; color: #556; }
+        .controls select { padding: 6px 8px; border: 1px solid #ccc; border-radius: 8px; background: #fff; }
+        .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 0 12px;
+            border-bottom: 1px solid #e0e0e0; margin-bottom: 10px; }
+        .chip { border-radius: 20px; padding: 5px 13px; font-size: .8em; font-weight: 500;
+            background: #eef2f7; color: #0056b3; cursor: pointer; border: 1px solid transparent;
+            user-select: none; }
+        .chip:hover { background: #dce8f6; }
+        .chip.on { background: #0056b3; color: #fff; }
+        .chip .n { opacity: .65; margin-left: 5px; font-size: .9em; }
+        .stats { text-align: center; font-size: .85em; color: #777; padding: 6px 0 10px; }
+        .stats strong { color: #333; }
+
+        /* ---- group headings ---- */
+        .gsec { margin-top: 26px; }
+        .gsec > h3 { font-size: 1.18em; color: #0056b3; margin: 0 0 2px;
+            border-bottom: 2px solid #0056b3; padding-bottom: 6px; display: flex;
+            align-items: baseline; gap: 10px; flex-wrap: wrap; }
+        .gsec > h3 .count { font-size: .62em; font-weight: 400; color: #fff;
+            background: #0056b3; border-radius: 10px; padding: 1px 9px; }
+        .gblurb { font-size: .84em; color: #777; margin: 6px 0 10px; }
+
+        /* ---- experiment cards ---- */
+        .card { background: #f9f9f9; border-radius: 8px; margin-bottom: 8px;
+            border-left: 4px solid #0056b3; overflow: hidden; transition: box-shadow .2s;
+            scroll-margin-top: 12px; }
+        .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+        .card.planned { border-left-color: #b0bac4; }
+        .card.dropped { border-left-color: #c9a227; }
+        .card-header { padding: 11px 16px; cursor: pointer; position: relative; }
+        .card-title { font-weight: 600; font-size: .95em; padding-right: 26px; }
+        .expid { display: inline-block; background: #0056b3; color: #fff; font-weight: 700;
+            border-radius: 4px; padding: 1px 8px; font-size: .86em; margin-right: 8px;
+            letter-spacing: .3px; }
+        .card.planned .expid { background: #8b97a3; }
+        .labno { display: inline-block; background: #e8edf3; color: #556; border-radius: 4px;
+            padding: 1px 7px; font-size: .8em; margin-right: 8px; font-weight: 500; }
+        .card-meta { font-size: .79em; color: #777; margin-top: 4px; display: flex;
+            flex-wrap: wrap; gap: 8px; align-items: center; }
+        .card-meta .proj { background: #e8edf3; color: #556; border-radius: 3px; padding: 1px 7px; }
+        .card-meta .num { font-variant-numeric: tabular-nums; }
+        .badge { font-size: .93em; font-weight: 700; letter-spacing: .3px; padding: 1px 7px;
+            border-radius: 3px; color: #fff; text-transform: uppercase; }
+        .badge.notdone, .badge.onhold, .badge.obsolete { background: #8b97a3; }
+        .badge.repeat { background: #2b579a; }
+        .badge.sacked, .badge.delayed { background: #c9752b; }
+        .badge.draft { background: #6a5acd; }
+        .badge.tbd { background: #b0bac4; }
+        .chevron { position: absolute; right: 14px; top: 12px; font-size: .7em; color: #aaa;
+            transition: transform .25s; }
+        .card.open .chevron { transform: rotate(180deg); }
+        .card-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; }
+        .card.open .card-wrap { grid-template-rows: 1fr; }
+        .card-body { overflow: hidden; min-height: 0; padding: 0 16px; }
+        .card.open .card-body { padding: 0 16px 14px; }
+
+        .qbox { background: #fff; border: 1px solid #e3e9f0; border-left: 3px solid #0056b3;
+            border-radius: 0 6px 6px 0; padding: 9px 12px; font-size: .86em; color: #445; margin: 0 0 10px; }
+        .qbox .lbl { font-size: .78em; text-transform: uppercase; letter-spacing: .7px;
+            color: #0056b3; font-weight: 700; display: block; margin-bottom: 2px; }
+        .qbox.res { border-left-color: #217346; }
+        .qbox.res .lbl { color: #217346; }
+
+        .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+            gap: 6px 18px; font-size: .82em; color: #555; margin: 0 0 10px; }
+        .facts .f b { display: block; font-size: .82em; text-transform: uppercase;
+            letter-spacing: .6px; color: #8794a1; font-weight: 700; }
+
+        .block { border-top: 1px solid #e6e6e6; padding-top: 9px; margin-top: 9px; }
+        .block h4 { margin: 0 0 6px; font-size: .74em; text-transform: uppercase;
+            letter-spacing: .7px; color: #0056b3; font-weight: 700; }
+
+        .doc { border-top: 1px dashed #e0e5eb; padding-top: 8px; margin-top: 8px; }
+        .doc:first-of-type { border-top: none; }
+        .docrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: .82em; }
+        .docrow .nm { font-weight: 500; color: #334; }
+        .tag { font-size: .82em; font-weight: 700; letter-spacing: .3px; padding: 1px 6px;
+            border-radius: 3px; color: #fff; }
+        .tag.doc { background: #2b579a; } .tag.xls { background: #217346; }
+        .tag.ppt { background: #b7472a; } .tag.pdf { background: #b00020; }
+        .role { background: #eef2f7; color: #667; border-radius: 3px; padding: 1px 6px; font-size: .92em; }
+        .pathrow { display: flex; align-items: center; gap: 8px; margin-top: 5px; flex-wrap: wrap; }
+        .pathrow code { flex: 1 1 340px; background: #eef1f5; border: 1px solid #dde3ea;
+            border-radius: 4px; padding: 5px 8px; font-size: .76em; word-break: break-all; color: #334; }
+        .copy, .moresteps { border: 1px solid #cbd6e2; background: #fff; color: #0056b3;
+            border-radius: 5px; padding: 4px 10px; font-size: .74em; cursor: pointer;
+            font-family: 'Roboto', sans-serif; white-space: nowrap; }
+        .copy:hover, .moresteps:hover { background: #0056b3; color: #fff; }
+        .copy.done { background: #217346; border-color: #217346; color: #fff; }
+        .moresteps { margin-top: 7px; }
+
+        /* rendered Word body -- shares the methods page's block classes */
+        .steps { margin-top: 8px; font-size: .85em; color: #333; display: none; }
+        .steps.show { display: block; }
+        .steps .s-h { font-weight: 700; color: #0056b3; margin: 12px 0 4px; }
+        .steps .s-h1 { font-size: 1.08em; }
+        .steps .s-h2 { font-size: 1.02em; }
+        .steps .s-h3, .steps .s-h4 { font-size: .97em; color: #234; }
+        .steps .s-h:first-child { margin-top: 0; }
+        .steps .s-p { margin: 5px 0; }
+        .steps .s-l { margin: 4px 0; padding-left: 22px; }
+        .steps ol.s-l { list-style: decimal; }
+        .steps ol.s-l ol.s-l { list-style: lower-alpha; }
+        .steps ol.s-l ol.s-l ol.s-l { list-style: lower-roman; }
+        .steps ul.s-l { list-style: disc; }
+        .steps ul.s-l ul.s-l { list-style: circle; }
+        .steps li { margin: 2px 0; }
+        .steps u { text-decoration: underline; }
+        .s-tblwrap { overflow-x: auto; margin: 8px 0; }
+        .s-tbl { border-collapse: collapse; font-size: .93em; min-width: 100%; }
+        .s-tbl th, .s-tbl td { border: 1px solid #dde3ea; padding: 4px 8px;
+            text-align: left; vertical-align: top; }
+        .s-tbl th { background: #eef4fb; font-weight: 600; color: #234; }
+        .steps .s-sheetname { font-weight: 600; color: #217346; margin-top: 10px; font-size: .95em; }
+        .steps .s-slide { border-left: 3px solid #dbe3ec; padding-left: 10px; margin: 8px 0; }
+        .steps .s-slidehd { font-weight: 600; color: #b7472a; font-size: .95em; }
+        .gtbl { font-size: .82em; }
+
+        .no-results { text-align: center; color: #999; padding: 30px 0; font-style: italic; display: none; }
+        .loading { text-align: center; color: #999; padding: 40px 0; font-style: italic; }
+        .err { background: #fdecea; border-left: 4px solid #b00020; color: #7a1b1b;
+            padding: 12px 16px; border-radius: 0 6px 6px 0; font-size: .88em; }
+        .totop { position: fixed; right: 18px; bottom: 18px; background: #0056b3; color: #fff;
+            text-decoration: none; padding: 9px 14px; border-radius: 20px; font-size: .78em;
+            opacity: .88; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+        @media (max-width: 640px) { .bars { height: 80px; } .bar .y { font-size: .62em; } }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Yeh Lab Internal Site</h1>
+        <h2>Transplants</h2>
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="methods.html">Methods</a>
+        <a href="transplants.html" class="active">Transplants</a>
+        <a href="flow.html">Flow</a>
+        <a href="openflow.html">OpenFlow</a>
+        <a href="journal-watch.html">Journal Watch</a>
+        <a href="grants.html">Grants</a>
+        <a href="tasks.html">Task Tracker<svg class="lockicon" viewBox="0 0 24 24" role="img" aria-label="password protected"><title>Password protected</title><path d="M12 2a5 5 0 0 0-5 5v3H6a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V11a1 1 0 0 0-1-1h-1V7a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V7a3 3 0 0 1 3-3z"/></svg></a>
+    </nav>
+
+    <div class="container">
+        <div class="intro">
+          <p><strong>Every BMT experiment sheet in the lab, indexed automatically.</strong>
+          This page is rebuilt every morning from
+          <code id="rootpath">/fh/fast/yeh_a/grp/projects/transplant_sheets</code>
+          &mdash; drop a new sheet into the right project subfolder and it appears here the
+          next day. Nothing is curated by hand, so the page can never drift from the folder.</p>
+          <p>Each experiment shows what was mined from the sheet itself: the
+          <strong>question</strong>, the <strong>group table</strong> (with mouse counts),
+          recipients, donors, conditioning, and the full text of every document filed under
+          that experiment number. Companion worksheets &mdash; injection sheets, takedown
+          sheets, antibiotic schedules &mdash; are folded in under their parent experiment.</p>
+          <p><strong>The experiment data is private.</strong> It is not in this public
+          repository: it lives in <code>acyeh-lab/lab-internal</code> and is fetched with the
+          GitHub token in this browser, the same way Task Tracker and Journal Watch work.
+          The Word originals stay on the lab share &mdash; each document lists its path with
+          a <em>Copy</em> button.</p>
+        </div>
+
+        <div id="body"><div class="loading">Loading transplant index&hellip;</div></div>
+    </div>
+
+    <a href="#" class="totop">&uarr; Top</a>
+
+    <footer>
+        <p>Yeh Lab Internal Site &middot; not indexed, not public</p>
+    </footer>
+
+<script>
+/* ===== Private data access (lab-internal repo, authenticated) =================
+   Identical contract to journal-watch.html / grants.html: raw media type so
+   files over 1 MB work, ETag revalidation so repeat loads cost one round-trip,
+   and a stale-cache fallback so a GitHub blip does not blank the page. */
+const TOKEN_KEY = 'ayeh-lab-gh-token';
+const GH_REPO_INT = 'acyeh-lab/lab-internal';
+const DATA_FILE = 'transplants-data.json';
+
+function ghSetupToken() {
+    const cur = localStorage.getItem(TOKEN_KEY);
+    const msg = cur
+        ? 'GitHub token is set. Enter a new one to replace, or leave blank to keep current:'
+        : 'This page reads private lab data.\n\nCreate a FINE-GRAINED token at github.com/settings/personal-access-tokens/new\nRepository access = acyeh-lab/lab-internal\nPermissions > Contents = Read and write\n\nPaste token:';
+    const t = prompt(msg);
+    if (t === null) return;
+    if (t.trim()) localStorage.setItem(TOKEN_KEY, t.trim());
+}
+
+async function ghFetchJSON(file) {
+    if (!localStorage.getItem(TOKEN_KEY)) {
+        ghSetupToken();
+        if (!localStorage.getItem(TOKEN_KEY)) throw new Error('No token provided');
+    }
+    const CK = 'ghcache:' + file;
+    let cached = null;
+    try { cached = JSON.parse(localStorage.getItem(CK) || 'null'); } catch (e) { cached = null; }
+
+    const headers = { 'Authorization': 'token ' + localStorage.getItem(TOKEN_KEY),
+                      'Accept': 'application/vnd.github.raw' };
+    if (cached && cached.etag) headers['If-None-Match'] = cached.etag;
+
+    const r = await fetch('https://api.github.com/repos/' + GH_REPO_INT + '/contents/' + file
+                          + '?ref=main', { headers: headers });
+
+    if (r.status === 304 && cached) return JSON.parse(cached.body);
+    if (r.status === 401 || r.status === 403 || r.status === 404) {
+        localStorage.removeItem(TOKEN_KEY);
+        throw new Error('Token rejected (HTTP ' + r.status + ') — reload the page to re-enter it');
+    }
+    if (!r.ok) {
+        if (cached) return JSON.parse(cached.body);
+        throw new Error('HTTP ' + r.status);
+    }
+    const text = await r.text();
+    const etag = r.headers.get('ETag');
+    if (etag) {
+        try { localStorage.setItem(CK, JSON.stringify({ etag: etag, body: text })); }
+        catch (e) { try { localStorage.removeItem(CK); } catch (e2) {} }
+    }
+    return JSON.parse(text);
+}
+
+/* ===== state ===== */
+let DATA = null;
+let PROJNAME = {};
+const F = { q: '', years: new Set(), projects: new Set(), hideUndone: false, group: 'project' };
+
+const esc = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const stripTags = s => String(s || '').replace(/<[^>]+>/g, '');
+
+function fmtDate(iso) {
+    if (!iso) return null;
+    const [y, m, d] = iso.split('-').map(Number);
+    const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return MO[m - 1] + ' ' + d + ', ' + y;
+}
+function human(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(0) + ' KB';
+    return (n / 1048576).toFixed(1) + ' MB';
+}
+/* An experiment that was never run should not be counted as one. */
+const DEAD = ['not done', 'on hold', 'obsolete', 'draft'];
+const isDead = r => (r.status || []).some(s => DEAD.indexOf(s) >= 0);
+
+/* ===== search index ===== */
+function haystack(r) {
+    if (r._hay) return r._hay;
+    const bits = [r.id, r.lab, r.title, r.question, r.results, r.project, r.iacuc,
+                  (r.status || []).join(' '), r.recipients.join(' '),
+                  r.donors.join(' '), r.conditioning.join(' ')];
+    (r.docs || []).forEach(d => { bits.push(d.name); bits.push(stripTags(d.body || '')); });
+    if (r.groups) {
+        bits.push(r.groups.head.map(stripTags).join(' '));
+        r.groups.rows.forEach(row => bits.push(row.map(stripTags).join(' ')));
+    }
+    r._hay = bits.join(' · ').toLowerCase();
+    return r._hay;
+}
+
+function matches(r) {
+    if (F.hideUndone && isDead(r)) return false;
+    if (F.years.size && !F.years.has(r.year)) return false;
+    if (F.projects.size && !F.projects.has(r.project)) return false;
+    if (!F.q) return true;
+    return F.q.split(/\s+/).every(t => haystack(r).indexOf(t) >= 0);
+}
+
+/* ===== rendering ===== */
+function renderTable(t, cls) {
+    if (!t) return '';
+    let h = '<div class="s-tblwrap"><table class="s-tbl ' + (cls || '') + '"><tr>';
+    t.head.forEach(c => { h += '<th>' + c + '</th>'; });
+    h += '</tr>';
+    t.rows.forEach(row => {
+        h += '<tr>';
+        row.forEach(c => { h += '<td>' + c + '</td>'; });
+        h += '</tr>';
+    });
+    return h + '</table></div>';
+}
+
+function card(r, i) {
+    const dead = isDead(r);
+    let cls = 'card' + (dead ? ' planned' : '') + ((r.status || []).indexOf('sacked') >= 0 ? ' dropped' : '');
+
+    let badges = (r.status || []).map(s =>
+        '<span class="badge ' + s.replace(/\s+/g, '') + '">' + esc(s) + '</span>').join('');
+    if (r.date_tbd) badges += '<span class="badge tbd">not scheduled</span>';
+
+    const meta = [];
+    if (r.date) meta.push('<span class="num">' + fmtDate(r.date) + '</span>');
+    else if (r.year) meta.push('<span class="num">' + r.year + '</span>');
+    meta.push('<span class="proj">' + esc(PROJNAME[r.project] || r.project || 'Unfiled') + '</span>');
+    if (r.n_groups) meta.push('<span class="num">' + r.n_groups + ' group' + (r.n_groups > 1 ? 's' : '') + '</span>');
+    if (r.n_mice) meta.push('<span class="num">' + r.n_mice + ' mice</span>');
+    if (r.iacuc) meta.push('<span class="num">IACUC ' + esc(r.iacuc) + '</span>');
+    meta.push('<span class="num">' + r.docs.length + ' doc' + (r.docs.length > 1 ? 's' : '') + '</span>');
+
+    let h = '<div class="' + cls + '" id="x' + i + '">';
+    h += '<div class="card-header" onclick="toggleCard(this)">'
+       + '<div class="card-title">'
+       + (r.is_experiment ? '<span class="expid">' + esc(r.id) + '</span>' : '')
+       + (r.lab ? '<span class="labno">#' + esc(r.lab) + '</span>' : '')
+       + esc(r.title) + '</div>'
+       + '<div class="card-meta">' + meta.join('') + badges + '</div>'
+       + '<span class="chevron">&#9660;</span></div>';
+
+    h += '<div class="card-wrap"><div class="card-body">';
+    if (r.question)
+        h += '<div class="qbox"><span class="lbl">Question</span>' + esc(r.question) + '</div>';
+    if (r.results)
+        h += '<div class="qbox res"><span class="lbl">Results noted on the sheet</span>' + esc(r.results) + '</div>';
+
+    const facts = [];
+    if (r.recipients.length) facts.push(['Recipients', r.recipients]);
+    if (r.donors.length) facts.push(['Donors', r.donors]);
+    if (r.conditioning.length) facts.push(['Conditioning', r.conditioning]);
+    if (facts.length) {
+        h += '<div class="facts">';
+        facts.forEach(f => {
+            h += '<div class="f"><b>' + f[0] + '</b>' + f[1].map(esc).join('<br>') + '</div>';
+        });
+        h += '</div>';
+    }
+
+    if (r.groups)
+        h += '<div class="block"><h4>Groups &mdash; ' + r.n_groups + ' arms, '
+           + (r.n_mice || '?') + ' mice</h4>' + renderTable(r.groups, 'gtbl') + '</div>';
+    if (r.stock)
+        h += '<div class="block"><h4>Cells &amp; animals required</h4>'
+           + renderTable(r.stock, 'gtbl') + '</div>';
+
+    h += '<div class="block"><h4>Documents</h4>';
+    r.docs.forEach((d, j) => {
+        const id = 'x' + i + 'd' + j;
+        h += '<div class="doc"><div class="docrow">'
+           + '<span class="tag ' + d.kind + '">' + esc(d.kind_label) + '</span>'
+           + '<span class="nm">' + esc(d.name) + '</span>'
+           + (d.role === 'companion' ? '<span class="role">companion sheet</span>' : '')
+           + '<span class="role">' + human(d.size) + '</span>'
+           + '<span class="role">modified ' + esc(d.mtime) + '</span></div>'
+           + '<div class="pathrow"><code id="p' + id + '">' + esc(DATA.root_posix + '/' + d.rel)
+           + '</code><button class="copy" onclick="copyPath(this,\'p' + id + '\')">Copy</button></div>';
+        if (d.body) {
+            h += '<button class="moresteps" onclick="toggleSteps(this,\'s' + id + '\')">Show full document</button>'
+               + '<div class="steps" id="s' + id + '">' + d.body
+               + (d.truncated ? '<p class="s-p"><em>… document truncated.</em></p>' : '')
+               + '</div>';
+        } else if (d.ext === '.pdf') {
+            h += '<div class="pathrow"><span class="role">PDF — open it from the share</span></div>';
+        }
+        h += '</div>';
+    });
+    h += '</div>';
+
+    h += '</div></div></div>';
+    return h;
+}
+
+function render() {
+    const list = DATA.experiments.filter(matches);
+
+    /* year histogram always reflects everything EXCEPT the year filter itself,
+       so you can see where else the current search lands before switching year */
+    const yearScope = DATA.experiments.filter(r => {
+        const save = F.years; F.years = new Set();
+        const ok = matches(r); F.years = save; return ok;
+    });
+    const counts = {};
+    yearScope.forEach(r => { if (r.year) counts[r.year] = (counts[r.year] || 0) + 1; });
+    const years = Object.keys(counts).map(Number).sort();
+    const max = Math.max(1, ...Object.values(counts));
+    let bars = '';
+    years.forEach(y => {
+        const n = counts[y];
+        bars += '<div class="bar' + (F.years.has(y) ? ' on' : '') + '" onclick="toggleYear(' + y + ')" '
+              + 'title="' + n + ' experiments in ' + y + '">'
+              + '<span class="n">' + n + '</span>'
+              + '<div class="fill" style="height:' + Math.round(100 * n / max) + '%"></div>'
+              + '<span class="y">' + String(y).slice(2) + '</span></div>';
+    });
+    document.getElementById('bars').innerHTML = bars || '<span class="y">no matches</span>';
+
+    document.querySelectorAll('.chip[data-proj]').forEach(c => {
+        c.classList.toggle('on', F.projects.has(c.dataset.proj));
+    });
+    document.getElementById('chip-undone').classList.toggle('on', F.hideUndone);
+
+    const mice = list.reduce((a, r) => a + (r.n_mice || 0), 0);
+    const docs = list.reduce((a, r) => a + r.docs.length, 0);
+    document.getElementById('stats').innerHTML =
+        '<strong>' + list.length + '</strong> of ' + DATA.experiments.length + ' experiments &middot; '
+        + '<strong>' + mice.toLocaleString() + '</strong> mice &middot; '
+        + docs + ' documents';
+
+    /* group and emit */
+    const groups = new Map();
+    list.forEach(r => {
+        const k = F.group === 'year' ? (r.year || 'Undated')
+                                     : (r.project || '');
+        if (!groups.has(k)) groups.set(k, []);
+        groups.get(k).push(r);
+    });
+    let keys = [...groups.keys()];
+    if (F.group === 'year') keys.sort((a, b) => (b === 'Undated' ? -1 : a === 'Undated' ? 1 : b - a));
+    else keys.sort((a, b) => groups.get(b).length - groups.get(a).length);
+
+    let h = '', i = 0;
+    keys.forEach(k => {
+        const rows = groups.get(k);
+        const name = F.group === 'year' ? k : (PROJNAME[k] || k || 'Unfiled');
+        const blurb = F.group === 'year' ? '' : (BLURB[k] || '');
+        h += '<div class="gsec"><h3>' + esc(String(name))
+           + '<span class="count">' + rows.length + '</span></h3>';
+        if (blurb) h += '<p class="gblurb">' + esc(blurb) + '</p>';
+        rows.forEach(r => { h += card(r, i++); });
+        h += '</div>';
+    });
+    document.getElementById('cards').innerHTML = h;
+    document.getElementById('no-results').style.display = list.length ? 'none' : 'block';
+}
+
+/* ===== interaction ===== */
+function toggleCard(el) { el.parentElement.classList.toggle('open'); }
+function toggleSteps(btn, id) {
+    const box = document.getElementById(id);
+    const on = box.classList.toggle('show');
+    btn.textContent = on ? 'Hide full document' : 'Show full document';
+}
+function copyPath(btn, id) {
+    const txt = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(txt).then(() => {
+        btn.textContent = 'Copied'; btn.classList.add('done');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1400);
+    });
+}
+function toggleYear(y) { F.years.has(y) ? F.years.delete(y) : F.years.add(y); render(); }
+function toggleProj(el) {
+    const p = el.dataset.proj;
+    F.projects.has(p) ? F.projects.delete(p) : F.projects.add(p);
+    render();
+}
+function toggleUndone() { F.hideUndone = !F.hideUndone; render(); }
+function setGroup(v) { F.group = v; render(); }
+function resetFilters() {
+    F.q = ''; F.years.clear(); F.projects.clear(); F.hideUndone = false;
+    document.getElementById('search').value = '';
+    render();
+}
+
+let BLURB = {};
+
+function boot(d) {
+    DATA = d;
+    d.projects.forEach(p => { PROJNAME[p.dir] = p.name; BLURB[p.dir] = p.blurb; });
+
+    const exps = d.experiments.filter(r => r.is_experiment);
+    const run = exps.filter(r => !isDead(r));
+    const mice = d.experiments.reduce((a, r) => a + (r.n_mice || 0), 0);
+    const dated = d.experiments.filter(r => r.date).map(r => r.date).sort();
+    const span = dated.length ? dated[0].slice(0, 4) + '–' + dated[dated.length - 1].slice(0, 4) : '—';
+
+    let h = '';
+    h += '<div class="summary">'
+       + kpi(run.length, 'experiments run')
+       + kpi(exps.length - run.length, 'planned / not done')
+       + kpi(mice.toLocaleString(), 'mice enrolled')
+       + kpi(d.n_docs, 'documents')
+       + kpi(d.projects.length, 'projects')
+       + kpi(span, 'years covered')
+       + '</div>';
+
+    h += '<div class="chart"><h4>Experiments per year</h4><div class="bars" id="bars"></div></div>';
+
+    h += '<div class="controls">'
+       + '<input type="text" class="search-box" id="search" oninput="F.q=this.value.trim().toLowerCase();render()" '
+       + 'placeholder="Search experiments, strains, TCRs, questions, group tables, document text...">'
+       + '<label>Group by <select onchange="setGroup(this.value)">'
+       + '<option value="project">Project</option><option value="year">Year</option>'
+       + '</select></label>'
+       + '<button class="reset-btn" onclick="resetFilters()">Reset</button></div>';
+
+    h += '<div class="chips">';
+    d.projects.forEach(p => {
+        h += '<span class="chip" data-proj="' + esc(p.dir) + '" onclick="toggleProj(this)">'
+           + esc(p.name) + '<span class="n">' + p.n + '</span></span>';
+    });
+    h += '<span class="chip" id="chip-undone" onclick="toggleUndone()">Hide not-done / draft</span>';
+    h += '</div>';
+
+    h += '<div class="stats" id="stats"></div>';
+    h += '<div class="no-results" id="no-results">No experiments match that search.</div>';
+    h += '<div id="cards"></div>';
+    h += '<p class="stats">Index built ' + esc(d.built.replace('T', ' ')) + ' from '
+       + '<code>' + esc(d.root_posix) + '</code> &middot; Windows: <code>' + esc(d.root_win) + '</code></p>';
+
+    document.getElementById('body').innerHTML = h;
+    document.getElementById('rootpath').textContent = d.root_posix;
+    render();
+}
+function kpi(v, k) { return '<div class="kpi"><div class="v">' + v + '</div><div class="k">' + k + '</div></div>'; }
+
+ghFetchJSON(DATA_FILE)
+    .then(boot)
+    .catch(e => {
+        document.getElementById('body').innerHTML =
+            '<div class="err"><strong>Could not load the transplant index.</strong><br>'
+            + esc(e.message) + '<br><br>This page reads <code>' + DATA_FILE + '</code> from the '
+            + 'private <code>' + GH_REPO_INT + '</code> repo. Reload to re-enter a token.</div>';
+    });
+</script>
+</body>
+</html>
