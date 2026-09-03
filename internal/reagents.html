@@ -518,6 +518,21 @@ function itemsInRack(fz, n) {
     return items().filter(r => (r.locs || []).some(
         l => l.kind === 'freezer' && l.fz === fz && l.rack === n));
 }
+
+/* Occupancy is counted in LOCATIONS, not records, because one spreadsheet row
+   can put two physical things in two different boxes — a plasmid in 7B3 and the
+   virus made from it in 7B1 are two tubes, and rack 7 holds 36 of them across
+   30 rows. Counting rows would under-report how full the rack is, which is the
+   one question the map exists to answer. The lists below still show one entry
+   per record, tagged with the role it is filed under. */
+function locsInRack(fz, n) {
+    return items().reduce((a, r) => a + (r.locs || []).filter(
+        l => l.kind === 'freezer' && l.fz === fz && l.rack === n).length, 0);
+}
+function locsInSlot(key) {
+    return items().reduce((a, r) => a + (r.locs || []).filter(
+        l => l.kind === 'freezer' && slotKey(l) === key).length, 0);
+}
 function slotsInRack(fz, n) {
     const s = new Set();
     items().forEach(r => (r.locs || []).forEach(l => {
@@ -532,7 +547,8 @@ function boxMeta(key) { return (DATA.boxes || {})[key] || {}; }
 function render() {
     const b = document.getElementById('body');
     const counts = {
-        map: items().filter(r => (r.locs || []).some(l => l.kind === 'freezer')).length,
+        map: items().reduce((a, r) => a + (r.locs || []).filter(
+                 l => l.kind === 'freezer').length, 0),
         inv: items().length,
         other: items().filter(r => (r.locs || []).some(l => l.kind !== 'freezer')
                                    || !(r.locs || []).length).length,
@@ -600,31 +616,40 @@ function renderMap(v) {
         else loose.push(r);
     });
 
+    const per = fz.racks_per_shelf || 5;
     let h = '<div class="fzhead"><h3>' + esc(fz.name) + '</h3>'
           + '<span style="font-size:.8em;color:#8794a1">'
           + fz.racks.length + ' racks &middot; each rack holds a 4&times;4 grid of boxes '
           + '&middot; each box is 9&times;9 = 81 positions</span></div>';
 
     if (!shelves.length) {
-        h += '<div class="warn"><strong>Shelves are not assigned yet.</strong> '
-           + 'The spreadsheet has never recorded which shelf a rack sits on, so nothing '
-           + 'has been assumed. Assign them as you go, or '
-           + '<button class="btn sm" onclick="autoShelves()">arrange as 4 shelves of 5 racks</button> '
-           + 'and correct it from there.</div>';
+        h += '<div class="warn"><strong>Shelves are not assigned.</strong> '
+           + 'Each shelf holds ' + per + ' racks, counting from the top &mdash; '
+           + '<button class="btn sm" onclick="autoShelves()">arrange them</button>.</div>';
     }
 
     shelves.forEach(s => {
+        const rs = byShelf[s.id];
+        const ns = rs.reduce((a, r) => a + locsInRack(fz.id, r.n), 0);
+        const range = rs.length
+            ? 'racks ' + rs[0].n + '\u2013' + rs[rs.length - 1].n : 'no racks';
         h += '<div class="shelf"><h4>' + esc(s.name)
+           + '<span style="font-weight:400;text-transform:none;letter-spacing:0">'
+           + range + ' &middot; ' + ns + ' item' + (ns === 1 ? '' : 's') + '</span>'
            + '<span class="line"></span>'
            + '<button class="btn sm" onclick="renameShelf(\'' + s.id + '\')">rename</button>'
            + '</h4><div class="racks">'
-           + byShelf[s.id].map(r => rackTile(fz, r)).join('') + '</div></div>';
+           + rs.map(r => rackTile(fz, r)).join('') + '</div></div>';
     });
     if (loose.length) {
         h += '<div class="shelf"><h4>' + (shelves.length ? 'Shelf not assigned' : 'All racks')
            + '<span class="line"></span></h4><div class="racks">'
            + loose.map(r => rackTile(fz, r)).join('') + '</div></div>';
     }
+
+    h += '<div style="margin:2px 0 14px"><button class="btn sm" onclick="addShelf()">'
+       + '+ Add a shelf (racks ' + (fz.racks.length + 1) + '\u2013'
+       + (fz.racks.length + per) + ')</button></div>';
 
     h += '<div id="rackpanel"></div>';
     v.innerHTML = h;
@@ -633,7 +658,7 @@ function renderMap(v) {
 
 function rackTile(fz, r) {
     const filled = slotsInRack(fz.id, r.n);
-    const n = itemsInRack(fz.id, r.n).length;
+    const n = locsInRack(fz.id, r.n);
     let mini = '';
     ['1', '2', '3', '4'].forEach(row => ['A', 'B', 'C', 'D'].forEach(col => {
         mini += '<i class="' + (filled.has(col + row) ? 'f' : '') + '"></i>';
@@ -658,9 +683,21 @@ function renderRackPanel() {
     const fz = freezer();
     if (!p || SEL.rack == null) { if (p) p.innerHTML = ''; return; }
 
+    const rk = (fz.racks || []).find(x => x.n === SEL.rack) || {};
+    const shelfSel = (fz.shelves || []).length
+        ? '<select style="font-size:.8em;padding:2px 5px;border:1px solid #dde3ea;'
+          + 'border-radius:5px;font-family:inherit" '
+          + 'onchange="setRackShelf(' + SEL.rack + ',this.value)">'
+          + '<option value=""' + (!rk.shelf ? ' selected' : '') + '>unassigned</option>'
+          + fz.shelves.map(sh => '<option value="' + sh.id + '"'
+              + (rk.shelf === sh.id ? ' selected' : '') + '>' + esc(sh.name) + '</option>').join('')
+          + '</select>'
+        : '';
+
     let h = '<div class="rackpanel"><h4>Rack ' + SEL.rack
           + '<span style="font-weight:400;font-size:.8em;color:#8794a1">'
           + 'box slots &mdash; column A&ndash;D across, row 1&ndash;4 down</span>'
+          + shelfSel
           + '<button class="btn sm" style="margin-left:auto" onclick="openRack(' + SEL.rack + ')">close</button>'
           + '</h4><div class="grid4"><div class="hd"></div>';
     ['A', 'B', 'C', 'D'].forEach(c => { h += '<div class="hd">' + c + '</div>'; });
@@ -669,14 +706,14 @@ function renderRackPanel() {
         ['A', 'B', 'C', 'D'].forEach(col => {
             const lab = '' + SEL.rack + col + row;
             const key = fz.id + '|' + lab;
-            const list = itemsInSlot(key);
+            const n = locsInSlot(key);
             const meta = boxMeta(key);
-            h += '<div class="slot ' + (list.length ? 'full' : 'empty')
+            h += '<div class="slot ' + (n ? 'full' : 'empty')
                + (SEL.slot === lab ? ' on' : '') + '" onclick="openSlot(\'' + lab + '\')">'
                + '<div class="sl">' + lab + '</div>'
                + (meta.label ? '<div class="lb">' + esc(meta.label) + '</div>' : '')
-               + (list.length ? '<div class="ct">' + list.length + ' item'
-                                + (list.length === 1 ? '' : 's') + '</div>' : '')
+               + (n ? '<div class="ct">' + n + ' item' + (n === 1 ? '' : 's')
+                      + '</div>' : '')
                + '</div>';
         });
     });
@@ -798,12 +835,49 @@ function setBoxMeta(key, field, val) {
     DIRTY.add('__boxes__'); renderSyncBar();
 }
 
+/* Shelf = ceil(rack / racks_per_shelf), counting from the top: with 5 to a
+   shelf, shelf 1 is racks 1-5 and shelf 4 is racks 16-20 (Albert, 2026-09-03).
+   Stored per rack rather than derived, so a rack that really does sit somewhere
+   else can be moved without breaking the rule for everything else. */
+function shelfOf(n, per) { return 's' + Math.ceil(n / per); }
+
 function autoShelves() {
     const fz = freezer();
-    fz.shelves = [1, 2, 3, 4].map(i => ({ id: 's' + i, name: 'Shelf ' + i }));
-    fz.racks.forEach(r => { r.shelf = 's' + Math.min(4, Math.ceil(r.n / 5)); });
+    const per = fz.racks_per_shelf || 5;
+    const n = Math.ceil(fz.racks.length / per);
+    fz.shelves = [];
+    for (let i = 1; i <= n; i++) {
+        fz.shelves.push({ id: 's' + i, name: 'Shelf ' + i + (i === 1 ? ' (top)' : '') });
+    }
+    fz.racks.forEach(r => { r.shelf = shelfOf(r.n, per); });
     DIRTY.add('__boxes__'); saveLocal(); renderView(); renderSyncBar();
-    toast('Racks arranged 5 per shelf — correct any that are wrong');
+    toast('Racks arranged ' + per + ' per shelf');
+}
+
+/* The freezer may well have more shelves than the spreadsheet ever mentioned —
+   nothing in it referenced a rack above 18. Adding one extends the rack
+   numbering rather than renumbering what is already there, so existing
+   addresses like 16B4 keep meaning what they meant. */
+function addShelf() {
+    const fz = freezer();
+    const per = fz.racks_per_shelf || 5;
+    const id = 's' + (fz.shelves.length + 1);
+    fz.shelves.push({ id: id, name: 'Shelf ' + (fz.shelves.length + 1) });
+    const from = fz.racks.length + 1;
+    for (let n = from; n < from + per; n++) fz.racks.push({ n: n, shelf: id });
+    DIRTY.add('__boxes__'); saveLocal(); renderView(); renderSyncBar();
+    toast('Added ' + (fz.shelves[fz.shelves.length - 1].name) + ' with racks '
+          + from + '\u2013' + (from + per - 1));
+}
+
+/* Moving one rack between shelves, offered where you are already looking at
+   that rack rather than as clutter on every tile in the grid. */
+function setRackShelf(n, shelfId) {
+    const fz = freezer();
+    const r = fz.racks.find(x => x.n === n);
+    if (!r) return;
+    r.shelf = shelfId || null;
+    DIRTY.add('__boxes__'); saveLocal(); renderView(); renderSyncBar();
 }
 
 function renameShelf(id) {
