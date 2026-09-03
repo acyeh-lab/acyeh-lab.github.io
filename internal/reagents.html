@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reagents - Yeh Lab Internal Site</title>
+    <style>
+        body { font-family: 'Roboto', sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
+        header { background-color: #0056b3; color: #fff; padding: 20px 10px; text-align: center; }
+        header h1 { font-size: 48px; margin: 0; font-weight: 700; letter-spacing: 2px; }
+        header h2 { font-size: 24px; margin: 0; font-weight: 400; }
+        nav { text-align: center; margin: 10px 0; background-color: #fff; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        nav a { text-decoration: none; margin: 0 15px; color: #0056b3; font-weight: bold; }
+        nav a:hover { text-decoration: underline; }
+        nav a.active { color: #fff; background-color: #0056b3; padding: 6px 14px; border-radius: 4px; text-decoration: none; }
+        nav a.active:hover { text-decoration: none; }
+        nav a .lockicon { width: .72em; height: .72em; fill: currentColor;
+            opacity: .5; margin-left: 5px; vertical-align: -1px; }
+        nav a:hover .lockicon, nav a.active .lockicon { opacity: .85; }
+        .container { max-width: 1180px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        footer { text-align: center; padding: 10px 0; background-color: #0056b3; color: #fff; margin-top: 20px; }
+
+        .intro { background: #eef4fb; border-left: 4px solid #0056b3; border-radius: 0 6px 6px 0;
+            padding: 12px 16px; margin: 4px 0 16px; font-size: .87em; color: #445; }
+        .intro p { margin: 0 0 8px; } .intro p:last-child { margin-bottom: 0; }
+        .intro code { background: #dce8f6; padding: 1px 5px; border-radius: 3px; font-size: .95em; }
+
+        /* ---- sync bar ---- */
+        .syncbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+            background: #f7f9fc; border: 1px solid #e3e9f0; border-radius: 8px;
+            padding: 9px 13px; margin: 0 0 14px; font-size: .84em; }
+        .syncbar .grow { flex: 1 1 auto; }
+        .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #217346; margin-right: 6px; vertical-align: 0; }
+        .dot.dirty { background: #c9752b; }
+        .dot.err { background: #b00020; }
+        .btn { border: 1px solid #cbd6e2; background: #fff; color: #0056b3; border-radius: 6px;
+            padding: 6px 13px; font-size: .95em; cursor: pointer; font-family: 'Roboto', sans-serif; }
+        .btn:hover { background: #eef4fb; }
+        .btn.pri { background: #0056b3; border-color: #0056b3; color: #fff; }
+        .btn.pri:hover { background: #00449a; }
+        .btn.pri[disabled] { background: #b6c4d4; border-color: #b6c4d4; cursor: default; }
+        .btn.danger { color: #b00020; border-color: #e6b8bf; }
+        .btn.danger:hover { background: #fdecea; }
+        .btn.sm { padding: 3px 9px; font-size: .8em; }
+
+        /* ---- view tabs ---- */
+        .views { display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 2px solid #e0e5eb;
+            margin: 0 0 16px; }
+        .views button { border: none; background: none; padding: 9px 16px; cursor: pointer;
+            font-family: 'Roboto', sans-serif; font-size: .92em; color: #667; font-weight: 500;
+            border-bottom: 3px solid transparent; margin-bottom: -2px; }
+        .views button:hover { color: #0056b3; }
+        .views button.on { color: #0056b3; border-bottom-color: #0056b3; font-weight: 700; }
+        .views button .n { background: #eef2f7; color: #667; border-radius: 9px;
+            padding: 0 7px; font-size: .82em; margin-left: 6px; }
+        .views button.on .n { background: #0056b3; color: #fff; }
+
+        /* ---- controls ---- */
+        .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+        .search-box { flex: 1 1 240px; padding: 8px 14px; border: 1px solid #ccc; border-radius: 20px;
+            font-size: .9em; font-family: 'Roboto', sans-serif; outline: none; }
+        .search-box:focus { border-color: #0056b3; }
+        .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .chip { border-radius: 20px; padding: 5px 13px; font-size: .8em; font-weight: 500;
+            background: #eef2f7; color: #0056b3; cursor: pointer; border: 1px solid transparent;
+            user-select: none; }
+        .chip:hover { background: #dce8f6; }
+        .chip.on { background: #0056b3; color: #fff; }
+        .chip .n { opacity: .65; margin-left: 5px; font-size: .9em; }
+        .stats { font-size: .84em; color: #777; padding: 4px 0 10px; }
+
+        /* ---- freezer map ---- */
+        .fzhead { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 6px; }
+        .fzhead h3 { font-size: 1.15em; color: #0056b3; margin: 0; }
+        .shelf { margin: 0 0 18px; }
+        .shelf > h4 { font-size: .74em; text-transform: uppercase; letter-spacing: .8px;
+            color: #7a8794; font-weight: 700; margin: 0 0 8px; display: flex;
+            align-items: center; gap: 8px; }
+        .shelf > h4 .line { flex: 1; height: 1px; background: #e3e9f0; }
+        .racks { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+        .rack { border: 1px solid #dde3ea; border-radius: 8px; padding: 8px 9px 9px; cursor: pointer;
+            background: #fff; transition: box-shadow .15s, border-color .15s; }
+        .rack:hover { border-color: #0056b3; box-shadow: 0 2px 8px rgba(0,86,179,.13); }
+        .rack.on { border-color: #0056b3; box-shadow: 0 0 0 2px rgba(0,86,179,.18); }
+        .rack.empty { background: #fbfcfd; }
+        .rack .rk { font-weight: 700; font-size: .92em; color: #234; display: flex;
+            justify-content: space-between; align-items: baseline; }
+        .rack .rk .c { font-size: .74em; font-weight: 500; color: #8794a1; }
+        .rack.hasitems .rk .c { color: #0056b3; }
+        .mini { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 6px; }
+        .mini i { display: block; padding-top: 100%; background: #eef1f5; border-radius: 2px; }
+        .mini i.f { background: #0056b3; }
+
+        /* rack detail: 4x4 of box slots */
+        .rackpanel { border: 1px solid #cbd6e2; border-radius: 8px; background: #fafbfd;
+            padding: 14px 16px; margin: 12px 0 18px; }
+        .rackpanel > h4 { margin: 0 0 10px; font-size: 1em; color: #0056b3;
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .grid4 { display: grid; grid-template-columns: 26px repeat(4, minmax(0, 1fr));
+            gap: 6px; max-width: 620px; }
+        .grid4 .hd { font-size: .75em; color: #8794a1; text-align: center; font-weight: 700;
+            align-self: center; }
+        .slot { border: 1px solid #dde3ea; border-radius: 6px; background: #fff; padding: 7px 8px;
+            cursor: pointer; min-height: 54px; transition: border-color .15s, box-shadow .15s; }
+        .slot:hover { border-color: #0056b3; }
+        .slot.on { border-color: #0056b3; box-shadow: 0 0 0 2px rgba(0,86,179,.18); }
+        .slot.full { background: #eef4fb; }
+        .slot .sl { font-weight: 700; font-size: .82em; color: #234; }
+        .slot .lb { font-size: .72em; color: #667; line-height: 1.25; margin-top: 1px;
+            overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .slot .ct { font-size: .72em; color: #0056b3; font-weight: 500; }
+        .slot.empty .sl { color: #aab4bf; font-weight: 500; }
+
+        /* box detail: 9x9 */
+        .boxpanel { border: 1px solid #cbd6e2; border-radius: 8px; background: #fff;
+            padding: 14px 16px; margin: 12px 0; }
+        .boxwrap { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+        .boxgridwrap { overflow-x: auto; }
+        .grid9 { display: grid; grid-template-columns: 22px repeat(9, 34px); gap: 3px; }
+        .grid9 .hd { font-size: .7em; color: #8794a1; text-align: center; font-weight: 700;
+            align-self: center; }
+        .well { width: 34px; height: 34px; border: 1px solid #dde3ea; border-radius: 4px;
+            background: #fbfcfd; cursor: pointer; font-size: .62em; color: #aab4bf;
+            display: flex; align-items: center; justify-content: center; padding: 0;
+            font-family: 'Roboto', sans-serif; overflow: hidden; }
+        .well:hover { border-color: #0056b3; }
+        .well.f { color: #fff; font-weight: 700; border-color: transparent; }
+        .well.on { box-shadow: 0 0 0 2px #0056b3; }
+        .well.tgt { border-style: dashed; border-color: #c9752b; background: #fff6ec; }
+        .boxside { flex: 1 1 300px; min-width: 280px; }
+        .boxside h5 { margin: 0 0 6px; font-size: .74em; text-transform: uppercase;
+            letter-spacing: .7px; color: #0056b3; font-weight: 700; }
+
+        /* ---- item rows ---- */
+        .item { border: 1px solid #e6ebf1; border-left: 4px solid #b6c4d4; border-radius: 6px;
+            margin-bottom: 6px; background: #fff; }
+        .item .hd2 { padding: 8px 12px; cursor: pointer; display: flex; gap: 9px;
+            align-items: baseline; flex-wrap: wrap; }
+        .item .nm { font-weight: 500; font-size: .9em; color: #234; flex: 1 1 240px; }
+        .item .cat { font-size: .72em; color: #fff; border-radius: 3px; padding: 1px 7px; }
+        .item .loc { font-size: .76em; color: #0056b3; font-family: inherit;
+            background: #eef4fb; border-radius: 3px; padding: 1px 7px; font-weight: 500; }
+        .item .loc.other { color: #667; background: #eef2f7; }
+        .item .loc.unk { color: #8a5a00; background: #fdf3e2; }
+        .item .dt { font-size: .74em; color: #8794a1; }
+        .item .body { display: none; padding: 2px 12px 12px; border-top: 1px solid #f0f3f7; }
+        .item.open .body { display: block; }
+        .fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 8px 16px; margin: 10px 0; }
+        .fld label { display: block; font-size: .7em; text-transform: uppercase;
+            letter-spacing: .6px; color: #8794a1; font-weight: 700; }
+        .fld input, .fld textarea, .fld select { width: 100%; box-sizing: border-box;
+            border: 1px solid #dde3ea; border-radius: 5px; padding: 5px 8px; font-size: .85em;
+            font-family: 'Roboto', sans-serif; color: #333; background: #fff; }
+        .fld input:focus, .fld textarea:focus { border-color: #0056b3; outline: none; }
+        .fld textarea { min-height: 52px; resize: vertical; line-height: 1.4; }
+        .fld.wide { grid-column: 1 / -1; }
+        .locbox { border: 1px solid #e3e9f0; border-radius: 6px; padding: 9px 11px;
+            margin: 8px 0; background: #fafbfd; }
+        .locbox .lr { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+            font-size: .84em; }
+        .locbox .role { font-size: .7em; text-transform: uppercase; letter-spacing: .6px;
+            color: #8794a1; font-weight: 700; min-width: 58px; }
+        .locbox input.num { width: 56px; } .locbox input.wl { width: 62px; }
+        .locbox select { padding: 4px 6px; border: 1px solid #dde3ea; border-radius: 5px;
+            font-family: 'Roboto', sans-serif; font-size: .95em; }
+        .locbox input { border: 1px solid #dde3ea; border-radius: 5px; padding: 4px 7px;
+            font-family: 'Roboto', sans-serif; font-size: .95em; }
+        .locbox .free { flex: 1 1 220px; }
+        .rowacts { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px;
+            padding-top: 9px; border-top: 1px solid #f0f3f7; }
+
+        .place { margin-bottom: 18px; }
+        .place > h4 { font-size: .95em; color: #0056b3; margin: 0 0 7px;
+            border-bottom: 1px solid #e3e9f0; padding-bottom: 5px; }
+        .place > h4 .n { font-size: .72em; color: #8794a1; font-weight: 400; margin-left: 8px; }
+
+        .empty-msg { text-align: center; color: #999; padding: 26px 0; font-style: italic; font-size: .9em; }
+        .loading { text-align: center; color: #999; padding: 40px 0; font-style: italic; }
+        .err { background: #fdecea; border-left: 4px solid #b00020; color: #7a1b1b;
+            padding: 12px 16px; border-radius: 0 6px 6px 0; font-size: .88em; }
+        .warn { background: #fff8e6; border-left: 4px solid #c9752b; color: #6b4a12;
+            padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: .85em; margin: 0 0 12px; }
+        .toast { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%);
+            background: #234; color: #fff; padding: 10px 20px; border-radius: 20px;
+            font-size: .85em; opacity: 0; pointer-events: none; transition: opacity .25s;
+            z-index: 60; max-width: 80vw; text-align: center; }
+        .toast.show { opacity: .95; }
+        .totop { position: fixed; right: 18px; bottom: 18px; background: #0056b3; color: #fff;
+            text-decoration: none; padding: 9px 14px; border-radius: 20px; font-size: .78em;
+            opacity: .88; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+        @media (max-width: 620px) {
+            .grid9 { grid-template-columns: 18px repeat(9, 28px); }
+            .well { width: 28px; height: 28px; font-size: .55em; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Yeh Lab Internal Site</h1>
+        <h2>Reagents</h2>
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="methods.html">Methods</a>
+        <a href="transplants.html">Transplants</a>
+        <a href="reagents.html" class="active">Reagents</a>
+        <a href="flow.html">Flow</a>
+        <a href="openflow.html">OpenFlow</a>
+        <a href="journal-watch.html">Journal Watch</a>
+        <a href="grants.html">Grants</a>
+        <a href="tasks.html">Task Tracker<svg class="lockicon" viewBox="0 0 24 24" role="img" aria-label="password protected"><title>Password protected</title><path d="M12 2a5 5 0 0 0-5 5v3H6a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V11a1 1 0 0 0-1-1h-1V7a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V7a3 3 0 0 1 3-3z"/></svg></a>
+    </nav>
+
+    <div class="container">
+        <div class="intro">
+          <p><strong>Where everything in the lab is stored, and what is in each freezer box.</strong>
+          Click a rack to open its 4&times;4 grid of box slots, then a slot to open that box as a
+          9&times;9 map of positions <code>A1</code>&ndash;<code>I9</code>. Click a position to see,
+          edit, move or remove what is in it.</p>
+          <p><strong>This page and <code>My Lab.xlsx</code> are two views of the same data.</strong>
+          Edit either one. A job on the cluster reconciles them every 15 minutes, so a
+          box you fill in here appears in the spreadsheet's <code>[Storage]</code> tabs, and a
+          row you type in Excel appears here. Each row carries a hidden <code>RID</code>
+          column that keeps the two sides matched up &mdash; don't delete it.</p>
+          <p><strong>The inventory is private.</strong> It is not in this public repository:
+          it lives in <code>acyeh-lab/lab-internal</code> and is fetched &mdash; and written back
+          &mdash; with the GitHub token in this browser, the same way Task Tracker works.</p>
+        </div>
+
+        <div id="body"><div class="loading">Loading reagent inventory&hellip;</div></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <a href="#" class="totop">&uarr; Top</a>
+
+    <footer>
+        <p>Yeh Lab Internal Site &middot; not indexed, not public</p>
+    </footer>
+
+<script>
+/* ===========================================================================
+   Reagents — the interactive storage map.
+
+   DATA MODEL (mirrors reagent_model.py on the cluster; keep the two in step):
+     record = { rid, sheet, kind:'item'|'section', cat, section,
+                fields: { <spreadsheet column header>: value },
+                locs:   [ { role, kind:'freezer'|'other'|'unknown', ... } ] }
+
+   A record's `fields` keys ARE the column headers of its [Storage] sheet, so
+   anything typed here lands in the right cell without a translation table, and
+   a column added in Excel shows up here with no code change.
+
+   `name` is DERIVED, never stored — see nameOf(). If it were stored, the page
+   and the spreadsheet would immediately disagree about it with no way to say
+   which was right.
+   =========================================================================== */
+
+const GH_REPO   = 'acyeh-lab/lab-internal';   // PRIVATE — data never on the public site
+const DATA_FILE = 'reagents-data.json';
+const TOKEN_KEY = 'ayeh-lab-gh-token';
+const LOCAL_KEY = 'ayeh-lab-reagents';
+const DIRTY_KEY = 'ayeh-lab-reagents-dirty';
+
+let DATA = null;
+let DIRTY = new Set();          // rids edited here since the last successful save
+let FILE_SHA = null;            // GitHub blob sha, for a safe read-modify-write
+let VIEW = 'map';
+let SEL = { rack: null, slot: null, well: null, placing: null };
+const F = { q: '', cats: new Set() };
+
+const esc = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+const CAT_COLOR = {
+    'Plasmids & Virus':                  '#2b579a',
+    'Cells & Bacteria':                  '#217346',
+    'Antibodies, Peptides & Tetramers':  '#b7472a',
+    'Student Constructs':                '#6a5acd',
+    'Samples':                           '#0f7b8a',
+    'Primers & Genes':                   '#a5761d',
+    'Histology':                         '#a03060',
+    'Data & Sequencing':                 '#5b6673',
+};
+const catColor = c => CAT_COLOR[c] || '#8794a1';
+
+function toast(msg, ms) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), ms || 2600);
+}
+
+/* ===== GitHub read/write ==================================================
+   Same contract as tasks.html: a fine-grained PAT with Contents=read+write on
+   acyeh-lab/lab-internal, held in this browser's localStorage. Reads use the
+   raw media type; writes need the blob sha, which is what makes a concurrent
+   change detectable instead of silently clobbered.
+   ======================================================================== */
+
+function getToken() { return localStorage.getItem(TOKEN_KEY); }
+
+function setupToken() {
+    const cur = getToken();
+    const msg = cur
+        ? 'GitHub token is set. Enter a new one to replace, or leave blank to keep current:'
+        : 'To load and save the reagent inventory, enter a GitHub Personal Access Token.\n\n'
+          + 'Create one at: github.com/settings/tokens\n'
+          + 'Use a FINE-GRAINED token with Repository access = acyeh-lab/lab-internal\n'
+          + 'and Permissions > Contents = Read and write\n\nPaste token:';
+    const t = prompt(msg);
+    if (t && t.trim()) { localStorage.setItem(TOKEN_KEY, t.trim()); toast('Token saved'); }
+}
+
+async function ghGet() {
+    if (!getToken()) { setupToken(); if (!getToken()) throw new Error('No token provided'); }
+    const r = await fetch('https://api.github.com/repos/' + GH_REPO + '/contents/'
+                          + DATA_FILE + '?ref=main&t=' + Date.now(), {
+        headers: { 'Authorization': 'token ' + getToken(),
+                   'Accept': 'application/vnd.github+json' }
+    });
+    if (r.status === 401 || r.status === 403 || r.status === 404) {
+        localStorage.removeItem(TOKEN_KEY);
+        throw new Error('Token rejected (HTTP ' + r.status + ') — reload the page to re-enter it');
+    }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const info = await r.json();
+    FILE_SHA = info.sha;
+    return JSON.parse(decodeURIComponent(escape(atob((info.content || '').replace(/\n/g, '')))));
+}
+
+async function ghPut(payload, sha, message) {
+    const body = {
+        message: message,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 1) + '\n'))),
+        sha: sha,
+        committer: { name: 'web-sync', email: 'ayeh@fredhutch.org' }
+    };
+    const r = await fetch('https://api.github.com/repos/' + GH_REPO + '/contents/' + DATA_FILE, {
+        method: 'PUT',
+        headers: { 'Authorization': 'token ' + getToken(),
+                   'Accept': 'application/vnd.github+json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+    if (!r.ok) {
+        const e = await r.json().catch(() => ({}));
+        throw new Error(e.message || ('HTTP ' + r.status));
+    }
+    const out = await r.json();
+    FILE_SHA = out.content && out.content.sha;
+    return out;
+}
+
+/* ===== Save ===============================================================
+   Never PUTs the local copy wholesale. The cluster sync rewrites this same
+   file every 15 minutes, so between load and save the remote may legitimately
+   have moved. Saving re-reads the remote and replays ONLY the records touched
+   here on top of it — so a spreadsheet edit landing mid-session survives, and
+   so does this session's work.
+   ======================================================================== */
+
+async function save() {
+    if (!DIRTY.size) { toast('Nothing to save'); return; }
+    const btn = document.getElementById('savebtn');
+    if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
+    try {
+        const remote = await ghGet();              // also refreshes FILE_SHA
+        const byRid = {};
+        (remote.records || []).forEach(r => { byRid[r.rid] = r; });
+
+        let added = 0, updated = 0, removed = 0;
+        const localByRid = {};
+        DATA.records.forEach(r => { localByRid[r.rid] = r; });
+
+        DIRTY.forEach(rid => {
+            const mine = localByRid[rid];
+            if (!mine) {                           // removed here
+                if (byRid[rid]) {
+                    const gone = byRid[rid];
+                    gone.archived = new Date().toISOString().slice(0, 19);
+                    gone.archived_by = 'removed on the website';
+                    (remote.archive = remote.archive || []).push(gone);
+                    remote.records = remote.records.filter(r => r.rid !== rid);
+                    removed++;
+                }
+                return;
+            }
+            if (byRid[rid]) {
+                byRid[rid].fields = mine.fields;
+                byRid[rid].locs   = mine.locs;
+                updated++;
+            } else {
+                remote.records.push(mine);
+                added++;
+            }
+        });
+
+        // Page-only settings (shelf names, box labels) have no spreadsheet
+        // column, so this page is their only author — copy them straight over.
+        remote.freezers = DATA.freezers;
+        remote.boxes    = DATA.boxes;
+        remote.next_rid = Math.max(remote.next_rid || 1, DATA.next_rid || 1);
+
+        await ghPut(remote, FILE_SHA,
+            'Reagents: ' + [added && added + ' added', updated && updated + ' edited',
+                            removed && removed + ' removed'].filter(Boolean).join(', ')
+            + ' — ' + new Date().toISOString().slice(0, 10));
+
+        DATA = remote;
+        DIRTY = new Set();
+        saveLocal();
+        render();
+        toast('Saved. The spreadsheet catches up within 15 minutes.');
+    } catch (e) {
+        toast('Save failed: ' + e.message, 6000);
+        console.error(e);
+    } finally {
+        if (btn) { btn.textContent = 'Save'; btn.disabled = false; }
+        renderSyncBar();
+    }
+}
+
+function saveLocal() {
+    try {
+        localStorage.setItem(LOCAL_KEY, JSON.stringify(DATA));
+        localStorage.setItem(DIRTY_KEY, JSON.stringify([...DIRTY]));
+    } catch (e) { /* quota — the server copy is the one that matters */ }
+}
+
+function markDirty(rid) { DIRTY.add(rid); saveLocal(); renderSyncBar(); }
+
+/* ===== Derived values =====================================================
+   nameOf mirrors build_name() in reagent_model.py: try each '|'-separated
+   template, take the first whose placeholders all resolve.
+   ======================================================================== */
+
+function sheetSpec(sheet) { return (DATA.sheets || {})[sheet] || {}; }
+
+const NAME_TPL = {
+    'Storage - VirusPlasmids':          '{Gene Inserts}|{List all Constructs}|{Source of Transfer Plasmid}',
+    'Storage - CellsBacteria':          '{Species} {Name}|{Name}|{Species}',
+    'Storage - MolecularAbPeptides':    '{Name}',
+    'Storage - Samples':                '{Experiment}',
+    'Storage - Students':               '{Name}|{List all Constructs}|{System}',
+    'Storage - Primers and Genes':      '{Description} {Gene}|{Description}',
+    'Storage - Histo':                  '{Lab Experiment}|{Histology Case 1}',
+    'Storage - DataSequencing':         '{Data Description}',
+};
+const DETAIL_COL = {
+    'Storage - VirusPlasmids': 'List all Constructs',
+    'Storage - CellsBacteria': 'Gene or Other Modification',
+    'Storage - MolecularAbPeptides': 'Peptide',
+    'Storage - Samples': 'Description',
+    'Storage - Students': 'System',
+    'Storage - Primers and Genes': 'Gene',
+    'Storage - Histo': 'Description',
+    'Storage - DataSequencing': 'Folder',
+};
+
+function nameOf(rec) {
+    const f = rec.fields || {};
+    const tpl = NAME_TPL[rec.sheet] || '';
+    for (const alt of tpl.split('|')) {
+        const keys = [...alt.matchAll(/\{([^}]+)\}/g)].map(m => m[1]);
+        if (keys.length && keys.every(k => (f[k] || '').trim())) {
+            let out = alt;
+            keys.forEach(k => { out = out.replace('{' + k + '}', f[k].trim()); });
+            return out.trim();
+        }
+    }
+    const d = (f[DETAIL_COL[rec.sheet]] || '').trim();
+    return d ? d.slice(0, 120) : '(unnamed)';
+}
+
+function detailOf(rec) {
+    const v = ((rec.fields || {})[DETAIL_COL[rec.sheet]] || '').trim();
+    return v && v !== nameOf(rec) ? v : '';
+}
+
+const slotLabel = l => '' + l.rack + l.col + l.brow;
+const slotKey   = l => l.fz + '|' + slotLabel(l);
+
+function locText(l) {
+    if (!l) return '';
+    if (l.kind === 'freezer') return '-80C ' + slotLabel(l) + (l.well ? ' · ' + l.well : '');
+    if (l.kind === 'unknown') return 'location unknown';
+    return l.place || l.raw || '';
+}
+
+/* Display-only grouping of the non-freezer places. Deliberately NOT written
+   back anywhere: the spreadsheet keeps the lab's own wording, and this only
+   decides which heading a row appears under. */
+function placeGroup(text) {
+    const s = (text || '').trim();
+    if (/^[a-zA-Z]:\\|^\/|^\\\\/.test(s)) return 'File paths';
+    if (/^-\s*20/.test(s))                return '-20C';
+    if (/deli fridge/i.test(s))           return 'Deli fridge (4C)';
+    if (/^4\s*C/i.test(s))                return '4C';
+    if (/cold room/i.test(s))             return 'Cold room';
+    if (/^-\s*80/.test(s))                return '-80C (no rack given)';
+    if (/bench|plastic box/i.test(s))     return 'Bench / room temperature';
+    return 'Other';
+}
+
+function items()    { return (DATA.records || []).filter(r => r.kind !== 'section'); }
+function freezer()  { return (DATA.freezers || [])[0] || null; }
+
+function itemsInSlot(key) {
+    return items().filter(r => (r.locs || []).some(
+        l => l.kind === 'freezer' && slotKey(l) === key));
+}
+function itemsInRack(fz, n) {
+    return items().filter(r => (r.locs || []).some(
+        l => l.kind === 'freezer' && l.fz === fz && l.rack === n));
+}
+function slotsInRack(fz, n) {
+    const s = new Set();
+    items().forEach(r => (r.locs || []).forEach(l => {
+        if (l.kind === 'freezer' && l.fz === fz && l.rack === n) s.add(l.col + l.brow);
+    }));
+    return s;
+}
+function boxMeta(key) { return (DATA.boxes || {})[key] || {}; }
+
+/* ===== Rendering ========================================================== */
+
+function render() {
+    const b = document.getElementById('body');
+    const counts = {
+        map: items().filter(r => (r.locs || []).some(l => l.kind === 'freezer')).length,
+        inv: items().length,
+        other: items().filter(r => (r.locs || []).some(l => l.kind !== 'freezer')
+                                   || !(r.locs || []).length).length,
+        arch: (DATA.archive || []).length,
+    };
+    b.innerHTML =
+        '<div id="syncbar"></div>'
+        + '<div class="views">'
+        + tabBtn('map',   'Freezer map', counts.map)
+        + tabBtn('inv',   'Inventory',   counts.inv)
+        + tabBtn('other', 'Other locations', counts.other)
+        + tabBtn('arch',  'Removed',     counts.arch)
+        + '</div><div id="view"></div>';
+    renderSyncBar();
+    renderView();
+}
+
+function tabBtn(id, label, n) {
+    return '<button class="' + (VIEW === id ? 'on' : '') + '" onclick="setView(\'' + id + '\')">'
+         + esc(label) + '<span class="n">' + n + '</span></button>';
+}
+
+function setView(v) { VIEW = v; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+function renderSyncBar() {
+    const el = document.getElementById('syncbar');
+    if (!el) return;
+    const n = DIRTY.size;
+    const when = DATA && (DATA.synced || DATA.built);
+    el.innerHTML =
+        '<div class="syncbar">'
+        + '<span><span class="dot' + (n ? ' dirty' : '') + '"></span>'
+        + (n ? '<strong>' + n + ' unsaved change' + (n === 1 ? '' : 's') + '</strong>'
+             : 'All changes saved')
+        + '</span>'
+        + '<span class="grow" style="color:#8794a1">'
+        + (when ? 'spreadsheet reconciled ' + esc(String(when).replace('T', ' ')) : '')
+        + '</span>'
+        + '<button class="btn" onclick="addItem()">+ Add reagent</button>'
+        + '<button class="btn" onclick="exportCsv()">Export CSV</button>'
+        + '<button class="btn pri" id="savebtn" onclick="save()"' + (n ? '' : ' disabled') + '>Save</button>'
+        + '</div>';
+}
+
+function renderView() {
+    const v = document.getElementById('view');
+    if (VIEW === 'map')   return renderMap(v);
+    if (VIEW === 'inv')   return renderInventory(v);
+    if (VIEW === 'other') return renderOther(v);
+    if (VIEW === 'arch')  return renderArchive(v);
+}
+
+/* ---- freezer map --------------------------------------------------------- */
+
+function renderMap(v) {
+    const fz = freezer();
+    if (!fz) { v.innerHTML = '<div class="empty-msg">No freezer configured.</div>'; return; }
+
+    const shelves = fz.shelves && fz.shelves.length ? fz.shelves : [];
+    const byShelf = {};
+    shelves.forEach(s => { byShelf[s.id] = []; });
+    const loose = [];
+    fz.racks.forEach(r => {
+        if (r.shelf && byShelf[r.shelf]) byShelf[r.shelf].push(r);
+        else loose.push(r);
+    });
+
+    let h = '<div class="fzhead"><h3>' + esc(fz.name) + '</h3>'
+          + '<span style="font-size:.8em;color:#8794a1">'
+          + fz.racks.length + ' racks &middot; each rack holds a 4&times;4 grid of boxes '
+          + '&middot; each box is 9&times;9 = 81 positions</span></div>';
+
+    if (!shelves.length) {
+        h += '<div class="warn"><strong>Shelves are not assigned yet.</strong> '
+           + 'The spreadsheet has never recorded which shelf a rack sits on, so nothing '
+           + 'has been assumed. Assign them as you go, or '
+           + '<button class="btn sm" onclick="autoShelves()">arrange as 4 shelves of 5 racks</button> '
+           + 'and correct it from there.</div>';
+    }
+
+    shelves.forEach(s => {
+        h += '<div class="shelf"><h4>' + esc(s.name)
+           + '<span class="line"></span>'
+           + '<button class="btn sm" onclick="renameShelf(\'' + s.id + '\')">rename</button>'
+           + '</h4><div class="racks">'
+           + byShelf[s.id].map(r => rackTile(fz, r)).join('') + '</div></div>';
+    });
+    if (loose.length) {
+        h += '<div class="shelf"><h4>' + (shelves.length ? 'Shelf not assigned' : 'All racks')
+           + '<span class="line"></span></h4><div class="racks">'
+           + loose.map(r => rackTile(fz, r)).join('') + '</div></div>';
+    }
+
+    h += '<div id="rackpanel"></div>';
+    v.innerHTML = h;
+    if (SEL.rack != null) renderRackPanel();
+}
+
+function rackTile(fz, r) {
+    const filled = slotsInRack(fz.id, r.n);
+    const n = itemsInRack(fz.id, r.n).length;
+    let mini = '';
+    ['1', '2', '3', '4'].forEach(row => ['A', 'B', 'C', 'D'].forEach(col => {
+        mini += '<i class="' + (filled.has(col + row) ? 'f' : '') + '"></i>';
+    }));
+    return '<div class="rack ' + (n ? 'hasitems' : 'empty') + (SEL.rack === r.n ? ' on' : '')
+         + '" onclick="openRack(' + r.n + ')">'
+         + '<div class="rk"><span>Rack ' + r.n + '</span>'
+         + '<span class="c">' + (n || '&mdash;') + '</span></div>'
+         + '<div class="mini">' + mini + '</div></div>';
+}
+
+function openRack(n) {
+    SEL.rack = (SEL.rack === n && !SEL.slot) ? null : n;
+    SEL.slot = null; SEL.well = null; SEL.placing = null;
+    renderView();
+    const p = document.getElementById('rackpanel');
+    if (p && SEL.rack != null) p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderRackPanel() {
+    const p = document.getElementById('rackpanel');
+    const fz = freezer();
+    if (!p || SEL.rack == null) { if (p) p.innerHTML = ''; return; }
+
+    let h = '<div class="rackpanel"><h4>Rack ' + SEL.rack
+          + '<span style="font-weight:400;font-size:.8em;color:#8794a1">'
+          + 'box slots &mdash; column A&ndash;D across, row 1&ndash;4 down</span>'
+          + '<button class="btn sm" style="margin-left:auto" onclick="openRack(' + SEL.rack + ')">close</button>'
+          + '</h4><div class="grid4"><div class="hd"></div>';
+    ['A', 'B', 'C', 'D'].forEach(c => { h += '<div class="hd">' + c + '</div>'; });
+    [1, 2, 3, 4].forEach(row => {
+        h += '<div class="hd">' + row + '</div>';
+        ['A', 'B', 'C', 'D'].forEach(col => {
+            const lab = '' + SEL.rack + col + row;
+            const key = fz.id + '|' + lab;
+            const list = itemsInSlot(key);
+            const meta = boxMeta(key);
+            h += '<div class="slot ' + (list.length ? 'full' : 'empty')
+               + (SEL.slot === lab ? ' on' : '') + '" onclick="openSlot(\'' + lab + '\')">'
+               + '<div class="sl">' + lab + '</div>'
+               + (meta.label ? '<div class="lb">' + esc(meta.label) + '</div>' : '')
+               + (list.length ? '<div class="ct">' + list.length + ' item'
+                                + (list.length === 1 ? '' : 's') + '</div>' : '')
+               + '</div>';
+        });
+    });
+    h += '</div><div id="boxpanel"></div></div>';
+    p.innerHTML = h;
+    if (SEL.slot) renderBoxPanel();
+}
+
+function openSlot(lab) {
+    SEL.slot = SEL.slot === lab ? null : lab;
+    SEL.well = null; SEL.placing = null;
+    renderRackPanel();
+}
+
+function renderBoxPanel() {
+    const el = document.getElementById('boxpanel');
+    const fz = freezer();
+    if (!el || !SEL.slot) return;
+    const key = fz.id + '|' + SEL.slot;
+    const meta = boxMeta(key);
+    const list = itemsInSlot(key);
+
+    // What sits at each well, and what is in the box without a position yet.
+    const atWell = {};
+    const unplaced = [];
+    list.forEach(r => (r.locs || []).forEach(l => {
+        if (l.kind !== 'freezer' || slotKey(l) !== key) return;
+        if (l.well) (atWell[l.well] = atWell[l.well] || []).push(r);
+        else unplaced.push({ rec: r, loc: l });
+    }));
+
+    let g = '<div class="grid9"><div class="hd"></div>';
+    for (let c = 1; c <= 9; c++) g += '<div class="hd">' + c + '</div>';
+    'ABCDEFGHI'.split('').forEach(row => {
+        g += '<div class="hd">' + row + '</div>';
+        for (let c = 1; c <= 9; c++) {
+            const w = row + c;
+            const occ = atWell[w] || [];
+            const col = occ.length ? catColor(occ[0].cat) : '';
+            const tip = occ.length ? occ.map(r => nameOf(r)).join(' | ') : w + ' — empty';
+            g += '<button class="well' + (occ.length ? ' f' : '')
+               + (SEL.well === w ? ' on' : '') + (SEL.placing ? ' tgt' : '') + '"'
+               + (col ? ' style="background:' + col + '"' : '')
+               + ' title="' + esc(w + ' — ' + tip) + '" onclick="clickWell(\'' + w + '\')">'
+               + (occ.length > 1 ? occ.length : (occ.length ? '' : w)) + '</button>';
+        }
+    });
+    g += '</div>';
+
+    let side = '<div class="boxside">'
+        + '<h5>Box ' + SEL.slot + '</h5>'
+        + '<div class="fld" style="margin-bottom:8px"><label>Box label</label>'
+        + '<input value="' + esc(meta.label || '') + '" placeholder="e.g. Markey lysates"'
+        + ' onchange="setBoxMeta(\'' + key + '\',\'label\',this.value)"></div>'
+        + '<div class="fld" style="margin-bottom:10px"><label>Box notes</label>'
+        + '<textarea placeholder="anything worth knowing about this box"'
+        + ' onchange="setBoxMeta(\'' + key + '\',\'notes\',this.value)">' + esc(meta.notes || '') + '</textarea></div>';
+
+    if (SEL.placing) {
+        const r = itemById(SEL.placing.rid);
+        side += '<div class="warn">Click a position to put <strong>' + esc(r ? nameOf(r) : '?')
+              + '</strong> there. <button class="btn sm" onclick="cancelPlace()">cancel</button></div>';
+    }
+
+    if (unplaced.length) {
+        side += '<h5>In this box, position not recorded (' + unplaced.length + ')</h5>'
+              + '<div style="font-size:.8em;color:#8794a1;margin-bottom:6px">'
+              + 'The spreadsheet has never held a within-box position, so everything imported '
+              + 'starts here. Click <em>Place</em>, then a square.</div>'
+              + unplaced.map(u =>
+                    '<div class="item"><div class="hd2" style="cursor:default">'
+                  + '<span class="nm">' + esc(nameOf(u.rec)) + '</span>'
+                  + '<span class="cat" style="background:' + catColor(u.rec.cat) + '">'
+                  + esc(u.rec.cat) + '</span>'
+                  + '<button class="btn sm" onclick="startPlace(\'' + u.rec.rid + '\',\'' + u.loc.role + '\')">Place</button>'
+                  + '</div></div>').join('');
+    }
+
+    if (SEL.well) {
+        const occ = atWell[SEL.well] || [];
+        side += '<h5>Position ' + SEL.well + '</h5>';
+        side += occ.length
+            ? occ.map(r => itemCard(r, true)).join('')
+            : '<div style="font-size:.85em;color:#8794a1;margin-bottom:8px">Empty.</div>'
+              + '<button class="btn" onclick="addItem(\'' + SEL.slot + '\',\'' + SEL.well + '\')">'
+              + '+ Add a reagent here</button>';
+    }
+    side += '</div>';
+
+    el.innerHTML = '<div class="boxpanel"><div class="boxwrap">'
+                 + '<div class="boxgridwrap">' + g + '</div>' + side + '</div></div>';
+}
+
+function clickWell(w) {
+    if (SEL.placing) {
+        const rec = itemById(SEL.placing.rid);
+        if (rec) {
+            const loc = (rec.locs || []).find(l => l.role === SEL.placing.role
+                        && l.kind === 'freezer' && slotKey(l) === freezer().id + '|' + SEL.slot);
+            if (loc) { loc.well = w; loc.raw = rawOf(loc); markDirty(rec.rid); }
+        }
+        SEL.placing = null; SEL.well = w;
+    } else {
+        SEL.well = SEL.well === w ? null : w;
+    }
+    renderBoxPanel();
+}
+
+function startPlace(rid, role) { SEL.placing = { rid: rid, role: role }; renderBoxPanel(); }
+function cancelPlace() { SEL.placing = null; renderBoxPanel(); }
+
+function setBoxMeta(key, field, val) {
+    DATA.boxes = DATA.boxes || {};
+    DATA.boxes[key] = DATA.boxes[key] || {};
+    DATA.boxes[key][field] = val;
+    // Box labels have no spreadsheet column — they live only here, so they are
+    // saved with the payload rather than marked as a record edit.
+    saveLocal(); renderSyncBar();
+    DIRTY.add('__boxes__'); renderSyncBar();
+}
+
+function autoShelves() {
+    const fz = freezer();
+    fz.shelves = [1, 2, 3, 4].map(i => ({ id: 's' + i, name: 'Shelf ' + i }));
+    fz.racks.forEach(r => { r.shelf = 's' + Math.min(4, Math.ceil(r.n / 5)); });
+    DIRTY.add('__boxes__'); saveLocal(); renderView(); renderSyncBar();
+    toast('Racks arranged 5 per shelf — correct any that are wrong');
+}
+
+function renameShelf(id) {
+    const fz = freezer();
+    const s = fz.shelves.find(x => x.id === id);
+    if (!s) return;
+    const v = prompt('Shelf name:', s.name);
+    if (v == null) return;
+    s.name = v.trim() || s.name;
+    DIRTY.add('__boxes__'); saveLocal(); renderView();
+}
+
+/* ---- inventory ----------------------------------------------------------- */
+
+function renderInventory(v) {
+    const all = items();
+    const cats = {};
+    all.forEach(r => { cats[r.cat] = (cats[r.cat] || 0) + 1; });
+
+    let h = '<div class="controls">'
+        + '<input class="search-box" id="q" placeholder="Search name, construct, source, notes, location…" '
+        + 'value="' + esc(F.q) + '" oninput="F.q=this.value;renderList()"></div>'
+        + '<div class="chips">'
+        + Object.keys(cats).sort().map(c =>
+            '<span class="chip' + (F.cats.has(c) ? ' on' : '') + '" onclick="toggleCat(\'' + esc(c).replace(/'/g, "\\'") + '\')">'
+            + esc(c) + '<span class="n">' + cats[c] + '</span></span>').join('')
+        + (F.cats.size ? '<span class="chip" onclick="F.cats.clear();renderView()">clear</span>' : '')
+        + '</div><div id="list"></div>';
+    v.innerHTML = h;
+    renderList();
+}
+
+function toggleCat(c) { F.cats.has(c) ? F.cats.delete(c) : F.cats.add(c); renderView(); }
+
+function matches(r) {
+    if (F.cats.size && !F.cats.has(r.cat)) return false;
+    if (!F.q) return true;
+    const hay = (nameOf(r) + ' ' + Object.values(r.fields || {}).join(' ') + ' '
+                 + (r.locs || []).map(locText).join(' ')).toLowerCase();
+    return F.q.toLowerCase().split(/\s+/).filter(Boolean).every(t => hay.includes(t));
+}
+
+function renderList() {
+    const el = document.getElementById('list');
+    if (!el) return;
+    const list = items().filter(matches);
+    el.innerHTML = '<div class="stats">Showing <strong>' + list.length + '</strong> of '
+                 + items().length + ' reagents</div>'
+                 + (list.length ? list.map(r => itemCard(r)).join('')
+                                : '<div class="empty-msg">Nothing matches.</div>');
+}
+
+/* ---- other locations ----------------------------------------------------- */
+
+function renderOther(v) {
+    const groups = {};
+    items().forEach(r => {
+        const nf = (r.locs || []).filter(l => l.kind !== 'freezer');
+        if (!nf.length && (r.locs || []).length) return;      // fully in the freezer
+        if (!nf.length) { (groups['No location recorded'] = groups['No location recorded'] || []).push(r); return; }
+        nf.forEach(l => {
+            const g = l.kind === 'unknown' ? 'Location unknown' : placeGroup(l.place || l.raw);
+            (groups[g] = groups[g] || []).push(r);
+        });
+    });
+    const names = Object.keys(groups).sort();
+    v.innerHTML = names.length
+        ? names.map(g => '<div class="place"><h4>' + esc(g)
+            + '<span class="n">' + groups[g].length + '</span></h4>'
+            + groups[g].map(r => itemCard(r)).join('') + '</div>').join('')
+        : '<div class="empty-msg">Everything has a freezer address.</div>';
+}
+
+/* ---- archive ------------------------------------------------------------- */
+
+function renderArchive(v) {
+    const a = DATA.archive || [];
+    v.innerHTML = '<div class="stats">Reagents removed from the inventory. Nothing is '
+        + 'ever hard-deleted &mdash; restoring one puts it back in the spreadsheet too.</div>'
+        + (a.length ? a.map((r, i) =>
+            '<div class="item"><div class="hd2" style="cursor:default">'
+          + '<span class="nm">' + esc(nameOf(r)) + '</span>'
+          + '<span class="cat" style="background:' + catColor(r.cat) + '">' + esc(r.cat) + '</span>'
+          + '<span class="dt">' + esc(r.archived || '') + ' &middot; ' + esc(r.archived_by || '') + '</span>'
+          + '<button class="btn sm" onclick="restore(' + i + ')">Restore</button>'
+          + '</div></div>').join('')
+          : '<div class="empty-msg">Nothing has been removed.</div>');
+}
+
+function restore(i) {
+    const r = (DATA.archive || [])[i];
+    if (!r) return;
+    DATA.archive.splice(i, 1);
+    delete r.archived; delete r.archived_by;
+    DATA.records.push(r);
+    markDirty(r.rid);
+    render();
+    toast('Restored — Save to put it back in the spreadsheet');
+}
+
+/* ---- one reagent, expandable into an editor ------------------------------ */
+
+function itemById(rid) { return (DATA.records || []).find(r => r.rid === rid); }
+
+function itemCard(r, open) {
+    const locs = (r.locs || []);
+    return '<div class="item' + (open ? ' open' : '') + '" id="it-' + r.rid + '"'
+        + ' style="border-left-color:' + catColor(r.cat) + '">'
+        + '<div class="hd2" onclick="toggleItem(\'' + r.rid + '\')">'
+        + '<span class="nm">' + esc(nameOf(r))
+        + (detailOf(r) ? '<span style="color:#8794a1;font-weight:400"> — ' + esc(detailOf(r)) + '</span>' : '')
+        + '</span>'
+        + '<span class="cat" style="background:' + catColor(r.cat) + '">' + esc(r.cat) + '</span>'
+        + locs.map(l => '<span class="loc' + (l.kind === 'freezer' ? '' :
+                        l.kind === 'unknown' ? ' unk' : ' other') + '">'
+                        + (locs.length > 1 ? esc(l.role) + ': ' : '') + esc(locText(l)) + '</span>').join('')
+        + (r.date ? '<span class="dt">' + esc(r.date) + '</span>' : '')
+        + '</div><div class="body">' + editor(r) + '</div></div>';
+}
+
+function toggleItem(rid) {
+    const el = document.getElementById('it-' + rid);
+    if (!el) return;
+    const wasOpen = el.classList.contains('open');
+    el.classList.toggle('open');
+    if (!wasOpen) el.querySelector('.body').innerHTML = editor(itemById(rid));
+}
+
+function editor(r) {
+    if (!r) return '';
+    const spec = sheetSpec(r.sheet);
+    const headers = spec.headers || Object.keys(r.fields || {});
+    const locCols = new Set(Object.values(spec.loc_cols || {}));
+
+    let h = '<div class="fgrid">';
+    headers.forEach(hd => {
+        if (locCols.has(hd)) return;                  // edited in the location block below
+        const val = (r.fields || {})[hd] || '';
+        const big = val.length > 70 || /note|comment|description|sequence/i.test(hd);
+        h += '<div class="fld' + (big ? ' wide' : '') + '"><label>' + esc(hd) + '</label>'
+           + (big
+              ? '<textarea onchange="setField(\'' + r.rid + '\',this.dataset.h,this.value)" data-h="' + esc(hd) + '">' + esc(val) + '</textarea>'
+              : '<input value="' + esc(val) + '" data-h="' + esc(hd) + '" onchange="setField(\'' + r.rid + '\',this.dataset.h,this.value)">')
+           + '</div>';
+    });
+    h += '</div>';
+
+    Object.entries(spec.loc_cols || {}).forEach(([role, col]) => {
+        h += locEditor(r, role, col);
+    });
+
+    h += '<div class="rowacts">'
+       + '<span style="flex:1;font-size:.72em;color:#b6c4d4;align-self:center">'
+       + esc(r.sheet) + ' &middot; ' + esc(r.rid) + '</span>'
+       + '<button class="btn danger sm" onclick="removeItem(\'' + r.rid + '\')">Remove</button>'
+       + '</div>';
+    return h;
+}
+
+function locEditor(r, role, col) {
+    const l = (r.locs || []).find(x => x.role === role);
+    const isFz = l && l.kind === 'freezer';
+    const opt = (vals, cur) => vals.map(v =>
+        '<option' + (String(v) === String(cur) ? ' selected' : '') + '>' + v + '</option>').join('');
+    let h = '<div class="locbox"><div class="lr">'
+        + '<span class="role">' + esc(role) + '</span>'
+        + '<select onchange="setLocKind(\'' + r.rid + '\',\'' + role + '\',this.value)">'
+        + '<option value="none"' + (!l ? ' selected' : '') + '>&mdash; none &mdash;</option>'
+        + '<option value="freezer"' + (isFz ? ' selected' : '') + '>-80C freezer</option>'
+        + '<option value="other"' + (l && l.kind !== 'freezer' ? ' selected' : '') + '>somewhere else</option>'
+        + '</select>';
+    if (isFz) {
+        h += 'rack <input class="num" type="number" min="1" max="99" value="' + l.rack
+           + '" onchange="setLoc(\'' + r.rid + '\',\'' + role + '\',\'rack\',this.value)">'
+           + '<select onchange="setLoc(\'' + r.rid + '\',\'' + role + '\',\'col\',this.value)">'
+           + opt(['A', 'B', 'C', 'D'], l.col) + '</select>'
+           + '<select onchange="setLoc(\'' + r.rid + '\',\'' + role + '\',\'brow\',this.value)">'
+           + opt([1, 2, 3, 4], l.brow) + '</select>'
+           + 'position <input class="wl" placeholder="A1–I9" value="' + esc(l.well || '')
+           + '" onchange="setLoc(\'' + r.rid + '\',\'' + role + '\',\'well\',this.value)">'
+           + '<input class="free" placeholder="note (optional)" value="' + esc(l.note || '')
+           + '" onchange="setLoc(\'' + r.rid + '\',\'' + role + '\',\'note\',this.value)">';
+    } else if (l) {
+        h += '<input class="free" placeholder="e.g. Deli Fridge MS Tetramer Box" value="'
+           + esc(l.place || l.raw || '')
+           + '" onchange="setLoc(\'' + r.rid + '\',\'' + role + '\',\'place\',this.value)">';
+    }
+    h += '</div><div style="font-size:.7em;color:#b6c4d4;margin-top:3px">writes to the '
+       + '<strong>' + esc(col) + '</strong> column</div></div>';
+    return h;
+}
+
+/* ---- mutations ----------------------------------------------------------- */
+
+function setField(rid, header, val) {
+    const r = itemById(rid); if (!r) return;
+    r.fields = r.fields || {};
+    r.fields[header] = val;
+    markDirty(rid);
+    const el = document.getElementById('it-' + rid);
+    if (el) el.querySelector('.nm').innerHTML = esc(nameOf(r))
+        + (detailOf(r) ? '<span style="color:#8794a1;font-weight:400"> — ' + esc(detailOf(r)) + '</span>' : '');
+}
+
+/* The raw string is what the spreadsheet cell will hold. Kept in step with the
+   structured fields on every edit so the two can never disagree — the sync
+   trusts the structured fields, but a human reading the JSON sees the same. */
+function rawOf(l) {
+    if (!l) return '';
+    if (l.kind !== 'freezer') return l.place || l.raw || '';
+    let core = (l.pfx || '-80Freezer') + ' ' + slotLabel(l) + (l.well ? ' [' + l.well + ']' : '');
+    const note = (l.note || '').trim();
+    if (!note) return core;
+    return (note === note.toUpperCase() || /^sent/i.test(note))
+        ? note + '; ' + core : core + ' - ' + note;
+}
+
+function setLocKind(rid, role, kind) {
+    const r = itemById(rid); if (!r) return;
+    r.locs = (r.locs || []).filter(l => l.role !== role);
+    if (kind === 'freezer') {
+        r.locs.push({ role: role, kind: 'freezer', fz: freezer().id, pfx: '-80Freezer',
+                      rack: 1, col: 'A', brow: 1, well: null, note: '', raw: '' });
+    } else if (kind === 'other') {
+        r.locs.push({ role: role, kind: 'other', place: '', raw: '' });
+    }
+    const l = r.locs.find(x => x.role === role);
+    if (l) l.raw = rawOf(l);
+    markDirty(rid);
+    refreshItem(rid);
+}
+
+function setLoc(rid, role, field, val) {
+    const r = itemById(rid); if (!r) return;
+    const l = (r.locs || []).find(x => x.role === role); if (!l) return;
+    if (field === 'rack' || field === 'brow') l[field] = parseInt(val, 10) || 1;
+    else if (field === 'well') {
+        const w = (val || '').trim().toUpperCase();
+        if (w && !/^[A-I][1-9]$/.test(w)) { toast('Position must be A1–I9'); refreshItem(rid); return; }
+        l.well = w || null;
+    } else l[field] = val;
+    l.raw = rawOf(l);
+    markDirty(rid);
+    refreshItem(rid);
+}
+
+function refreshItem(rid) {
+    const el = document.getElementById('it-' + rid);
+    const r = itemById(rid);
+    if (!el || !r) { renderView(); return; }
+    const wasOpen = el.classList.contains('open');
+    el.outerHTML = itemCard(r, wasOpen);
+    if (VIEW === 'map') renderRackPanel();
+}
+
+function removeItem(rid) {
+    const r = itemById(rid); if (!r) return;
+    if (!confirm('Remove "' + nameOf(r) + '" from the inventory?\n\n'
+        + 'It moves to the Removed tab, and the next sync deletes its row from '
+        + 'My Lab.xlsx. You can restore it from there.')) return;
+    r.archived = new Date().toISOString().slice(0, 19);
+    r.archived_by = 'removed on the website';
+    (DATA.archive = DATA.archive || []).push(r);
+    DATA.records = DATA.records.filter(x => x.rid !== rid);
+    markDirty(rid);
+    render();
+    toast('Removed — Save to apply it to the spreadsheet');
+}
+
+/* New records get a W-series id so they can never collide with the R-series
+   the cluster assigns to rows typed straight into Excel. */
+function nextWebRid() {
+    let n = 1;
+    const used = new Set((DATA.records || []).concat(DATA.archive || []).map(r => r.rid));
+    while (used.has('W' + String(n).padStart(4, '0'))) n++;
+    return 'W' + String(n).padStart(4, '0');
+}
+
+function addItem(slot, well) {
+    const order = DATA.sheet_order || Object.keys(DATA.sheets || {});
+    const menu = order.map((s, i) => (i + 1) + '. ' + (DATA.sheets[s] || {}).cat).join('\n');
+    const pick = prompt('What kind of reagent?\n\n' + menu + '\n\nNumber:', '1');
+    if (pick == null) return;
+    const sheet = order[parseInt(pick, 10) - 1];
+    if (!sheet) { toast('No such category'); return; }
+    const spec = DATA.sheets[sheet];
+
+    const rec = { rid: nextWebRid(), kind: 'item', sheet: sheet, cat: spec.cat,
+                  section: '', fields: {}, locs: [] };
+    (spec.headers || []).forEach(h => { rec.fields[h] = ''; });
+    if (spec.date) rec.fields[spec.date] = new Date().toISOString().slice(0, 10);
+
+    const role = Object.keys(spec.loc_cols || {})[0];
+    if (role && slot) {
+        const m = /^(\d+)([A-D])([1-4])$/.exec(slot);
+        if (m) {
+            const l = { role: role, kind: 'freezer', fz: freezer().id, pfx: '-80Freezer',
+                        rack: +m[1], col: m[2], brow: +m[3], well: well || null, note: '' };
+            l.raw = rawOf(l);
+            rec.locs.push(l);
+        }
+    }
+
+    DATA.records.push(rec);
+    markDirty(rec.rid);
+    VIEW = 'inv'; F.q = ''; F.cats = new Set([spec.cat]);
+    render();
+    setTimeout(() => {
+        const el = document.getElementById('it-' + rec.rid);
+        if (el) { toggleItem(rec.rid); el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  const inp = el.querySelector('input'); if (inp) inp.focus(); }
+    }, 60);
+    toast('Fill it in, then Save');
+}
+
+/* ---- export -------------------------------------------------------------- */
+
+function exportCsv() {
+    const rows = [['RID', 'Category', 'Name', 'Location', 'Position', 'Sheet', 'Date', 'Details']];
+    items().forEach(r => {
+        const locs = (r.locs || []);
+        if (!locs.length) rows.push([r.rid, r.cat, nameOf(r), '', '', r.sheet, r.date || '', detailOf(r)]);
+        locs.forEach(l => rows.push([
+            r.rid, r.cat, nameOf(r),
+            l.kind === 'freezer' ? '-80C ' + slotLabel(l) : (l.place || l.raw || ''),
+            l.kind === 'freezer' ? (l.well || '') : '',
+            r.sheet, r.date || '', detailOf(r)]));
+    });
+    const csv = rows.map(r => r.map(c =>
+        '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"').join(',')).join('\r\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = 'yeh-lab-reagents-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+/* ===== boot =============================================================== */
+
+window.addEventListener('beforeunload', e => {
+    if (DIRTY.size) { e.preventDefault(); e.returnValue = ''; }
+});
+
+document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); save(); }
+});
+
+(async function boot() {
+    // Show local work immediately if there is unsaved work, so a reload during
+    // a stocktake never looks like it lost everything.
+    try {
+        const l = localStorage.getItem(LOCAL_KEY);
+        const d = JSON.parse(localStorage.getItem(DIRTY_KEY) || '[]');
+        if (l && d.length) { DATA = JSON.parse(l); DIRTY = new Set(d); render(); }
+    } catch (e) { /* fall through to the server copy */ }
+
+    try {
+        const remote = await ghGet();
+        if (!DIRTY.size) { DATA = remote; saveLocal(); render(); }
+        else { toast(DIRTY.size + ' unsaved change(s) kept — Save to merge with the server'); }
+    } catch (e) {
+        if (!DATA) {
+            document.getElementById('body').innerHTML =
+                '<div class="err"><strong>Could not load the reagent inventory.</strong><br>'
+                + esc(e.message) + '<br><br>This page reads <code>' + DATA_FILE
+                + '</code> from the private <code>' + GH_REPO + '</code> repo. '
+                + 'Reload to re-enter a token.</div>';
+        }
+    }
+})();
+</script>
+</body>
+</html>
