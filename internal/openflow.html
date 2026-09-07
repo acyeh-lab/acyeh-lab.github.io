@@ -1890,7 +1890,11 @@ function loadAbCatalogue(file){
         if(!ln||ln.indexOf(',yes,')<0)continue;      // cheap prefilter on is_fluorescent
         const c=splitCSV(ln);
         if(c[iL]!=='yes'||!c[iF])continue;
-        const k=normFluorKey(c[iF]); if(!k)continue;
+        // Key on the CANONICAL name, not the raw one: the catalogue still
+        // splits some dyes in two ('RPE' vs 'PE'), and the vocabulary merged
+        // them.  Keying on the raw value would hide those reagents.
+        const g=lookupFluor(c[iF]); if(!g||!g.name)continue;
+        const k=normFluorKey(g.name);
         let a=byFluor.get(k); if(!a){a=[];byFluor.set(k,a);}
         a.push([unent(c[iT]||''),c[iC]||'',c[iV]||'',c[iN]||'',c[iS]||'']); n++;
       }
