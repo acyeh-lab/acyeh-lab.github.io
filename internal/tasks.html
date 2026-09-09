@@ -288,6 +288,11 @@
         }
         .calendar-day:nth-child(7n) { border-right: none; }
         .calendar-grid > .calendar-day:nth-last-child(-n+7) { border-bottom: none; }
+        .calendar-day.drag-over { background: #e3f0fb; outline: 2px solid #2f6f9f; outline-offset: -2px; }
+        .calendar-day.other-month.drag-over { background: #dbe9f6; }
+        .calendar-event { cursor: grab; }
+        .calendar-event:active { cursor: grabbing; }
+        .calendar-event.dragging { opacity: .45; }
         .calendar-day.other-month { color: #ccc; background: #fafafa; }
         .calendar-day.other-month .calendar-day-num { color: #ccc; }
         .calendar-day-num {
@@ -747,6 +752,82 @@
         localStorage.setItem('calendar-collapsed', sec.classList.contains('collapsed') ? '1' : '0');
     }
 
+    /* ===== Calendar drag-to-reschedule ===== */
+    let calDragTaskId = null;
+    let calDidDrag = false;
+
+    function calFindTask(id) {
+        for (const [pn, p] of Object.entries(data.projects)) {
+            const t = p.tasks.find(x => x.id === id);
+            if (t) return { task: t, project: pn };
+        }
+        return null;
+    }
+
+    function calDragStart(e, taskId) {
+        calDragTaskId = taskId;
+        calDidDrag = true;
+        e.dataTransfer.effectAllowed = 'move';
+        // Firefox requires data to be set for the drag to start at all
+        try { e.dataTransfer.setData('text/plain', String(taskId)); } catch(err) {}
+        e.currentTarget.classList.add('dragging');
+    }
+
+    function calDragEnd(e) {
+        e.currentTarget.classList.remove('dragging');
+        document.querySelectorAll('.calendar-day.drag-over')
+                .forEach(d => d.classList.remove('drag-over'));
+        // let the click that follows a drag be swallowed, then re-arm
+        setTimeout(() => { calDidDrag = false; }, 50);
+    }
+
+    /* a click fires after a drag in some browsers - do not open the task then */
+    function calMaybeFocus(taskId) {
+        if (calDidDrag) return;
+        focusTask(taskId);
+    }
+
+    function calDragOver(e) {
+        if (calDragTaskId === null) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        e.currentTarget.classList.add('drag-over');
+    }
+
+    function calDragLeave(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
+
+    function calDrop(e) {
+        e.preventDefault();
+        const cell = e.currentTarget;
+        cell.classList.remove('drag-over');
+        const newDate = cell.getAttribute('data-date');
+        const isOtherMonth = cell.getAttribute('data-other') === '1';
+        const id = calDragTaskId;
+        calDragTaskId = null;
+        if (id === null || !newDate) return;
+
+        const found = calFindTask(id);
+        if (!found) { toast('Task not found'); return; }
+        const oldDate = found.task.due || null;
+        if (oldDate === newDate) return;
+
+        snapshot();
+        found.task.due = newDate;
+        saveLocal();
+
+        /* Dragging onto a greyed-out day from an adjacent month re-centres the
+           calendar on that month, so the task stays visible where it was dropped. */
+        if (isOtherMonth) {
+            const d = new Date(newDate + 'T00:00:00');
+            calendarMonth = new Date(d.getFullYear(), d.getMonth(), 1);
+        }
+
+        render();
+        toast('Moved to ' + newDate + (isOtherMonth ? ' \u2014 showing that month' : ''));
+    }
+
     function renderCalendar() {
         const titleEl = document.getElementById('calendar-title');
         const gridEl = document.getElementById('calendar-grid');
@@ -795,7 +876,11 @@
             const isToday = cellStr === todayStr;
             const events = eventsByDate[cellStr] || [];
 
-            html += '<div class="calendar-day' + (otherMonth ? ' other-month' : '') + (isToday ? ' today' : '') + '">';
+            html += '<div class="calendar-day' + (otherMonth ? ' other-month' : '') + (isToday ? ' today' : '') + '"'
+                 + ' data-date="' + cellStr + '"'
+                 + ' data-other="' + (otherMonth ? '1' : '0') + '"'
+                 + ' ondragover="calDragOver(event)" ondragleave="calDragLeave(event)"'
+                 + ' ondrop="calDrop(event)">';
             html += '<div><span class="calendar-day-num">' + cellDay + '</span></div>';
             if (events.length > 0) {
                 html += '<div class="calendar-events">';
@@ -806,9 +891,12 @@
                     const desc = esc(ev.task.description);
                     const projEsc = esc(ev.project);
                     html += '<div class="calendar-event' + (overdue ? ' overdue' : '') + '" '
+                         + 'draggable="true" data-task-id="' + ev.task.id + '" '
+                         + 'ondragstart="calDragStart(event,' + ev.task.id + ')" '
+                         + 'ondragend="calDragEnd(event)" '
                          + 'style="background:' + color + ';" '
-                         + 'title="' + projEsc + ': ' + desc.replace(/"/g, '&quot;') + '" '
-                         + 'onclick="focusTask(' + ev.task.id + ')">'
+                         + 'title="' + projEsc + ': ' + desc.replace(/"/g, '&quot;') + ' — drag to reschedule" '
+                         + 'onclick="calMaybeFocus(' + ev.task.id + ')">'
                          + desc + '</div>';
                 }
                 if (events.length > 2) {
