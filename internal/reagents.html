@@ -114,6 +114,27 @@
         .slot .ct { font-size: .72em; color: #0056b3; font-weight: 500; }
         .slot.empty .sl { color: #aab4bf; font-weight: 500; }
 
+        /* plasmid flags */
+        .plasmidbox { border: 1px solid #dde3ea; border-left: 4px solid #cbd6e2;
+            border-radius: 6px; background: #fafbfd; padding: 9px 12px; margin: 10px 0 4px; }
+        .plasmidbox.ok  { border-left-color: #1a7f37; background: #f2f9f4; }
+        .plasmidbox.bad { border-left-color: #c1121f; background: #fdf4f4; }
+        .pchk { display: flex; align-items: center; gap: 7px; font-size: .85em;
+            color: #234; cursor: pointer; margin-bottom: 3px; }
+        .pchk input { width: 15px; height: 15px; cursor: pointer; margin: 0; }
+        .pstate { font-size: .82em; font-weight: 700; letter-spacing: .02em;
+            padding: 1px 7px; border-radius: 9px; margin-left: 2px; }
+        .plasmidbox.ok  .pstate { background: #1a7f37; color: #fff; }
+        .plasmidbox.bad .pstate { background: #c1121f; color: #fff; }
+        .seqbox { width: 100%; min-height: 96px; font-family: ui-monospace, Menlo,
+            Consolas, monospace; font-size: .74em; line-height: 1.45; resize: vertical;
+            border: 1px solid #dde3ea; border-radius: 5px; padding: 7px 8px;
+            background: #fff; color: #234; word-break: break-all; }
+        .plegend { display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+            font-size: .76em; color: #667; margin: 2px 0 8px; }
+        .plegend i { display: inline-block; width: 11px; height: 11px; border-radius: 3px;
+            margin-right: 5px; vertical-align: -1px; }
+
         /* owner tag — who a box belongs to */
         .own { display: inline-block; font-size: .66em; font-weight: 700; letter-spacing: .02em;
             padding: 1px 6px; border-radius: 9px; background: #6a5acd; color: #fff;
@@ -318,6 +339,51 @@ const CAT_COLOR = {
     'Data & Sequencing':                 '#5b6673',
 };
 const catColor = c => CAT_COLOR[c] || '#8794a1';
+
+/* ===== Plasmid flags ======================================================
+   Three page-only fields on a record, set in its editor:
+
+     is_plasmid    this tube holds a plasmid
+     seq_verified  its sequence has been checked
+     sequence      the sequence itself, pasted in
+
+   Page-only for the same reason box labels are: no [Storage] sheet has a
+   column for them, and inventing one in someone's workbook to carry a
+   website flag is not a trade worth making. The cluster sync copies unknown
+   record keys through untouched, so they survive a round trip.
+
+   The sequence is held on the record rather than in a separate store because
+   it IS a property of that tube — two minipreps of the same construct can
+   disagree, and that disagreement is exactly what you want to see.
+
+   COLOUR RULE (Albert, 2026-09-11): in the 9x9 box map a plasmid whose
+   sequence is verified is GREEN, and a plasmid that is not verified is RED.
+   Anything not marked as a plasmid keeps its category colour — the map
+   would be useless if every antibody and tissue block turned red for failing
+   to be a plasmid. One line to flip if that is not what was meant: see
+   wellColor().
+   ======================================================================== */
+
+const PLASMID_OK   = '#1a7f37';   // verified — green
+const PLASMID_BAD  = '#c1121f';   // plasmid, NOT verified — red
+
+const isPlasmid  = r => !!(r && r.is_plasmid);
+const isVerified = r => !!(r && r.is_plasmid && r.seq_verified);
+
+/* What colour a filled well shows. Plasmid state wins over category so the
+   unverified ones stand out; everything else is unchanged. */
+function wellColor(rec) {
+    if (!rec) return '';
+    if (isPlasmid(rec)) return isVerified(rec) ? PLASMID_OK : PLASMID_BAD;
+    return catColor(rec.cat);
+}
+
+/* Counts for the box panel, so "3 unverified" is visible without hunting. */
+function plasmidTally(list) {
+    let p = 0, v = 0;
+    (list || []).forEach(r => { if (isPlasmid(r)) { p++; if (isVerified(r)) v++; } });
+    return { plasmids: p, verified: v, unverified: p - v };
+}
 
 function toast(msg, ms) {
     const t = document.getElementById('toast');
@@ -905,8 +971,12 @@ function renderBoxPanel() {
         for (let c = 1; c <= 9; c++) {
             const w = row + c;
             const occ = atWell[w] || [];
-            const col = occ.length ? catColor(occ[0].cat) : '';
-            const tip = occ.length ? occ.map(r => nameOf(r)).join(' | ') : w + ' — empty';
+            const col = occ.length ? wellColor(occ[0]) : '';
+            const tip = occ.length
+                ? occ.map(r => nameOf(r) + (isPlasmid(r)
+                      ? (isVerified(r) ? '  [plasmid, sequence verified]'
+                                       : '  [plasmid, NOT sequence verified]') : '')).join(' | ')
+                : w + ' — empty';
             g += '<button class="well' + (occ.length ? ' f' : '')
                + (SEL.well === w ? ' on' : '') + (SEL.placing ? ' tgt' : '') + '"'
                + (col ? ' style="background:' + col + '"' : '')
@@ -919,8 +989,18 @@ function renderBoxPanel() {
     // Existing tags offered as a datalist so a second box of Adonai's is tagged
     // "Adonai" and not "adonai" — a typo would silently start a second tab.
     const tags = ownerTags();
+    const tal = plasmidTally(list);
     let side = '<div class="boxside">'
         + '<h5>Box ' + SEL.slot + '</h5>'
+        + (tal.plasmids
+            ? '<div class="plegend">'
+              + '<span><i style="background:' + PLASMID_OK + '"></i>'
+              + tal.verified + ' verified</span>'
+              + '<span><i style="background:' + PLASMID_BAD + '"></i>'
+              + '<strong>' + tal.unverified + ' not verified</strong></span>'
+              + '<span style="color:#8794a1">of ' + tal.plasmids + ' plasmid'
+              + (tal.plasmids === 1 ? '' : 's') + ' in this box</span></div>'
+            : '')
         + '<div class="fld" style="margin-bottom:8px"><label>Belongs to (tag)</label>'
         + '<input list="ownertags" value="' + esc(meta.owner || '') + '"'
         + ' placeholder="e.g. Adonai — leave blank for shared lab stock"'
@@ -1213,12 +1293,51 @@ function editor(r) {
         h += locEditor(r, role, col);
     });
 
+    h += plasmidBlock(r);
+
     h += '<div class="rowacts">'
        + '<span style="flex:1;font-size:.72em;color:#b6c4d4;align-self:center">'
        + esc(r.sheet) + ' &middot; ' + esc(r.rid) + '</span>'
        + '<button class="btn danger sm" onclick="removeItem(\'' + r.rid + '\')">Remove</button>'
        + '</div>';
     return h;
+}
+
+/* The plasmid block. The verified checkbox and the sequence box only exist
+   when "is a plasmid" is ticked — an unticked record should not carry a
+   half-answered question, and un-ticking clears both rather than leaving a
+   stale "verified" on something no longer called a plasmid. */
+function plasmidBlock(r) {
+    const p = isPlasmid(r), v = isVerified(r);
+    const seq = (r.sequence || '');
+    // Count bases, not characters. A FASTA header is letters too, so ">pMAL-c2x
+    // test" was adding 10 to the count of a 33-base sequence. Drop header lines
+    // first, then strip everything that is not a letter.
+    const bp = seq.split(/\r?\n/).filter(l => !/^\s*[>;]/.test(l))
+                  .join('').replace(/[^A-Za-z]/g, '').length;
+
+    let h = '<div class="plasmidbox' + (p ? (v ? ' ok' : ' bad') : '') + '">'
+        + '<label class="pchk"><input type="checkbox"' + (p ? ' checked' : '')
+        + ' onchange="setPlasmid(\'' + r.rid + '\',this.checked)"> '
+        + '<strong>This is a plasmid</strong></label>';
+
+    if (p) {
+        h += '<label class="pchk"><input type="checkbox"' + (v ? ' checked' : '')
+           + ' onchange="setVerified(\'' + r.rid + '\',this.checked)"> '
+           + 'Sequence verified'
+           + '<span class="pstate">' + (v ? 'verified' : 'NOT verified') + '</span>'
+           + '</label>'
+           + '<div class="fld" style="margin-top:6px"><label>Sequence '
+           + (bp ? '<span style="color:#8794a1;font-weight:400">&mdash; '
+                 + bp.toLocaleString() + ' bases on file</span>' : '')
+           + '</label>'
+           + '<textarea class="seqbox" spellcheck="false" placeholder="Paste the sequence here (FASTA or plain). Saved with the record."'
+           + ' onchange="setSequence(\'' + r.rid + '\',this.value)">' + esc(seq) + '</textarea>'
+           + '<div style="font-size:.7em;color:#b6c4d4;margin-top:3px">'
+           + 'Page-only &mdash; there is no spreadsheet column for this, so it lives '
+           + 'with the record and survives the sync.</div></div>';
+    }
+    return h + '</div>';
 }
 
 function locEditor(r, role, col) {
@@ -1255,6 +1374,39 @@ function locEditor(r, role, col) {
 }
 
 /* ---- mutations ----------------------------------------------------------- */
+
+/* Un-ticking "is a plasmid" clears the answers that only make sense for one.
+   Keeping a stale seq_verified on a record no longer called a plasmid would
+   turn green again the moment someone re-ticked the box, asserting a
+   verification nobody performed. The sequence is kept — it is data someone
+   typed, and losing it to a mis-click is worse than an orphan field. */
+function setPlasmid(rid, on) {
+    const r = itemById(rid); if (!r) return;
+    if (on) r.is_plasmid = true;
+    else { delete r.is_plasmid; delete r.seq_verified; }
+    markDirty(rid);
+    refreshItem(rid);
+    if (VIEW === 'map' || VIEW.startsWith('own:')) renderBoxPanel();
+}
+
+function setVerified(rid, on) {
+    const r = itemById(rid); if (!r) return;
+    if (on) r.seq_verified = true; else delete r.seq_verified;
+    markDirty(rid);
+    refreshItem(rid);
+    if (VIEW === 'map' || VIEW.startsWith('own:')) renderBoxPanel();
+}
+
+/* Stored as typed, including FASTA headers and line breaks. Normalising it
+   here would quietly discard whatever the person pasted, and this field exists
+   precisely so the record holds what they had in front of them. */
+function setSequence(rid, val) {
+    const r = itemById(rid); if (!r) return;
+    const v = (val || '').trim();
+    if (v) r.sequence = v; else delete r.sequence;
+    markDirty(rid);
+    refreshItem(rid);
+}
 
 function setField(rid, header, val) {
     const r = itemById(rid); if (!r) return;
