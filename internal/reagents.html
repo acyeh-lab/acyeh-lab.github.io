@@ -114,6 +114,26 @@
         .slot .ct { font-size: .72em; color: #0056b3; font-weight: 500; }
         .slot.empty .sl { color: #aab4bf; font-weight: 500; }
 
+        /* owner tag — who a box belongs to */
+        .own { display: inline-block; font-size: .66em; font-weight: 700; letter-spacing: .02em;
+            padding: 1px 6px; border-radius: 9px; background: #6a5acd; color: #fff;
+            vertical-align: middle; }
+        .slot .own { margin-top: 2px; max-width: 100%; overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap; }
+        .ownhead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+            margin: 2px 0 12px; }
+        .ownhead h3 { margin: 0; font-size: 1.05em; color: #0056b3; }
+        .ownbox { border: 1px solid #dde3ea; border-radius: 8px; background: #fff;
+            padding: 10px 12px; cursor: pointer; min-width: 150px;
+            transition: border-color .15s, box-shadow .15s; }
+        .ownbox:hover { border-color: #0056b3; }
+        .ownbox.on { border-color: #0056b3; box-shadow: 0 0 0 2px rgba(0,86,179,.18);
+            background: #f4f8fd; }
+        .ownbox .ad { font-weight: 700; color: #234; font-size: .95em; }
+        .ownbox .lb { font-size: .76em; color: #667; line-height: 1.3; }
+        .ownbox .ct { font-size: .74em; color: #0056b3; font-weight: 500; }
+        .ownboxes { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+
         /* box detail: 9x9 */
         .boxpanel { border: 1px solid #cbd6e2; border-radius: 8px; background: #fff;
             padding: 14px 16px; margin: 12px 0; }
@@ -222,6 +242,10 @@
           Click a rack to open its 4&times;4 grid of box slots, then a slot to open that box as a
           9&times;9 map of positions <code>A1</code>&ndash;<code>I9</code>. Click a position to see,
           edit, move or remove what is in it.</p>
+          <p><strong>A box can belong to someone.</strong> Open a box on the Freezer map and put a
+          name in <em>Belongs to</em> &mdash; that box then gets its own tab at the top of this page
+          showing just their boxes, so a student can go straight to their own material and edit it
+          without working through the whole freezer. Untagged boxes are shared lab stock.</p>
           <p><strong>This page and <code>My Lab.xlsx</code> are two views of the same data.</strong>
           Edit either one. A job on the cluster reconciles them every 15 minutes, so a
           box you fill in here appears in the spreadsheet's <code>[Storage]</code> tabs, and a
@@ -542,6 +566,56 @@ function slotsInRack(fz, n) {
 }
 function boxMeta(key) { return (DATA.boxes || {})[key] || {}; }
 
+/* ===== Box owners =========================================================
+   A box can be tagged with the person it belongs to — Adonai's boxes, say —
+   and every tag in use becomes its own tab showing just those boxes. The tag
+   lives in DATA.boxes[key].owner alongside the label and notes, so like them
+   it is page-only: the spreadsheet has no column for it, and the cluster sync
+   deep-copies `boxes` through untouched.
+
+   Deliberately a free-text tag on the BOX, not a lookup against the Students
+   sheet's `Student` column. A box is a physical shelf address that one person
+   keeps, and it holds whatever they put in it — including rows filed on other
+   sheets, which have no Student column at all (8B3 has a Samples row in it).
+   Deriving ownership from the contents would make the tab flicker as items
+   move; tagging the box states the fact directly.
+   ======================================================================== */
+
+function ownerOf(key) { return (boxMeta(key).owner || '').trim(); }
+
+/* Every tag currently in use, with how many boxes carry it. Sorted by name so
+   the tabs do not reshuffle when a box is added. */
+function ownerTags() {
+    const t = {};
+    Object.keys(DATA.boxes || {}).forEach(k => {
+        const o = ownerOf(k);
+        if (o) t[o] = (t[o] || 0) + 1;
+    });
+    return Object.keys(t).sort((a, b) => a.localeCompare(b)).map(o => ({ name: o, n: t[o] }));
+}
+
+/* The box addresses one person keeps, in shelf order. A tagged box shows up
+   here whether or not anything is in it yet — an empty box someone has been
+   given is exactly the thing they need to find. */
+function boxesOwnedBy(tag) {
+    const fz = freezer();
+    return Object.keys(DATA.boxes || {})
+        .filter(k => ownerOf(k) === tag && (!fz || k.split('|')[0] === fz.id))
+        .map(k => {
+            const lab = k.split('|')[1] || '';
+            const m = /^(\d+)([A-D])([1-4])$/.exec(lab);
+            return { key: k, lab: lab, rack: m ? +m[1] : 0, col: m ? m[2] : '',
+                     brow: m ? +m[3] : 0, n: locsInSlot(k) };
+        })
+        .sort((a, b) => a.rack - b.rack || a.col.localeCompare(b.col) || a.brow - b.brow);
+}
+
+function itemsOwnedBy(tag) {
+    const keys = new Set(boxesOwnedBy(tag).map(b => b.key));
+    return items().filter(r => (r.locs || []).some(
+        l => l.kind === 'freezer' && keys.has(slotKey(l))));
+}
+
 /* ===== Rendering ========================================================== */
 
 function render() {
@@ -554,24 +628,38 @@ function render() {
                                    || !(r.locs || []).length).length,
         arch: (DATA.archive || []).length,
     };
+    // One tab per owner tag in use, between the shared views and Removed, so a
+    // student lands on their own boxes without hunting through the whole map.
+    const tags = ownerTags();
     b.innerHTML =
         '<div id="syncbar"></div>'
         + '<div class="views">'
         + tabBtn('map',   'Freezer map', counts.map)
         + tabBtn('inv',   'Inventory',   counts.inv)
         + tabBtn('other', 'Other locations', counts.other)
+        + tags.map(t => tabBtn('own:' + t.name, t.name, t.n)).join('')
         + tabBtn('arch',  'Removed',     counts.arch)
         + '</div><div id="view"></div>';
     renderSyncBar();
     renderView();
 }
 
+/* An owner tab's id carries a person's name, which is free text, so it goes
+   through the attribute escaper — a name with an apostrophe in it would
+   otherwise end the onclick string early. */
+const jsq = s => esc(String(s)).replace(/'/g, '&#39;');
+
 function tabBtn(id, label, n) {
-    return '<button class="' + (VIEW === id ? 'on' : '') + '" onclick="setView(\'' + id + '\')">'
+    return '<button class="' + (VIEW === id ? 'on' : '') + '" onclick="setView(\'' + jsq(id) + '\')">'
          + esc(label) + '<span class="n">' + n + '</span></button>';
 }
 
-function setView(v) { VIEW = v; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function setView(v) {
+    VIEW = v;
+    SEL = { rack: null, slot: null, well: null, placing: null };
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 function renderSyncBar() {
     const el = document.getElementById('syncbar');
@@ -599,6 +687,56 @@ function renderView() {
     if (VIEW === 'inv')   return renderInventory(v);
     if (VIEW === 'other') return renderOther(v);
     if (VIEW === 'arch')  return renderArchive(v);
+    if (VIEW.startsWith('own:')) return renderOwner(v, VIEW.slice(4));
+    // A tag that was renamed or cleared while its tab was open.
+    VIEW = 'map';
+    return renderMap(v);
+}
+
+/* ---- one person's boxes --------------------------------------------------
+   The same box editor as the map, reached without the rack detour: pick a box
+   from the strip at the top and the 9x9 opens below it, with every action the
+   map offers (place, add here, edit, remove).
+   ------------------------------------------------------------------------ */
+
+function renderOwner(v, tag) {
+    const boxes = boxesOwnedBy(tag);
+    const mine = itemsOwnedBy(tag);
+
+    let h = '<div class="ownhead"><h3>' + esc(tag) + '&rsquo;s boxes</h3>'
+          + '<span style="font-size:.82em;color:#8794a1">'
+          + boxes.length + ' box' + (boxes.length === 1 ? '' : 'es') + ' &middot; '
+          + mine.length + ' reagent' + (mine.length === 1 ? '' : 's')
+          + ' &middot; tagged on the Freezer map, in the box panel</span></div>';
+
+    if (!boxes.length) {
+        v.innerHTML = h + '<div class="empty-msg">No box carries this tag any more.</div>';
+        return;
+    }
+
+    h += '<div class="ownboxes">' + boxes.map(b =>
+            '<div class="ownbox' + (SEL.slot === b.lab ? ' on' : '') + '"'
+          + ' onclick="openOwnerBox(\'' + b.lab + '\')">'
+          + '<div class="ad">' + esc(b.lab) + '</div>'
+          + (boxMeta(b.key).label ? '<div class="lb">' + esc(boxMeta(b.key).label) + '</div>' : '')
+          + '<div class="ct">' + (b.n ? b.n + ' item' + (b.n === 1 ? '' : 's') : 'empty') + '</div>'
+          + '</div>').join('') + '</div>';
+
+    h += '<div id="boxpanel"></div>';
+    h += '<h4 style="margin:18px 0 8px;font-size:.95em;color:#0056b3">'
+       + 'Everything in ' + esc(tag) + '&rsquo;s boxes</h4>'
+       + (mine.length ? mine.map(r => itemCard(r)).join('')
+                      : '<div class="empty-msg">These boxes are empty.</div>');
+    v.innerHTML = h;
+    if (SEL.slot) renderBoxPanel();
+}
+
+function openOwnerBox(lab) {
+    const m = /^(\d+)([A-D])([1-4])$/.exec(lab);
+    SEL.rack = m ? +m[1] : null;
+    SEL.slot = SEL.slot === lab ? null : lab;
+    SEL.well = null; SEL.placing = null;
+    renderView();
 }
 
 /* ---- freezer map --------------------------------------------------------- */
@@ -711,6 +849,7 @@ function renderRackPanel() {
             h += '<div class="slot ' + (n ? 'full' : 'empty')
                + (SEL.slot === lab ? ' on' : '') + '" onclick="openSlot(\'' + lab + '\')">'
                + '<div class="sl">' + lab + '</div>'
+               + (meta.owner ? '<div><span class="own">' + esc(meta.owner) + '</span></div>' : '')
                + (meta.label ? '<div class="lb">' + esc(meta.label) + '</div>' : '')
                + (n ? '<div class="ct">' + n + ' item' + (n === 1 ? '' : 's')
                       + '</div>' : '')
@@ -763,8 +902,20 @@ function renderBoxPanel() {
     });
     g += '</div>';
 
+    // Existing tags offered as a datalist so a second box of Adonai's is tagged
+    // "Adonai" and not "adonai" — a typo would silently start a second tab.
+    const tags = ownerTags();
     let side = '<div class="boxside">'
         + '<h5>Box ' + SEL.slot + '</h5>'
+        + '<div class="fld" style="margin-bottom:8px"><label>Belongs to (tag)</label>'
+        + '<input list="ownertags" value="' + esc(meta.owner || '') + '"'
+        + ' placeholder="e.g. Adonai — leave blank for shared lab stock"'
+        + ' onchange="setBoxOwner(\'' + key + '\',this.value)">'
+        + '<datalist id="ownertags">'
+        + tags.map(t => '<option value="' + esc(t.name) + '">').join('')
+        + '</datalist>'
+        + '<div style="font-size:.7em;color:#b6c4d4;margin-top:3px">'
+        + 'Tagged boxes get their own tab at the top of this page.</div></div>'
         + '<div class="fld" style="margin-bottom:8px"><label>Box label</label>'
         + '<input value="' + esc(meta.label || '') + '" placeholder="e.g. Markey lysates"'
         + ' onchange="setBoxMeta(\'' + key + '\',\'label\',this.value)"></div>'
@@ -833,6 +984,25 @@ function setBoxMeta(key, field, val) {
     // saved with the payload rather than marked as a record edit.
     saveLocal(); renderSyncBar();
     DIRTY.add('__boxes__'); renderSyncBar();
+}
+
+/* Tagging a box adds, renames or removes a tab, so unlike a label or a note it
+   has to redraw the whole page rather than just the panel. Case and spacing are
+   normalised against the tags already in use so "adonai" joins Adonai's tab
+   instead of opening a second one next to it. */
+function setBoxOwner(key, val) {
+    let v = (val || '').trim();
+    const hit = ownerTags().find(t => t.name.toLowerCase() === v.toLowerCase());
+    if (hit) v = hit.name;
+    DATA.boxes = DATA.boxes || {};
+    DATA.boxes[key] = DATA.boxes[key] || {};
+    if (v) DATA.boxes[key].owner = v;
+    else delete DATA.boxes[key].owner;
+    DIRTY.add('__boxes__');
+    saveLocal();
+    render();
+    toast(v ? 'Box ' + key.split('|')[1] + ' tagged ' + v + ' — Save to keep it'
+            : 'Tag cleared — Save to keep it');
 }
 
 /* Shelf = ceil(rack / racks_per_shelf), counting from the top: with 5 to a
