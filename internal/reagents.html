@@ -339,9 +339,12 @@ function setupToken() {
     const msg = cur
         ? 'GitHub token is set. Enter a new one to replace, or leave blank to keep current:'
         : 'To load and save the reagent inventory, enter a GitHub Personal Access Token.\n\n'
-          + 'Create one at: github.com/settings/tokens\n'
-          + 'Use a FINE-GRAINED token with Repository access = acyeh-lab/lab-internal\n'
-          + 'and Permissions > Contents = Read and write\n\nPaste token:';
+          + 'Create one at: github.com/settings/tokens\n\n'
+          + 'If you OWN acyeh-lab: a FINE-GRAINED token, Repository access =\n'
+          + 'acyeh-lab/lab-reagents, Permissions > Contents = Read and write.\n\n'
+          + 'If you are a COLLABORATOR: a CLASSIC token with the "repo" scope.\n'
+          + 'Fine-grained tokens do not work for collaborators on a personal\n'
+          + 'account\u2019s repository \u2014 see [Prot 701] on the Methods tab.\n\nPaste token:';
     const t = prompt(msg);
     if (t && t.trim()) { localStorage.setItem(TOKEN_KEY, t.trim()); toast('Token saved'); }
 }
