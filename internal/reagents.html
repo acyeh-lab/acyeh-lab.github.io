@@ -364,18 +364,27 @@ const catColor = c => CAT_COLOR[c] || '#8794a1';
    wellColor().
    ======================================================================== */
 
-const PLASMID_OK   = '#1a7f37';   // verified — green
+const PLASMID_OK   = '#1a7f37';   // plasmid, sequence verified — green
 const PLASMID_BAD  = '#c1121f';   // plasmid, NOT verified — red
+const NOT_PLASMID  = '#2b579a';   // everything else — one blue
 
 const isPlasmid  = r => !!(r && r.is_plasmid);
 const isVerified = r => !!(r && r.is_plasmid && r.seq_verified);
 
-/* What colour a filled well shows. Plasmid state wins over category so the
-   unverified ones stand out; everything else is unchanged. */
+/* What colour a filled well shows. THREE states, and only three (Albert,
+   2026-09-11): green = plasmid, sequence verified; red = plasmid, not
+   verified; blue = not a plasmid.
+
+   Non-plasmids deliberately do NOT keep their category colour here. The
+   category palette already contains a red (#b7472a, Antibodies) and a green
+   (#217346, Cells & Bacteria), so a category-coloured well was
+   indistinguishable from a plasmid-status one — an antibody would have read
+   as an unverified plasmid. One flat blue removes the ambiguity, and category
+   is still carried by the chip and the left border on every item card. */
 function wellColor(rec) {
     if (!rec) return '';
-    if (isPlasmid(rec)) return isVerified(rec) ? PLASMID_OK : PLASMID_BAD;
-    return catColor(rec.cat);
+    if (!isPlasmid(rec)) return NOT_PLASMID;
+    return isVerified(rec) ? PLASMID_OK : PLASMID_BAD;
 }
 
 /* Counts for the box panel, so "3 unverified" is visible without hunting. */
@@ -992,15 +1001,15 @@ function renderBoxPanel() {
     const tal = plasmidTally(list);
     let side = '<div class="boxside">'
         + '<h5>Box ' + SEL.slot + '</h5>'
-        + (tal.plasmids
-            ? '<div class="plegend">'
-              + '<span><i style="background:' + PLASMID_OK + '"></i>'
-              + tal.verified + ' verified</span>'
-              + '<span><i style="background:' + PLASMID_BAD + '"></i>'
-              + '<strong>' + tal.unverified + ' not verified</strong></span>'
-              + '<span style="color:#8794a1">of ' + tal.plasmids + ' plasmid'
-              + (tal.plasmids === 1 ? '' : 's') + ' in this box</span></div>'
-            : '')
+        + '<div class="plegend">'
+          + '<span><i style="background:' + PLASMID_OK + '"></i>'
+          + tal.verified + ' verified</span>'
+          + '<span><i style="background:' + PLASMID_BAD + '"></i>'
+          + (tal.unverified ? '<strong>' + tal.unverified + ' not verified</strong>'
+                            : '0 not verified') + '</span>'
+          + '<span><i style="background:' + NOT_PLASMID + '"></i>'
+          + (list.length - tal.plasmids) + ' not a plasmid</span>'
+          + '</div>'
         + '<div class="fld" style="margin-bottom:8px"><label>Belongs to (tag)</label>'
         + '<input list="ownertags" value="' + esc(meta.owner || '') + '"'
         + ' placeholder="e.g. Adonai — leave blank for shared lab stock"'
@@ -1276,7 +1285,12 @@ function editor(r) {
     const headers = spec.headers || Object.keys(r.fields || {});
     const locCols = new Set(Object.values(spec.loc_cols || {}));
 
-    let h = '<div class="fgrid">';
+    // First thing in the card, above the spreadsheet fields (Albert, 2026-09-11:
+    // "move it to the top so we see it first"). It is the question asked of
+    // every record, and it drives the colour of the box map.
+    let h = plasmidBlock(r);
+
+    h += '<div class="fgrid">';
     headers.forEach(hd => {
         if (locCols.has(hd)) return;                  // edited in the location block below
         const val = (r.fields || {})[hd] || '';
@@ -1292,8 +1306,6 @@ function editor(r) {
     Object.entries(spec.loc_cols || {}).forEach(([role, col]) => {
         h += locEditor(r, role, col);
     });
-
-    h += plasmidBlock(r);
 
     h += '<div class="rowacts">'
        + '<span style="flex:1;font-size:.72em;color:#b6c4d4;align-self:center">'
