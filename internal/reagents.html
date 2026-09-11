@@ -284,7 +284,13 @@
    which was right.
    =========================================================================== */
 
-const GH_REPO   = 'acyeh-lab/lab-internal';   // PRIVATE — data never on the public site
+/* PRIVATE — the inventory is never on the public site.
+
+   Its own repo, not lab-internal: a GitHub fine-grained token scopes to a
+   REPOSITORY, not to a file, so a token issued to a student for this page
+   would otherwise have reached tasks, grants and transplant data too. Split
+   out 2026-09-11 so a reagents-only token is possible. */
+const GH_REPO   = 'acyeh-lab/lab-reagents';
 const DATA_FILE = 'reagents-data.json';
 const TOKEN_KEY = 'ayeh-lab-gh-token';
 const LOCAL_KEY = 'ayeh-lab-reagents';
@@ -349,7 +355,12 @@ async function ghGet() {
     });
     if (r.status === 401 || r.status === 403 || r.status === 404) {
         localStorage.removeItem(TOKEN_KEY);
-        throw new Error('Token rejected (HTTP ' + r.status + ') — reload the page to re-enter it');
+        // The likeliest cause by far is a token minted before the inventory
+        // moved out of lab-internal on 2026-09-11, so name the repo it needs.
+        throw new Error('Token rejected (HTTP ' + r.status + ') for ' + GH_REPO
+            + '. A token made before 2026-09-11 may only cover acyeh-lab/lab-internal — '
+            + 'add this repo to it at github.com/settings/tokens (the token itself does '
+            + 'not change), then reload.');
     }
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const info = await r.json();
