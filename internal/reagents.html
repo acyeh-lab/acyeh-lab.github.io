@@ -114,6 +114,21 @@
         .slot .ct { font-size: .72em; color: #0056b3; font-weight: 500; }
         .slot.empty .sl { color: #aab4bf; font-weight: 500; }
 
+        /* plasmid status, readable with the card SHUT */
+        .pflag { font-size: .68em; font-weight: 700; letter-spacing: .03em;
+            padding: 2px 8px; border-radius: 9px; white-space: nowrap;
+            text-transform: uppercase; }
+        .pflag.ok  { background: #1a7f37; color: #fff; }
+        .pflag.bad { background: #c1121f; color: #fff; }
+        /* A tint on the whole row, not just the border — a 4px edge is easy
+           to miss when scanning a list of eighty. Kept pale so the text stays
+           the thing you read. */
+        .item.p-bad { background: #fdf5f5; }
+        .item.p-ok  { background: #f4faf6; }
+        .item.p-bad > .hd2 .nm { color: #8a1015; }
+        .ownbox.p-bad { border-color: #c1121f; background: #fdf4f4; }
+        .ownbox.p-ok  { border-color: #1a7f37; background: #f2f9f4; }
+
         /* plasmid flags */
         .plasmidbox { border: 1px solid #dde3ea; border-left: 4px solid #cbd6e2;
             border-radius: 6px; background: #fafbfd; padding: 9px 12px; margin: 10px 0 4px; }
@@ -819,13 +834,23 @@ function renderOwner(v, tag) {
         return;
     }
 
-    h += '<div class="ownboxes">' + boxes.map(b =>
-            '<div class="ownbox' + (SEL.slot === b.lab ? ' on' : '') + '"'
+    // Each box tile states its own worst case, so an unsequenced plasmid is
+    // visible from the strip without opening the box.
+    h += '<div class="ownboxes">' + boxes.map(b => {
+        const t = plasmidTally(itemsInSlot(b.key));
+        const cls = t.unverified ? ' p-bad' : (t.plasmids ? ' p-ok' : '');
+        return '<div class="ownbox' + (SEL.slot === b.lab ? ' on' : '') + cls + '"'
           + ' onclick="openOwnerBox(\'' + b.lab + '\')">'
           + '<div class="ad">' + esc(b.lab) + '</div>'
           + (boxMeta(b.key).label ? '<div class="lb">' + esc(boxMeta(b.key).label) + '</div>' : '')
           + '<div class="ct">' + (b.n ? b.n + ' item' + (b.n === 1 ? '' : 's') : 'empty') + '</div>'
-          + '</div>').join('') + '</div>';
+          + (t.plasmids
+              ? '<div class="pflag ' + (t.unverified ? 'bad' : 'ok') + '" style="margin-top:4px">'
+                + (t.unverified ? t.unverified + ' NOT sequenced' : t.verified + ' sequenced')
+                + '</div>'
+              : '')
+          + '</div>';
+    }).join('') + '</div>';
 
     h += '<div id="boxpanel"></div>';
     h += '<h4 style="margin:18px 0 8px;font-size:.95em;color:#0056b3">'
@@ -1273,12 +1298,21 @@ function itemById(rid) { return (DATA.records || []).find(r => r.rid === rid); }
 
 function itemCard(r, open) {
     const locs = (r.locs || []);
-    return '<div class="item' + (open ? ' open' : '') + '" id="it-' + r.rid + '"'
-        + ' style="border-left-color:' + catColor(r.cat) + '">'
+    // The plasmid state has to be readable with the card SHUT (Albert,
+    // 2026-09-12: "show up in red rather than having to open it up"). So the
+    // whole left edge takes the status colour, not just the panel inside, and
+    // a word-label rides next to the category chip. A colour alone is not
+    // enough — it has to say which of the three states it is.
+    const pl = isPlasmid(r), ver = isVerified(r);
+    return '<div class="item' + (open ? ' open' : '')
+        + (pl ? (ver ? ' p-ok' : ' p-bad') : '') + '" id="it-' + r.rid + '"'
+        + ' style="border-left-color:' + wellColor(r) + '">'
         + '<div class="hd2" onclick="toggleItem(\'' + r.rid + '\')">'
         + '<span class="nm">' + esc(nameOf(r))
         + (detailOf(r) ? '<span style="color:#8794a1;font-weight:400"> — ' + esc(detailOf(r)) + '</span>' : '')
         + '</span>'
+        + (pl ? '<span class="pflag ' + (ver ? 'ok' : 'bad') + '">'
+                + (ver ? '\u2713 sequenced' : '\u25cf NOT sequenced') + '</span>' : '')
         + '<span class="cat" style="background:' + catColor(r.cat) + '">' + esc(r.cat) + '</span>'
         + locs.map(l => '<span class="loc' + (l.kind === 'freezer' ? '' :
                         l.kind === 'unknown' ? ' unk' : ' other') + '">'
