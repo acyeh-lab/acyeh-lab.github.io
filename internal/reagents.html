@@ -368,6 +368,12 @@ const PLASMID_OK   = '#1a7f37';   // plasmid, sequence verified — green
 const PLASMID_BAD  = '#c1121f';   // plasmid, NOT verified — red
 const NOT_PLASMID  = '#2b579a';   // everything else — one blue
 
+/* Record keys the PAGE owns — no [Storage] column corresponds to them.
+   Enumerated once, here, because they have to be handled in two unrelated
+   places: this file's save() and nowhere else. Add a fourth key and you edit
+   this line only. */
+const PAGE_KEYS = ['is_plasmid', 'seq_verified', 'sequence'];
+
 const isPlasmid  = r => !!(r && r.is_plasmid);
 const isVerified = r => !!(r && r.is_plasmid && r.seq_verified);
 
@@ -506,6 +512,16 @@ async function save() {
             if (byRid[rid]) {
                 byRid[rid].fields = mine.fields;
                 byRid[rid].locs   = mine.locs;
+                // Page-owned keys sit OUTSIDE `fields`, which is deliberate —
+                // that is what stops the cluster sync treating them as a
+                // spreadsheet edit. But it also means copying fields+locs
+                // alone silently drops them, and `DATA = remote` below then
+                // wipes the local copy too, so a ticked box reverted on Save
+                // with no error. Copy them across explicitly.
+                PAGE_KEYS.forEach(k => {
+                    if (mine[k] === undefined) delete byRid[rid][k];
+                    else byRid[rid][k] = mine[k];
+                });
                 updated++;
             } else {
                 remote.records.push(mine);
