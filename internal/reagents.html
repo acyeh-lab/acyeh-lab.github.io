@@ -1053,7 +1053,7 @@ function renderBoxPanel() {
           + '</div>'
         + '<div class="fld" style="margin-bottom:8px"><label>Belongs to (tag)</label>'
         + '<input list="ownertags" value="' + esc(meta.owner || '') + '"'
-        + ' placeholder="e.g. Adonai — leave blank for shared lab stock"'
+        + ' placeholder="e.g. a student’s name — leave blank for shared lab stock"'
         + ' onchange="setBoxOwner(\'' + key + '\',this.value)">'
         + '<datalist id="ownertags">'
         + tags.map(t => '<option value="' + esc(t.name) + '">').join('')
@@ -1061,7 +1061,7 @@ function renderBoxPanel() {
         + '<div style="font-size:.7em;color:#b6c4d4;margin-top:3px">'
         + 'Tagged boxes get their own tab at the top of this page.</div></div>'
         + '<div class="fld" style="margin-bottom:8px"><label>Box label</label>'
-        + '<input value="' + esc(meta.label || '') + '" placeholder="e.g. Markey lysates"'
+        + '<input value="' + esc(meta.label || '') + '" placeholder="e.g. Bacterial lysate"'
         + ' onchange="setBoxMeta(\'' + key + '\',\'label\',this.value)"></div>'
         + '<div class="fld" style="margin-bottom:10px"><label>Box notes</label>'
         + '<textarea placeholder="anything worth knowing about this box"'
