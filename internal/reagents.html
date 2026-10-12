@@ -542,10 +542,32 @@ async function ghPut(payload, sha, message) {
    so does this session's work.
    ======================================================================== */
 
+/* Every Save button on the page: the one in the top bar, and the one inside each
+   open card (Albert, 2026-10-12: "the save button when I fill out the box should
+   be right where I fill out the box, not way up on top"). They are the same
+   action -- there is one dirty set and one save -- so they must show the same
+   state, or an in-card button would sit there reading "Save" while the real save
+   was mid-flight. */
+function saveBtns() {
+    return [...document.querySelectorAll('#savebtn, .jsave')];
+}
+
+/* Label the in-card buttons honestly. Save pushes EVERY pending change, not just
+   the card you are looking at, so once there is more than one it says so. */
+function syncSaveButtons() {
+    const n = DIRTY.size;
+    document.querySelectorAll('.jsave').forEach(b => {
+        b.textContent = n > 1 ? 'Save all (' + n + ')' : 'Save';
+        b.disabled = !n;
+        b.title = n ? 'Saves all ' + n + ' unsaved change' + (n === 1 ? '' : 's')
+                    : 'Nothing to save';
+    });
+}
+
 async function save() {
     if (!DIRTY.size) { toast('Nothing to save'); return; }
-    const btn = document.getElementById('savebtn');
-    if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
+    const btns = saveBtns();
+    btns.forEach(b => { b.textContent = 'Saving…'; b.disabled = true; });
     try {
         const remote = await ghGet();              // also refreshes FILE_SHA
         const byRid = {};
@@ -608,7 +630,9 @@ async function save() {
         toast('Save failed: ' + e.message, 6000);
         console.error(e);
     } finally {
-        if (btn) { btn.textContent = 'Save'; btn.disabled = false; }
+        // renderSyncBar rebuilds the top button from DIRTY; syncSaveButtons does
+        // the same for any in-card ones, so a failed save leaves them enabled and
+        // a successful one leaves them disabled, without either being hard-coded.
         renderSyncBar();
     }
 }
@@ -819,6 +843,7 @@ function render() {
     renderSyncBar();
     renderGlobalSearch();
     renderView();
+    syncSaveButtons();      // the cards only exist after renderView()
 }
 
 /* An owner tab's id carries a person's name, which is free text, so it goes
@@ -856,6 +881,9 @@ function renderSyncBar() {
         + '<button class="btn" onclick="exportCsv()">Export CSV</button>'
         + '<button class="btn pri" id="savebtn" onclick="save()"' + (n ? '' : ' disabled') + '>Save</button>'
         + '</div>';
+    // markDirty() calls this on every keystroke, so the in-card Save buttons
+    // pick up the new count here rather than needing their own hook.
+    syncSaveButtons();
 }
 
 function renderView() {
@@ -1157,6 +1185,7 @@ function renderBoxPanel() {
 
     el.innerHTML = '<div class="boxpanel"><div class="boxwrap">'
                  + '<div class="boxgridwrap">' + g + '</div>' + side + '</div></div>';
+    syncSaveButtons();      // the selected well's card is drawn already open
 }
 
 function clickWell(w) {
@@ -1505,6 +1534,7 @@ function toggleItem(rid) {
     const wasOpen = el.classList.contains('open');
     el.classList.toggle('open');
     if (!wasOpen) el.querySelector('.body').innerHTML = editor(itemById(rid));
+    if (!wasOpen) syncSaveButtons();   // the card just gained a Save button
 }
 
 function editor(r) {
@@ -1560,10 +1590,16 @@ function editor(r) {
         h += locEditor(r, role, col);
     });
 
+    // Save sits at the bottom of the card, where the typing finishes. Albert,
+    // 2026-10-12: "the save button when I fill out the box should be right where
+    // I fill out the box, not way up on top." Rightmost, so it is the button the
+    // hand lands on; Remove stays to its left and keeps its own confirm.
+    // syncSaveButtons() fills in the label and disabled state from DIRTY.
     h += '<div class="rowacts">'
        + '<span style="flex:1;font-size:.72em;color:#b6c4d4;align-self:center">'
        + esc(r.sheet) + ' &middot; ' + esc(r.rid) + '</span>'
        + '<button class="btn danger sm" onclick="removeItem(\'' + r.rid + '\')">Remove</button>'
+       + '<button class="btn pri sm jsave" onclick="save()">Save</button>'
        + '</div>';
     return h;
 }
