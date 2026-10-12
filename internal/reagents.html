@@ -63,6 +63,33 @@
         .search-box { flex: 1 1 240px; padding: 8px 14px; border: 1px solid #ccc; border-radius: 20px;
             font-size: .9em; font-family: 'Roboto', sans-serif; outline: none; }
         .search-box:focus { border-color: #0056b3; }
+
+        /* ---- global search (Albert 2026-10-12: "grep for any key terms in any
+           of the boxes"). Lives above the view tabs so it works from the freezer
+           map, not only inside the Inventory tab. ---- */
+        .gbar { display: flex; gap: 8px; align-items: center; margin: 2px 0 10px; }
+        .gbar input { flex: 1 1 auto; padding: 9px 15px; border: 1px solid #ccc;
+            border-radius: 20px; font-size: .9em; font-family: 'Roboto', sans-serif; outline: none; }
+        .gbar input:focus { border-color: #0056b3; background: #fbfdff; }
+        .gbar .gclear { border: 0; background: #eef2f7; color: #0056b3; cursor: pointer;
+            border-radius: 20px; padding: 7px 13px; font-size: .8em; font-weight: 500; }
+        .gbar .gclear:hover { background: #dce8f6; }
+        .ghits { border: 1px solid #cfe0f5; border-radius: 8px; background: #f7fbff;
+            padding: 8px 10px; margin: 0 0 14px; max-height: 46vh; overflow-y: auto; }
+        .ghits .gcount { font-size: .78em; color: #5b6b7c; margin: 0 2px 7px; }
+        .ghit { display: flex; flex-wrap: wrap; gap: 6px 9px; align-items: center;
+            padding: 6px 4px; border-top: 1px solid #e4eefb; }
+        .ghit:first-of-type { border-top: 0; }
+        .ghit .gnm { font-weight: 500; font-size: .9em; }
+        .ghit .gcat { font-size: .68em; padding: 2px 8px; border-radius: 10px; color: #fff; }
+        .ghit .gwhere { font-size: .76em; color: #5b6b7c; background: #e9f1fb;
+            border-radius: 10px; padding: 2px 9px; }
+        .ghit .gbtn { border: 0; background: #0056b3; color: #fff; cursor: pointer;
+            border-radius: 10px; padding: 3px 10px; font-size: .72em; font-weight: 500; }
+        .ghit .gbtn:hover { background: #00407f; }
+        .gnone { font-size: .85em; color: #8794a1; padding: 4px 2px; }
+        .ghit.flash { animation: ghitflash 1.1s ease-out 1; }
+        @keyframes ghitflash { from { background: #ffe9a8; } to { background: transparent; } }
         .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
         .chip { border-radius: 20px; padding: 5px 13px; font-size: .8em; font-weight: 500;
             background: #eef2f7; color: #0056b3; cursor: pointer; border: 1px solid transparent;
@@ -779,6 +806,9 @@ function render() {
     const tags = ownerTags();
     b.innerHTML =
         '<div id="syncbar"></div>'
+        // Above the tabs on purpose: the search has to be reachable from the
+        // freezer map, not buried in the Inventory tab.
+        + '<div id="gsearch"></div>'
         + '<div class="views">'
         + tabBtn('map',   'Freezer map', counts.map)
         + tabBtn('inv',   'Inventory',   counts.inv)
@@ -787,6 +817,7 @@ function render() {
         + tabBtn('arch',  'Removed',     counts.arch)
         + '</div><div id="view"></div>';
     renderSyncBar();
+    renderGlobalSearch();
     renderView();
 }
 
@@ -1252,12 +1283,133 @@ function renderInventory(v) {
 
 function toggleCat(c) { F.cats.has(c) ? F.cats.delete(c) : F.cats.add(c); renderView(); }
 
+/* Everything a record can be matched on: its display name, EVERY spreadsheet
+   field value, and every location string. Factored out so the Inventory filter
+   and the global search bar cannot drift apart -- the same haystack, one
+   definition. */
+function hayOf(r) {
+    return (nameOf(r) + ' ' + Object.values(r.fields || {}).join(' ') + ' '
+            + (r.locs || []).map(locText).join(' ')).toLowerCase();
+}
+
+/* Space-separated terms are ANDed, so "sfb plasmid 4A1" narrows rather than
+   widens. Each term is a plain substring, which is what "grep for any key
+   terms" means here -- no word boundaries, so "thet" still finds "B.theta". */
+function hayHit(hay, q) {
+    const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+    return terms.length ? terms.every(t => hay.includes(t)) : false;
+}
+
 function matches(r) {
     if (F.cats.size && !F.cats.has(r.cat)) return false;
     if (!F.q) return true;
-    const hay = (nameOf(r) + ' ' + Object.values(r.fields || {}).join(' ') + ' '
-                 + (r.locs || []).map(locText).join(' ')).toLowerCase();
-    return F.q.toLowerCase().split(/\s+/).filter(Boolean).every(t => hay.includes(t));
+    return hayHit(hayOf(r), F.q);
+}
+
+/* ===== global search ======================================================
+   Albert, 2026-10-12: "an option of a search (like a search bar) where I can
+   basically grep for any key terms in any of the boxes".
+
+   The Inventory tab already had a search, but only inside that tab -- no use
+   while standing in a box on the freezer map. This bar sits ABOVE the view
+   tabs, so it is reachable from every view, searches every live record, and
+   gives each freezer hit a button that jumps to that exact rack/box/position.
+   ========================================================================= */
+
+let GQ = '';          // the global query. Deliberately NOT F.q -- the Inventory
+                      // tab keeps its own independent filter and chips.
+const GCAP = 80;      // rows drawn before asking for a narrower query
+
+function renderGlobalSearch() {
+    const el = document.getElementById('gsearch');
+    if (!el) return;
+    // The clear button is always present, never conditional, so that gsearch()
+    // can leave this markup alone entirely (see the note on it below).
+    el.innerHTML =
+        '<div class="gbar">'
+        + '<input id="gq" type="search" value="' + esc(GQ) + '" autocomplete="off"'
+        + ' placeholder="Search every box and every field — name, construct, source, notes, position…"'
+        + ' oninput="gsearch(this.value)">'
+        + '<button class="gclear" onclick="gclear()">clear</button>'
+        + '</div><div id="ghits" style="display:none"></div>';
+    renderGHits();
+}
+
+/* Updates ONLY #ghits. Rebuilding the bar on every keystroke would destroy the
+   input the person is typing into, caret position and all -- which is the usual
+   way a search box ends up dropping characters. */
+function gsearch(v) { GQ = v; renderGHits(); }
+
+function gclear() {
+    const i = document.getElementById('gq');
+    if (i) i.value = '';
+    gsearch('');
+    if (i) i.focus();
+}
+
+function renderGHits() {
+    const el = document.getElementById('ghits');
+    if (!el) return;
+    if (!GQ.trim()) { el.innerHTML = ''; el.style.display = 'none'; return; }
+    el.style.display = '';
+
+    const hits = items().filter(r => hayHit(hayOf(r), GQ));
+    // Archived records live in their own list, so a thing that was removed would
+    // otherwise just look missing. Count them and say so.
+    const arch = (DATA.archive || []).filter(r => hayHit(hayOf(r), GQ)).length;
+
+    if (!hits.length) {
+        el.innerHTML = '<div class="gnone">Nothing matches “' + esc(GQ) + '”.'
+            + (arch ? ' But ' + arch + ' match' + (arch === 1 ? '' : 'es')
+                      + ' in <strong>Removed</strong>.' : '')
+            + '</div>';
+        return;
+    }
+
+    let h = '<div class="gcount"><strong>' + hits.length + '</strong> match'
+          + (hits.length === 1 ? '' : 'es')
+          + (hits.length > GCAP ? ' — showing the first ' + GCAP
+                                  + ', add another term to narrow' : '')
+          + (arch ? ' · ' + arch + ' more in Removed' : '')
+          + '</div>';
+
+    hits.slice(0, GCAP).forEach(r => {
+        const locs = (r.locs || []);
+        h += '<div class="ghit" id="gh-' + r.rid + '">'
+           + '<span class="gnm">' + esc(nameOf(r)) + '</span>'
+           + '<span class="gcat" style="background:' + catColor(r.cat) + '">'
+           + esc(r.cat) + '</span>';
+        if (!locs.length) h += '<span class="gwhere">no location recorded</span>';
+        locs.forEach(l => {
+            if (l.kind === 'freezer') {
+                const lab = slotLabel(l);
+                h += '<span class="gwhere">-80C ' + esc(lab)
+                   + (l.well ? ' · ' + esc(l.well) : ' · position not set') + '</span>'
+                   + '<button class="gbtn" onclick="gotoHit(\'' + jsq(r.rid) + '\',\''
+                   + jsq(lab) + '\',\'' + jsq(l.well || '') + '\')">go to box</button>';
+            } else {
+                h += '<span class="gwhere">' + esc(locText(l)) + '</span>';
+            }
+        });
+        h += '</div>';
+    });
+    el.innerHTML = h;
+}
+
+/* Jump to the hit's box. SEL is set directly rather than through setView(),
+   which clears SEL -- that is the whole thing we are trying to preserve. */
+function gotoHit(rid, slot, well) {
+    const m = /^(\d+)([A-D])([1-4])$/.exec(slot || '');
+    VIEW = 'map';
+    SEL = { rack: m ? +m[1] : null, slot: slot || null, well: well || null, placing: null };
+    render();                       // also re-renders the bar, so the hit list survives
+    setTimeout(() => {
+        const tgt = document.getElementById('it-' + rid)
+                 || document.getElementById('boxpanel');
+        if (tgt) tgt.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const row = document.getElementById('gh-' + rid);
+        if (row) row.classList.add('flash');
+    }, 90);
 }
 
 function renderList() {
