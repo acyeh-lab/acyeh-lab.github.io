@@ -214,6 +214,23 @@
         .fld input:focus, .fld textarea:focus { border-color: #0056b3; outline: none; }
         .fld textarea { min-height: 52px; resize: vertical; line-height: 1.4; }
         .fld.wide { grid-column: 1 / -1; }
+
+        /* The NAME block. Albert 2026-09-22: "it's not intuitive how to add a
+           name to each item -- make it the first box people fill out". The name
+           is not one column: it is whatever NAME_TPL builds the display name
+           from, which for some sheets is two columns (Species + Name). So this
+           block hoists exactly those columns, in template order, above
+           everything else in the card. */
+        .namebox { border: 1px solid #cfe0f5; border-radius: 6px; padding: 9px 11px;
+            margin: 10px 0 12px; background: #f4f9ff; }
+        .namebox h5 { margin: 0 0 7px; font-size: .74em; text-transform: uppercase;
+            letter-spacing: .7px; color: #0056b3; font-weight: 700; }
+        .namebox h5 .hint { text-transform: none; letter-spacing: 0; font-weight: 400;
+            color: #6b7c8d; margin-left: 6px; }
+        .namebox .nrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 8px 14px; }
+        .namebox.empty { border-color: #f0c98a; background: #fdf6ea; }
+        .namebox.empty h5 { color: #8a5a00; }
         .locbox { border: 1px solid #e3e9f0; border-radius: 6px; padding: 9px 11px;
             margin: 8px 0; background: #fafbfd; }
         .locbox .lr { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
@@ -595,6 +612,15 @@ const NAME_TPL = {
     'Storage - Histo':                  '{Lab Experiment}|{Histology Case 1}',
     'Storage - DataSequencing':         '{Data Description}',
 };
+/* The columns NAME_TPL's FIRST alternative uses -- i.e. the ones a person has
+   to fill in for the record to have a real name rather than "(unnamed)".
+   Derived from NAME_TPL rather than typed twice, so the two cannot drift. */
+function nameCols(sheet) {
+    const tpl = NAME_TPL[sheet] || '';
+    const first = tpl.split('|')[0] || '';
+    return [...first.matchAll(/\{([^}]+)\}/g)].map(m => m[1]);
+}
+
 const DETAIL_COL = {
     'Storage - VirusPlasmids': 'List all Constructs',
     'Storage - CellsBacteria': 'Gene or Other Modification',
@@ -1338,11 +1364,36 @@ function editor(r) {
     // First thing in the card, above the spreadsheet fields (Albert, 2026-09-11:
     // "move it to the top so we see it first"). It is the question asked of
     // every record, and it drives the colour of the box map.
-    let h = plasmidBlock(r);
+    // THE NAME COMES FIRST. Before the plasmid question, before the spreadsheet
+    // columns -- it is the first thing anyone types, and until it is filled the
+    // record shows as "(unnamed)" in the list and on the box map.
+    const ncols = nameCols(r.sheet).filter(c => headers.includes(c));
+    const named = ncols.length && ncols.every(c => ((r.fields || {})[c] || '').trim());
+    let h = '';
+    if (ncols.length) {
+        h += '<div class="namebox' + (named ? '' : ' empty') + '">'
+           + '<h5>' + (named ? 'Name' : 'Name this reagent first')
+           + '<span class="hint">shown in the list and on the box map'
+           + (ncols.length > 1 ? ' &middot; both boxes together make the name' : '')
+           + '</span></h5><div class="nrow">';
+        ncols.forEach((hd, i) => {
+            const val = (r.fields || {})[hd] || '';
+            h += '<div class="fld"><label>' + esc(hd) + '</label>'
+               + '<input value="' + esc(val) + '" data-h="' + esc(hd) + '"'
+               + (i === 0 ? ' id="nm-' + r.rid + '"' : '')
+               + ' placeholder="required"'
+               + ' onchange="setField(\'' + r.rid + '\',this.dataset.h,this.value)">'
+               + '</div>';
+        });
+        h += '</div></div>';
+    }
+
+    h += plasmidBlock(r);
 
     h += '<div class="fgrid">';
     headers.forEach(hd => {
         if (locCols.has(hd)) return;                  // edited in the location block below
+        if (ncols.includes(hd)) return;               // already hoisted into the name block
         const val = (r.fields || {})[hd] || '';
         const big = val.length > 70 || /note|comment|description|sequence/i.test(hd);
         h += '<div class="fld' + (big ? ' wide' : '') + '"><label>' + esc(hd) + '</label>'
@@ -1581,14 +1632,19 @@ function addItem(slot, well) {
 
     DATA.records.push(rec);
     markDirty(rec.rid);
+
     VIEW = 'inv'; F.q = ''; F.cats = new Set([spec.cat]);
     render();
     setTimeout(() => {
         const el = document.getElementById('it-' + rec.rid);
         if (el) { toggleItem(rec.rid); el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  const inp = el.querySelector('input'); if (inp) inp.focus(); }
+                  // Focus the NAME box specifically, not just the first input on
+                  // the card -- that is the box the person is being asked for.
+                  const inp = document.getElementById('nm-' + rec.rid)
+                           || el.querySelector('input');
+                  if (inp) inp.focus(); }
     }, 60);
-    toast('Fill it in, then Save');
+    toast('Start with the name, then Save');
 }
 
 /* ---- export -------------------------------------------------------------- */
