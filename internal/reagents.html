@@ -1633,18 +1633,41 @@ function addItem(slot, well) {
     DATA.records.push(rec);
     markDirty(rec.rid);
 
-    VIEW = 'inv'; F.q = ''; F.cats = new Set([spec.cat]);
+    /* Added from a box position? STAY IN THE BOX.
+       renderBoxPanel already draws a fully-expanded, editable itemCard for
+       whatever sits at SEL.well, so the new record's form appears exactly where
+       the person is looking. This used to set VIEW='inv' and filter the
+       Inventory to the whole category, which threw the person out of the box
+       they were filling and onto a long list of unrelated samples (Albert,
+       2026-10-12: "it changes view and I go back to a general page with many
+       other samples"). Only the toolbar "+ Add reagent" arrives with no box
+       context, and that still needs the Inventory list -- it is the only other
+       place that renders a form. */
+    const inBox = !!(slot && well);
+    if (inBox) {
+        const rm = /^(\d+)([A-D])([1-4])$/.exec(slot);
+        if (SEL.rack == null && rm) SEL.rack = +rm[1];   // owner tab reaches boxes without a rack click
+        SEL.slot = slot;
+        SEL.well = well;
+    } else {
+        VIEW = 'inv'; F.q = ''; F.cats = new Set([spec.cat]);
+    }
     render();
     setTimeout(() => {
         const el = document.getElementById('it-' + rec.rid);
-        if (el) { toggleItem(rec.rid); el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (el) { // In the box panel the card is ALREADY open (itemCard(r,true)); only
+                  // the Inventory list renders it shut. Toggling unconditionally would
+                  // therefore shut the very form we just opened.
+                  if (!el.classList.contains('open')) toggleItem(rec.rid);
+                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                   // Focus the NAME box specifically, not just the first input on
                   // the card -- that is the box the person is being asked for.
                   const inp = document.getElementById('nm-' + rec.rid)
                            || el.querySelector('input');
                   if (inp) inp.focus(); }
     }, 60);
-    toast('Start with the name, then Save');
+    toast(inBox ? 'Name it, then Save — you are still in box ' + slot
+                : 'Start with the name, then Save');
 }
 
 /* ---- export -------------------------------------------------------------- */
