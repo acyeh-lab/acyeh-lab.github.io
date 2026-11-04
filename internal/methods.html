@@ -172,6 +172,60 @@
         .totop { position: fixed; right: 18px; bottom: 18px; background: #0056b3; color: #fff;
             text-decoration: none; padding: 9px 14px; border-radius: 20px; font-size: .78em;
             opacity: .88; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+
+        /* ---- Submit a method ------------------------------------------ */
+        .subwrap { margin: 0 0 18px; }
+        .subtoggle { width: 100%; display: flex; align-items: center; gap: 10px;
+            background: #fff; border: 1px solid #cfd9e4; border-left: 4px solid #217346;
+            border-radius: 6px; padding: 13px 16px; cursor: pointer; text-align: left;
+            font-family: inherit; font-size: .95em; color: #1b3a5c; font-weight: 600; }
+        .subtoggle:hover { background: #f4f9f5; border-color: #217346; }
+        .subtoggle .plus { display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 50%; background: #217346; color: #fff;
+            font-size: 1em; line-height: 1; flex: 0 0 auto; }
+        .subtoggle .sub-sub { font-weight: 400; color: #6b7a8c; font-size: .88em; margin-left: auto; }
+        .subpanel { display: none; border: 1px solid #cfd9e4; border-top: none;
+            border-radius: 0 0 6px 6px; padding: 18px 16px 16px; background: #fbfdfb; }
+        .subwrap.open .subpanel { display: block; }
+        .subwrap.open .subtoggle { border-radius: 6px 6px 0 0; background: #f4f9f5; }
+        .subnote { font-size: .88em; color: #52616f; line-height: 1.55; margin: 0 0 16px; }
+        .subnote strong { color: #1b3a5c; }
+        .subgrid { display: grid; grid-template-columns: 160px 1fr; gap: 12px 14px; align-items: start; }
+        .subgrid label { font-size: .86em; font-weight: 600; color: #1b3a5c; padding-top: 8px; }
+        .subgrid .req { color: #c0392b; }
+        .subfield input[type=text], .subfield textarea { width: 100%; box-sizing: border-box;
+            font-family: inherit; font-size: .92em; padding: 8px 10px;
+            border: 1px solid #cfd9e4; border-radius: 4px; background: #fff; color: #222; }
+        .subfield textarea { min-height: 86px; resize: vertical; line-height: 1.5; }
+        .subfield input[type=text]:focus, .subfield textarea:focus {
+            outline: none; border-color: #0056b3; box-shadow: 0 0 0 2px rgba(0,86,179,.12); }
+        .subhint { font-size: .8em; color: #6b7a8c; margin: 5px 0 0; line-height: 1.45; }
+        .subhint.ok { color: #217346; }
+        .subhint.warn { color: #9a6700; }
+        .subhint.bad { color: #c0392b; }
+        .filerow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .filebtn { display: inline-block; background: #0056b3; color: #fff; border: none;
+            border-radius: 4px; padding: 8px 14px; font-family: inherit; font-size: .86em;
+            cursor: pointer; font-weight: 600; }
+        .filebtn:hover { background: #00407f; }
+        .filename { font-size: .85em; color: #52616f; word-break: break-all; }
+        .subactions { display: flex; align-items: center; gap: 12px; margin-top: 16px;
+            padding-top: 14px; border-top: 1px solid #e3e9f0; flex-wrap: wrap; }
+        .subsend { background: #217346; color: #fff; border: none; border-radius: 4px;
+            padding: 10px 20px; font-family: inherit; font-size: .9em; font-weight: 600;
+            cursor: pointer; }
+        .subsend:hover { background: #1a5c38; }
+        .subsend:disabled { background: #9bb0a4; cursor: not-allowed; }
+        .subtok { background: none; border: none; color: #0056b3; font-family: inherit;
+            font-size: .82em; cursor: pointer; text-decoration: underline; padding: 0; }
+        .substatus { font-size: .85em; color: #52616f; }
+        .substatus.ok { color: #217346; font-weight: 600; }
+        .substatus.bad { color: #c0392b; font-weight: 600; }
+        @media (max-width: 640px) {
+            .subgrid { grid-template-columns: 1fr; gap: 4px 0; }
+            .subgrid label { padding-top: 10px; }
+        }
+
     </style>
 </head>
 <body>
@@ -213,6 +267,63 @@
           engineering &middot; <strong>600s</strong> tetramer &middot;
           <strong>700s</strong> computational. Unnumbered vendor and
           reference documents are filed by topic.</p>
+        </div>
+
+        <div class="subwrap" id="subwrap">
+          <button class="subtoggle" onclick="toggleSubmit()" aria-expanded="false" aria-controls="subpanel">
+            <span class="plus" id="subplus">+</span>
+            <span>Submit a method</span>
+            <span class="sub-sub">new protocol, or a revision of one already here</span>
+          </button>
+          <div class="subpanel" id="subpanel">
+            <p class="subnote">
+              Use this to send a protocol to the lab library. Nothing is published by
+              submitting: the file goes to a private inbox, <strong>Albert is e-mailed</strong>,
+              and it appears on this page only once he replies <strong>approve</strong>.
+              You need a GitHub token that covers the submissions repository &mdash; the
+              <em>Token</em> button below sets it, and it is stored only in this browser.
+            </p>
+            <div class="subgrid">
+              <label for="subnum">Protocol # <span class="req">*</span></label>
+              <div class="subfield">
+                <input type="text" id="subnum" inputmode="numeric" maxlength="4"
+                       placeholder="409" oninput="checkNum()" autocomplete="off">
+                <p class="subhint" id="subnumhint">Three digits. The first digit is the series:
+                  1&nbsp;human &middot; 2&nbsp;mouse &middot; 3&nbsp;molecular &middot;
+                  4&nbsp;bacterial &middot; 5&nbsp;TCR &middot; 6&nbsp;tetramer &middot;
+                  7&nbsp;computational.</p>
+              </div>
+
+              <label for="subtitle">Title <span class="req">*</span></label>
+              <div class="subfield">
+                <input type="text" id="subtitle" placeholder="CH Typing of E. coli Strains"
+                       autocomplete="off">
+                <p class="subhint">Just the name of the method &mdash; no &ldquo;Prot 409&rdquo; prefix.</p>
+              </div>
+
+              <label for="subfile">File <span class="req">*</span></label>
+              <div class="subfield">
+                <div class="filerow">
+                  <button type="button" class="filebtn" onclick="document.getElementById('subfile').click()">Choose file&hellip;</button>
+                  <span class="filename" id="subfilename">No file chosen</span>
+                </div>
+                <input type="file" id="subfile" style="display:none" onchange="pickFile()"
+                       accept=".docx,.doc,.xlsx,.xls,.pptx,.ppt,.pdf,.md,.txt">
+                <p class="subhint">Word, Excel or PowerPoint. Up to 10&nbsp;MB.</p>
+              </div>
+
+              <label for="subreason">Reason for<br>submission <span class="req">*</span></label>
+              <div class="subfield">
+                <textarea id="subreason" placeholder="What is this, and what changed? If it replaces or revises an existing protocol, say which one and why."></textarea>
+                <p class="subhint">This is what Albert reads when deciding. It is also kept with the file as a record.</p>
+              </div>
+            </div>
+            <div class="subactions">
+              <button class="subsend" id="subsend" onclick="submitMethod()">Submit for approval</button>
+              <button class="subtok" onclick="setupSubmitToken()">Token&hellip;</button>
+              <span class="substatus" id="substatus"></span>
+            </div>
+          </div>
         </div>
 
         <div class="controls">
@@ -5705,6 +5816,206 @@
     <a href="#" class="totop">↑ Top</a>
 
     <script>
+
+/* ===== Submit a method ====================================================
+   GitHub Pages is static, so a submission is a commit: the file and a
+   submission.json are PUT into the private repo acyeh-lab/lab-method-submissions via
+   the contents API, using a fine-grained token the submitter supplies. The
+   cluster side e-mails Albert and installs it on his "approve" reply.
+
+   Deliberately its OWN localStorage key and its OWN repo: a token scopes to a
+   repository, so reusing the reagents or tasks token here would hand every
+   submitter those repos as well.
+   ========================================================================= */
+var SUBMIT_REPO = 'acyeh-lab/lab-method-submissions';
+var SUBMIT_TOKEN_KEY = 'yehlab_methods_submit_token';
+var TAKEN = {"101": "Prot 101 \u2014 Human Antibody Staining (General)", "102": "Prot 102 \u2014 PBMC Harvest from Whole Blood (Ficoll-Paque)", "103": "Prot 103 \u2014 PBMC PMA/Ionomycin Stimulation + Intracellular Staining", "104": "Prot 104 \u2014 Freezing and Thawing PBMCs", "105": "Prot 105 \u2014 Human Endoscopy Sample Freezing &amp; Formalin Fixation", "106": "Prot 106 \u2014 Human Biopsy Prep for Single-Cell Assays (base version)", "107": "Prot 107 \u2014 CMV Peptide Stimulation", "108": "Prot 108 \u2014 51Cr Release Assay", "109": "Prot 109 \u2014 xCELLigence eSight Live Microscopy / Impedance Assay", "201": "Prot 201 \u2014 Mouse Transplant Donor Prep (BM and Spleen)", "202": "Prot 202 \u2014 Mouse Whole Skin Digestion (CD4-preserving)", "203": "Prot 203 \u2014 Mouse GI Harvest", "204": "Prot 204 \u2014 Mouse TCD and BioMag T (combined)", "205": "Prot 205 \u2014 Mouse BM T-Cell Depletion", "206": "Prot 206 \u2014 Mouse BioMag T-Cell Enrichment", "207": "Prot 207 \u2014 Violet Proliferation Dye and CFSE Labelling", "208": "Prot 208 \u2014 Mouse Peripheral Blood Processing", "209": "Prot 209 \u2014 Tamoxifen Reconstitution for ERT2 Reporters", "210": "Prot 210 \u2014 Antibiotic Cocktail (microbiome depletion)", "211": "Prot 211 \u2014 Mouse Microbiome / 16S rRNA Sequencing", "212": "Prot 212 \u2014 CD11c Mouse Splenocyte Isolation (DC gradient)", "213": "Prot 213A \u2014 15-plex BD Cytokine Bead Array (mouse Flex Set)", "214": "Prot 214 \u2014 Organ Harvesting for CMV Experiments", "215": "Prot 215 \u2014 FLT3 Dendritic Cell Expansion", "216": "Prot 216 \u2014 Immunopeptidomics Sample Generation", "217": "Prot 217 \u2014 Dendritic Cell Activation", "301": "Prot 301 \u2014 Accessing Digital Histology and HALO", "302": "Prot 302 \u2014 Bacterial Maxi Prep", "303": "Prot 303 \u2014 Cell Transduction (Primary Cells)", "304": "Prot 304 \u2014 Cell Transduction (T Hybridomas)", "305": "Prot 305 \u2014 eSight Hybridoma Screen and MLR", "306": "Prot 306 \u2014 TCR Cas9 RNP Knockout", "307": "Prot 307 \u2014 Transfection of Plat-E Cells (retrovirus)", "308": "Prot 308 \u2014 Codon Optimization for TCR Engineering", "309": "Prot 309 \u2014 Vector Sequencing (MP71)", "310": "Prot 310 \u2014 10x Sequencing (lab tips)", "311": "Prot 311 \u2014 qPCR (SYBR Green, Roche LightCycler 480)", "401": "Prot 401 \u2014 Bacterial Agar Plates with Ampicillin", "402": "Prot 402 \u2014 Sterile Lysates / Bacterial Growth Curves", "403": "Prot 403 \u2014 CD4 Antigen Detection Assay", "404": "Prot 404 \u2014 Topical Application of S. epidermidis", "405": "Prot 405 \u2014 Growing E. faecalis and Lachnospiraceae", "406": "Prot 406a \u2014 Phospho-Western Blot, Bacterial Lysate", "407": "Prot 407 \u2014 Embedding Bacterial Pellet in HistoGel", "408": "Prot 408 \u2014 Bacterial Glycerol Stocks: Freezing and Revival", "409": "Prot 409 \u2014 CH Typing of E. coli Strains", "501": "Prot 501 \u2014 TCR Design (overview)", "502": "Prot 502 \u2014 Concentrated TCR Lentivirus Stock Production", "503": "Prot 503 \u2014 PC.008 Rapid Expansion Protocol (REP)", "504": "Prot 504 \u2014 Monocyte-derived Dendritic Cells", "505": "Prot 505 \u2014 Cloning by Limiting Dilution", "601": "Prot 601 \u2014 Tetramer Staining Protocols", "701": "Prot 701 \u2014 GitHub Account Setup and Lab Repository Access", "702": "Prot 702 \u2014 Cluster Access and the labctl Toolkit", "703": "Prot 703 \u2014 Running Jobs on the gizmo SLURM Cluster", "704": "Prot 704 \u2014 Building a Literature Reference Set", "705": "Prot 705 \u2014 Single-Cell RNA-seq Analysis Pipeline", "706": "Prot 706 \u2014 Spatial Transcriptomics of Host Tissue and Gut Microbes", "707": "Prot 707 \u2014 The Reagent Inventory and its Two-Way Sync", "708": "Prot 708 \u2014 Internal Site Build Chains and Adding a Protocol", "709": "Prot 709 \u2014 Scheduled Jobs, Heartbeats and the Dead-Man\u2019s Switch"};
+var NEXT_FREE = {"1": 110, "2": 218, "3": 312, "4": 410, "5": 506, "6": 602, "7": 710};
+var SERIES_NAME = {'1':'human','2':'mouse','3':'molecular / cell engineering',
+                   '4':'bacterial','5':'TCR engineering','6':'tetramer',
+                   '7':'computational'};
+var PICKED = null;
+
+function escSub(t) {
+    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function toggleSubmit() {
+    var w = document.getElementById('subwrap');
+    var open = w.classList.toggle('open');
+    document.getElementById('subplus').textContent = open ? '\u2212' : '+';
+    w.querySelector('.subtoggle').setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) setTimeout(function(){ document.getElementById('subnum').focus(); }, 60);
+}
+
+function checkNum() {
+    var v = document.getElementById('subnum').value.trim();
+    var h = document.getElementById('subnumhint');
+    h.className = 'subhint';
+    if (!v) {
+        h.innerHTML = 'Three digits. The first digit is the series: 1&nbsp;human &middot; '
+            + '2&nbsp;mouse &middot; 3&nbsp;molecular &middot; 4&nbsp;bacterial &middot; '
+            + '5&nbsp;TCR &middot; 6&nbsp;tetramer &middot; 7&nbsp;computational.';
+        return;
+    }
+    if (!/^\d{3}$/.test(v)) {
+        h.className = 'subhint bad';
+        h.textContent = 'Use a three-digit number, e.g. 409.';
+        return;
+    }
+    var series = v.charAt(0);
+    if (!SERIES_NAME[series]) {
+        h.className = 'subhint bad';
+        h.textContent = 'There is no ' + series + '00s series. Series run 100 to 799.';
+        return;
+    }
+    if (TAKEN[v]) {
+        h.className = 'subhint warn';
+        h.innerHTML = '\u26a0 ' + v + ' is already <strong>' + escSub(TAKEN[v]) + '</strong>. '
+            + 'Submitting under this number files it as a <strong>revision</strong> of that '
+            + 'protocol \u2014 say so in the reason below. For a new method use '
+            + (NEXT_FREE[series] ? '<strong>' + NEXT_FREE[series] + '</strong>, the next free number'
+                                 : 'the next free number') + ' in the ' + series + '00s.';
+    } else {
+        h.className = 'subhint ok';
+        h.innerHTML = '\u2713 ' + v + ' is free \u2014 ' + series + '00s is '
+            + SERIES_NAME[series] + '.';
+    }
+}
+
+function pickFile() {
+    var f = document.getElementById('subfile').files[0];
+    var el = document.getElementById('subfilename');
+    if (!f) { PICKED = null; el.textContent = 'No file chosen'; return; }
+    PICKED = f;
+    el.textContent = f.name + '  (' + (f.size / 1024).toFixed(1) + ' KB)';
+}
+
+function getSubmitToken() { return localStorage.getItem(SUBMIT_TOKEN_KEY); }
+
+function setupSubmitToken() {
+    var cur = getSubmitToken();
+    var msg = cur
+        ? 'A submissions token is set. Enter a new one to replace it, or leave blank to keep it:'
+        : 'To submit a method you need a GitHub Personal Access Token.\n\n'
+          + 'Create one at: github.com/settings/tokens\n\n'
+          + 'FINE-GRAINED token, Repository access = ' + SUBMIT_REPO + ',\n'
+          + 'Permissions > Contents = Read and write.\n\n'
+          + 'This token is for submissions ONLY and reaches no other lab repo.\n'
+          + 'It is stored in this browser and sent only to github.com.\n\nPaste token:';
+    var t = prompt(msg);
+    if (t && t.trim()) {
+        localStorage.setItem(SUBMIT_TOKEN_KEY, t.trim());
+        setSubStatus('Token saved.', 'ok');
+    }
+}
+
+function setSubStatus(msg, cls) {
+    var s = document.getElementById('substatus');
+    s.textContent = msg;
+    s.className = 'substatus' + (cls ? ' ' + cls : '');
+}
+
+function b64(buf) {
+    var bytes = new Uint8Array(buf), s = '', CH = 0x8000;
+    for (var i = 0; i < bytes.length; i += CH) {
+        s += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+    }
+    return btoa(s);
+}
+
+function slugify(s) {
+    return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48);
+}
+
+async function ghPutSubmission(path, contentB64, message, token) {
+    var r = await fetch('https://api.github.com/repos/' + SUBMIT_REPO + '/contents/' + path, {
+        method: 'PUT',
+        headers: { 'Authorization': 'token ' + token,
+                   'Accept': 'application/vnd.github+json',
+                   'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: message, content: contentB64 })
+    });
+    if (!r.ok) {
+        var e = await r.json().catch(function(){ return {}; });
+        throw new Error((e.message || ('HTTP ' + r.status))
+            + (r.status === 404 ? ' \u2014 the token may not cover ' + SUBMIT_REPO : ''));
+    }
+    return r.json();
+}
+
+async function submitMethod() {
+    var num = document.getElementById('subnum').value.trim();
+    var title = document.getElementById('subtitle').value.trim();
+    var reason = document.getElementById('subreason').value.trim();
+
+    if (!/^\d{3}$/.test(num)) { setSubStatus('Enter a three-digit protocol number.', 'bad'); return; }
+    if (!SERIES_NAME[num.charAt(0)]) { setSubStatus('There is no ' + num.charAt(0) + '00s series.', 'bad'); return; }
+    if (!title) { setSubStatus('Enter a title.', 'bad'); return; }
+    if (!PICKED) { setSubStatus('Choose a file to upload.', 'bad'); return; }
+    if (PICKED.size > 10 * 1024 * 1024) { setSubStatus('That file is over 10 MB \u2014 e-mail it to Albert instead.', 'bad'); return; }
+    if (!reason) { setSubStatus('Say why you are submitting it.', 'bad'); return; }
+
+    if (!getSubmitToken()) { setupSubmitToken(); if (!getSubmitToken()) return; }
+    var token = getSubmitToken();
+
+    var btn = document.getElementById('subsend');
+    btn.disabled = true;
+    setSubStatus('Uploading\u2026');
+
+    try {
+        var who = 'unknown';
+        try {
+            var ur = await fetch('https://api.github.com/user', {
+                headers: { 'Authorization': 'token ' + token,
+                           'Accept': 'application/vnd.github+json' } });
+            if (ur.status === 401) {
+                localStorage.removeItem(SUBMIT_TOKEN_KEY);
+                throw new Error('Token rejected. Click Token\u2026 and paste a current one.');
+            }
+            if (ur.ok) { var u = await ur.json(); who = u.login || 'unknown'; }
+        } catch (e) { if (/rejected/.test(e.message)) throw e; }
+
+        var buf = await PICKED.arrayBuffer();
+        var now = new Date();
+        var stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
+        var folder = 'submissions/' + stamp + '_Prot' + num + '_' + (slugify(title) || 'method');
+
+        var meta = {
+            protocol_number: num,
+            series: SERIES_NAME[num.charAt(0)],
+            title: title,
+            reason: reason,
+            filename: PICKED.name,
+            size_bytes: PICKED.size,
+            submitted_by: who,
+            submitted_utc: now.toISOString(),
+            replaces_existing: TAKEN[num] || null,
+            status: 'new'
+        };
+
+        await ghPutSubmission(folder + '/' + PICKED.name, b64(buf),
+            'Submission: Prot ' + num + ' ' + title + ' (file)', token);
+        await ghPutSubmission(folder + '/submission.json',
+            btoa(unescape(encodeURIComponent(JSON.stringify(meta, null, 2) + '\n'))),
+            'Submission: Prot ' + num + ' ' + title + ' (metadata)', token);
+
+        setSubStatus('\u2713 Submitted. Albert has been notified \u2014 it appears here once he approves.', 'ok');
+        document.getElementById('subnum').value = '';
+        document.getElementById('subtitle').value = '';
+        document.getElementById('subreason').value = '';
+        document.getElementById('subfile').value = '';
+        document.getElementById('subfilename').textContent = 'No file chosen';
+        PICKED = null;
+        checkNum();
+    } catch (err) {
+        setSubStatus('Failed: ' + err.message, 'bad');
+    } finally {
+        btn.disabled = false;
+    }
+}
+
 function toggleCard(card) { card.classList.toggle('open'); }
 
 function showAll(ev, id) {
