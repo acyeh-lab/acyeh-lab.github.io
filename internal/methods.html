@@ -220,16 +220,16 @@
                    placeholder="Search methods, sources, people, vendors, reagents...">
             <button class="reset-btn" onclick="resetSearch()">Reset</button>
         </div>
-        <div class="stats" id="stats"><strong>167</strong> methods and reference documents
+        <div class="stats" id="stats"><strong>168</strong> methods and reference documents
             across <strong>11</strong> sections &middot;
-            155.1 MB on disk &middot; 108 downloadable
-            (45.4 MB) &middot; catalog built 2026-09-11</div>
+            155.1 MB on disk &middot; 109 downloadable
+            (45.4 MB) &middot; catalog built 2026-11-04</div>
 
         <div class="secnav">
             <a href="#human">Human Sample Processing<span class="n">13</span></a>
             <a href="#mouse">Mouse Methods<span class="n">32</span></a>
             <a href="#molecular">Molecular Biology &amp; Cell Engineering<span class="n">13</span></a>
-            <a href="#bacterial">Bacterial &amp; Microbiome Methods<span class="n">12</span></a>
+            <a href="#bacterial">Bacterial &amp; Microbiome Methods<span class="n">13</span></a>
             <a href="#tcr">TCR Engineering &amp; Cell Therapy<span class="n">15</span></a>
             <a href="#flow">Flow Cytometry, Staining &amp; Tetramers<span class="n">11</span></a>
             <a href="#comp">Computational Pipelines &amp; Lab Computing<span class="n">9</span></a>
@@ -2244,7 +2244,7 @@
         </div>
 
         <div class="section" id="bacterial" data-sec="bacterial">
-          <h3>Bacterial &amp; Microbiome Methods<span class="count">12</span></h3>
+          <h3>Bacterial &amp; Microbiome Methods<span class="count">13</span></h3>
           <p class="secblurb">Protocol 400s series — culture, lysates, growth curves, colonization models, Western blot and bacterial histology.</p>
           <div class="secbtns"><button onclick="setAll('bacterial',true)">Expand all</button><button onclick="setAll('bacterial',false)">Collapse all</button></div>
           <div class="toc"><ol>
@@ -2259,7 +2259,8 @@
             <li data-for="bacterial-8"><a href="#bacterial-8" onclick="jumpTo(event,'bacterial-8')"><span>Prot 406b — Phospho-Western Blot, Primary T Cells</span></a></li>
             <li data-for="bacterial-9"><a href="#bacterial-9" onclick="jumpTo(event,'bacterial-9')"><span>Prot 407 — Embedding Bacterial Pellet in HistoGel</span></a></li>
             <li data-for="bacterial-10"><a href="#bacterial-10" onclick="jumpTo(event,'bacterial-10')"><span>Prot 408 — Bacterial Glycerol Stocks: Freezing and Revival</span></a></li>
-            <li data-for="bacterial-11"><a href="#bacterial-11" onclick="jumpTo(event,'bacterial-11')"><span><em>S. epidermidis</em> Application Schedule Template</span></a></li>
+            <li data-for="bacterial-11"><a href="#bacterial-11" onclick="jumpTo(event,'bacterial-11')"><span>Prot 409 — CH Typing of <em>E. coli</em> Strains</span></a></li>
+            <li data-for="bacterial-12"><a href="#bacterial-12" onclick="jumpTo(event,'bacterial-12')"><span><em>S. epidermidis</em> Application Schedule Template</span></a></li>
           </ol></div>
           <div class="card" id="bacterial-0" data-sec="bacterial" data-search="prot 401 — bacterial agar plates with ampicillin pouring lb-agar plates from powder (sigma l3147): 20&amp;nbsp;g in 0.5&amp;nbsp;l, boil to dissolve, autoclave 15&amp;nbsp;min at 121°c, then add antibiotic. yeh lab (author metadata yeh md, albert c). [prot 401] bacterial agar with amp.docx  creating agar plates from powder sigma millipore – lb broth with agar – l3147-1kg ($293.00) https://www.sigmaaldrich.com/us/en/product/sigma/l3147 1. suspend 20 g in 0.5l of distilled water. (40g/1l) 2. heat to boiling while stirring to dissolve. 3. autoclave for 15 minutes at 121°c. 4. cool to 50°c prior to adding final concentration of … yeh md, albert c yeh md, albert c ">
             <div class="card-header" onclick="toggleCard(this.parentNode)">
@@ -2641,7 +2642,42 @@
               </div>
             </div></div>
           </div>
-          <div class="card" id="bacterial-11" data-sec="bacterial" data-search="s. epidermidis application schedule template fill-in calendar template for a topical s. epidermidis colonisation run — culture start, inoculation days and volumes. document author metadata: kathleen ensbey; edited by albert yeh. pairs with prot 404. s. epidermidis schedule template.docx  topical application of s. epidermidis schedule s. epidermidis: glycerol stock located in -80◦c freezer, box 1c3 take glycerol stock aliquot (keep frozen on dry ice) inoculate 5ml of tryptic soy broth per mouse (n+1) grow 18hrs at 37◦c (incubator #135) in fredricks lab e4-430; label all items with the date and our contact details) spec. cu… ensbey, kathleen yeh md, albert c ">
+          <div class="card" id="bacterial-11" data-sec="bacterial" data-search="prot 409 — ch typing of e. coli strains two-round nested pcr that types an e. coli isolate on its fumc and fimh alleles — the ch scheme. outer primers amplify each locus; the nested primers carry t7 promoter and t7 terminator tails so the product can be read straight off those sites. 15 µl reactions of 2× dreamtaq, 0.5 µm primers and 1 µl purified template; pcr1 runs 30 cycles (94 °c 20 s / 57 °c 20 s / 72 °c 40 s), then 1.0 µl of that product goes into 15 µl of mm2 for 10 cycles only of pcr2 under the same conditions. pcr product is opened or added only in j209; runs can pause tightly sealed at −20 °c in freezer #1. both primer pairs, with sequences, are tabulated in the document. document last modified by albert yeh, 11/4/2026. the protocol itself is adapted from the ch typing protocol used in evgeni sukorenko’s lab (uw), which is also all the primer table gives as a reference — no published ch scheme is cited. the document does not state which fumc/fimh allele database the sequences are called against, nor the sequencing route downstream of the t7 tails; add them here once they are settled. [prot 409] ch typing ecoli.docx protocol for ch typing of e. coli strains, developed from evgeni sukorenko’s lab (uw). (see sukorenko lab) ch typing of e. coli strains protocol for ch typing of e. coli strains, developed from evgeni sukorenko’s lab (uw). taatacgactcactataggggcgcttcaaatttgttcgg gctagttattgctcagcgggtacgcagcgaaaaagattc taatacgactcactatagggactgctgatgggctggtc gctagttattgctcagcggaggaattggcactgaacc 1. prepare master mix for pcr1 and pcr2 1 µl template (purified dna…  yeh md, albert c ">
+            <div class="card-header" onclick="toggleCard(this.parentNode)">
+              <div class="card-title">Prot 409 — CH Typing of <em>E. coli</em> Strains</div>
+              <div class="card-meta"><span class="tag doc">Word</span><span>20.7 KB</span><span>&middot; Yeh MD, Albert C</span><span>&middot; edited 2026-11-04</span></div>
+              <div class="chevron">▼</div>
+            </div>
+            <div class="card-wrap"><div class="card-body">
+              <p class="desc">Two-round nested PCR that types an <em>E. coli</em> isolate on its <em>fumC</em> and <em>fimH</em> alleles — the CH scheme. Outer primers amplify each locus; the nested primers carry T7 promoter and T7 terminator tails so the product can be read straight off those sites. 15 µL reactions of 2× DreamTaq, 0.5 µM primers and 1 µL purified template; PCR1 runs 30 cycles (94 °C 20 s / 57 °C 20 s / 72 °C 40 s), then 1.0 µL of that product goes into 15 µL of MM2 for <strong>10 cycles only</strong> of PCR2 under the same conditions. PCR product is opened or added <strong>only in J209</strong>; runs can pause tightly sealed at −20 °C in freezer #1. Both primer pairs, with sequences, are tabulated in the document.</p>
+              <div class="dlrow"><a class="dl" href="methods_files/Prot_409_CH_Typing_Ecoli.docx" download="[Prot 409] CH Typing Ecoli.docx" onclick="event.stopPropagation()">⬇ Download Word &middot; 20.7 KB</a></div>
+              <div class="block"><h4>Source &amp; citation</h4>
+                <div class="cite">Document last modified by <strong>Albert Yeh</strong>, 11/4/2026. The protocol itself is adapted from the CH typing protocol used in <strong>Evgeni Sukorenko’s lab (UW)</strong>, which is also all the primer table gives as a reference — no published CH scheme is cited. The document does not state which <em>fumC</em>/<em>fimH</em> allele database the sequences are called against, nor the sequencing route downstream of the T7 tails; add them here once they are settled.</div>
+                <ul>
+                  <li>&ldquo;Protocol for CH typing of E. coli strains, developed from Evgeni Sukorenko’s lab (UW).&rdquo; <em>— stated in the document</em></li>
+                  <li>&ldquo;(See Sukorenko lab)&rdquo; <em>— stated in the document</em></li>
+                </ul>
+              </div>
+              <div class="block"><h4>Document record</h4>
+                <div class="recgrid">
+                  <div><b>Last edited by:</b> Yeh MD, Albert C</div>
+                  <div><b>Created:</b> 2022-04-17</div>
+                  <div><b>Last modified:</b> 2026-11-04</div>
+                  <div><b>Revisions:</b> 8</div>
+                </div>
+              </div>
+              <div class="block"><h4>The protocol, step by step</h4>
+                <div class="steps" id="st-bacterial-11">
+                  <div class="nofade"><p class="s-p">CH Typing of E. coli Strains</p><p class="s-p">Protocol for CH typing of E. coli strains, developed from Evgeni Sukorenko’s lab (UW).</p><div class="s-h s-h1">Primers</div><div class="s-tblwrap"><table class="s-tbl"><tr><th><strong>Test</strong></th><th><strong>Target</strong></th><th><strong>Primer name</strong></th><th><strong>Sequence</strong></th><th><strong>Ref</strong></th></tr><tr><td>CH typing</td><td>fumC: PCR1</td><td>fumC-F</td><td>GCATCACAGGTCGCCAGCG</td><td>(See Sukorenko lab)</td></tr><tr><td></td><td></td><td>fumC-R</td><td>GTACGCAGCGAAAAAGATTC</td><td></td></tr><tr><td></td><td>fumC: Nested</td><td>fumC-F'-T7Pro</td><td>TAATACGACTCACTATAGGGGCGCTTCAAATTTGTTCGG</td><td></td></tr><tr><td></td><td></td><td>fumC-R'-T7Term</td><td>GCTAGTTATTGCTCAGCGGGTACGCAGCGAAAAAGATTC</td><td></td></tr><tr><td></td><td>fimH: PCR1</td><td>fimH-F</td><td>CTGTTTGCTGTACTGCTGATG</td><td></td></tr><tr><td></td><td></td><td>fimH-R</td><td>CCACAATAAACGGTAAGAGGAAT</td><td></td></tr><tr><td></td><td>fimH: Nested</td><td>fimH-F'-T7Pro</td><td>TAATACGACTCACTATAGGGACTGCTGATGGGCTGGTC</td><td></td></tr><tr><td></td><td></td><td>fimH-R'-T7Term</td><td>GCTAGTTATTGCTCAGCGGAGGAATTGGCACTGAACC</td><td></td></tr></table></div><div class="s-h s-h1">1. Prepare Master Mix for PCR1 and PCR2</div><p class="s-p">15 µL per reaction<br>2× DreamTaq<br>0.5 µM primers<br>1 µL template (purified DNA)</p><div class="s-h s-h1">2. Run PCR1</div><div class="s-tblwrap"><table class="s-tbl"><tr><th><strong>Step</strong></th><th><strong>Temperature</strong></th><th><strong>Time</strong></th><th><strong>Cycles</strong></th></tr><tr><td>Initial denaturation</td><td>95°C</td><td>3 min</td><td>1</td></tr><tr><td>Denaturation</td><td>94°C</td><td>20 sec</td><td>30</td></tr><tr><td>Annealing</td><td>57°C</td><td>20 sec</td><td></td></tr><tr><td>Extension</td><td>72°C</td><td>40 sec</td><td></td></tr><tr><td>Final extension</td><td>72°C</td><td>5 min</td><td>1</td></tr><tr><td>Hold</td><td>6°C</td><td>Hold</td><td>—</td></tr></table></div><div class="s-h s-h1">PCR2</div><p class="s-p">3. Transfer 1.0 µL of PCR1 product to a non-skirted PCR plate containing 15 µL of MM2 in each well. Only open/add PCR product in J209.</p><p class="s-p">4. Run 10 (not 30!) cycles of PCR2 (nested) using the same conditions.</p><p class="s-p">5. If you need to pause the process, store PCR2 products tightly sealed in freezer #1 (−20°C).</p></div>
+                </div>
+              </div>
+              <div class="block"><h4>File location</h4>
+                <div class="pathrow"><code>/fh/fast/yeh_a/grp/admin/yeh_methods/[Prot 409] CH Typing Ecoli.docx</code><button class="copy" onclick="copyPath(event,this)" data-path="/fh/fast/yeh_a/grp/admin/yeh_methods/[Prot 409] CH Typing Ecoli.docx">Copy path</button></div>
+                <div class="pathrow"><code>X:\fast\yeh_a\grp\admin\yeh_methods\[Prot 409] CH Typing Ecoli.docx</code><button class="copy" onclick="copyPath(event,this)" data-path="X:\fast\yeh_a\grp\admin\yeh_methods\[Prot 409] CH Typing Ecoli.docx">Copy Windows path</button></div>
+              </div>
+            </div></div>
+          </div>
+          <div class="card" id="bacterial-12" data-sec="bacterial" data-search="s. epidermidis application schedule template fill-in calendar template for a topical s. epidermidis colonisation run — culture start, inoculation days and volumes. document author metadata: kathleen ensbey; edited by albert yeh. pairs with prot 404. s. epidermidis schedule template.docx  topical application of s. epidermidis schedule s. epidermidis: glycerol stock located in -80◦c freezer, box 1c3 take glycerol stock aliquot (keep frozen on dry ice) inoculate 5ml of tryptic soy broth per mouse (n+1) grow 18hrs at 37◦c (incubator #135) in fredricks lab e4-430; label all items with the date and our contact details) spec. cu… ensbey, kathleen yeh md, albert c ">
             <div class="card-header" onclick="toggleCard(this.parentNode)">
               <div class="card-title"><em>S. epidermidis</em> Application Schedule Template</div>
               <div class="card-meta"><span class="tag doc">Word</span><span>15.4 KB</span><span>&middot; Yeh MD, Albert C</span><span>&middot; edited 2023-05-02</span></div>
@@ -2663,7 +2699,7 @@
                 </div>
               </div>
               <div class="block"><h4>The protocol, step by step</h4>
-                <div class="steps" id="st-bacterial-11">
+                <div class="steps" id="st-bacterial-12">
                   <div class="nofade"><p class="s-p">Exp</p><p class="s-p">Date</p><p class="s-p">Topical application of <em>S. epidermidis</em> schedule</p><div class="s-tblwrap"><table class="s-tbl"><tr><th></th><th></th><th>Start culture</th><th>Inoculate mice</th></tr><tr><td>Date</td><td>Day</td><td>(xx ml)</td><td>Group # # x strain</td></tr><tr><td>Sun 5/12</td><td>-10</td><td></td><td></td></tr><tr><td>Mon 5/13</td><td>-9</td><td></td><td></td></tr><tr><td>Tue 5/14</td><td>-8</td><td></td><td></td></tr><tr><td>Wed 5/15</td><td>-7</td><td></td><td></td></tr><tr><td>Thu 5/16</td><td>-6</td><td></td><td></td></tr><tr><td>Fri 5/17</td><td>-5</td><td></td><td></td></tr><tr><td>Sat 5/18</td><td>-4</td><td></td><td></td></tr><tr><td>Sun 5/19</td><td>-3</td><td></td><td></td></tr><tr><td>Mon 5/20</td><td>-2</td><td></td><td></td></tr></table></div><p class="s-p"><em>S. epidermidis: glycerol stock located in -80◦C freezer, box 1C3</em></p><p class="s-p"><em>Start culture:</em></p><ul class="s-l"><li>Take glycerol stock aliquot (keep frozen on dry ice)</li><li>Inoculate 5ml of tryptic soy broth per mouse (n+1)</li><li>Grow 18hrs at 37◦C (Incubator #135) in Fredricks Lab E4-430; label all items with the date and our contact details)</li></ul><p class="s-p"><em>Inoculate mice:</em></p><ul class="s-l"><li>Spec. culture: an O.D. (600nm) = 0.8 is required. Dilute in tryptic soy broth, if required</li><li>Make 5ml aliquots x number of mice to inoculate</li></ul></div>
                 </div>
               </div>
