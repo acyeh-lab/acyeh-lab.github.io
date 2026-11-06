@@ -209,18 +209,25 @@
             cursor: pointer; font-weight: 600; }
         .filebtn:hover { background: #00407f; }
         .filename { font-size: .85em; color: #52616f; word-break: break-all; }
+        .attachcue { margin: 14px 0 0; padding: 10px 12px; background: #fff8e5;
+            border: 1px solid #f0d9a0; border-left: 3px solid #d79a00; border-radius: 4px;
+            font-size: .85em; color: #6b5200; line-height: 1.5; }
+        .attachcue strong { color: #5a4400; }
         .subactions { display: flex; align-items: center; gap: 12px; margin-top: 16px;
             padding-top: 14px; border-top: 1px solid #e3e9f0; flex-wrap: wrap; }
         .subsend { background: #217346; color: #fff; border: none; border-radius: 4px;
             padding: 10px 20px; font-family: inherit; font-size: .9em; font-weight: 600;
             cursor: pointer; }
         .subsend:hover { background: #1a5c38; }
-        .subsend:disabled { background: #9bb0a4; cursor: not-allowed; }
         .subtok { background: none; border: none; color: #0056b3; font-family: inherit;
             font-size: .82em; cursor: pointer; text-decoration: underline; padding: 0; }
         .substatus { font-size: .85em; color: #52616f; }
         .substatus.ok { color: #217346; font-weight: 600; }
         .substatus.bad { color: #c0392b; font-weight: 600; }
+        .subfallback { display: none; margin-top: 12px; }
+        .subfallback textarea { width: 100%; box-sizing: border-box; min-height: 190px;
+            font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: .8em;
+            padding: 10px; border: 1px solid #cfd9e4; border-radius: 4px; line-height: 1.5; }
         @media (max-width: 640px) {
             .subgrid { grid-template-columns: 1fr; gap: 4px 0; }
             .subgrid label { padding-top: 10px; }
@@ -277,11 +284,11 @@
           </button>
           <div class="subpanel" id="subpanel">
             <p class="subnote">
-              Use this to send a protocol to the lab library. Nothing is published by
-              submitting: the file goes to a private inbox, <strong>Albert is e-mailed</strong>,
-              and it appears on this page only once he replies <strong>approve</strong>.
-              You need a GitHub token that covers the submissions repository &mdash; the
-              <em>Token</em> button below sets it, and it is stored only in this browser.
+              Use this to send a protocol to the lab library. <strong>No account and no
+              token &mdash; it writes an e-mail for you.</strong> Fill this in, press
+              <em>Compose e-mail</em>, attach your file in your mail program and send.
+              Nothing is published by submitting: the protocol appears on this page only
+              once Albert approves it.
             </p>
             <div class="subgrid">
               <label for="subnum">Protocol # <span class="req">*</span></label>
@@ -309,7 +316,9 @@
                 </div>
                 <input type="file" id="subfile" style="display:none" onchange="pickFile()"
                        accept=".docx,.doc,.xlsx,.xls,.pptx,.ppt,.pdf,.md,.txt">
-                <p class="subhint">Word, Excel or PowerPoint. Up to 10&nbsp;MB.</p>
+                <p class="subhint">Word, Excel, PowerPoint or PDF. Choosing it here <strong>names it in
+                  the e-mail</strong> so a missing attachment is obvious &mdash; a web page cannot
+                  attach a file to an e-mail for you, so you attach it in your mail program.</p>
               </div>
 
               <label for="subreason">Reason for<br>submission <span class="req">*</span></label>
@@ -318,10 +327,20 @@
                 <p class="subhint">This is what Albert reads when deciding. It is also kept with the file as a record.</p>
               </div>
             </div>
+            <p class="attachcue">
+              <strong>Don&rsquo;t forget the attachment.</strong> The e-mail opens with everything
+              filled in except the file itself. Attach the protocol before you send it, or Albert
+              gets a submission with nothing to install.
+            </p>
             <div class="subactions">
-              <button class="subsend" id="subsend" onclick="submitMethod()">Submit for approval</button>
-              <button class="subtok" onclick="setupSubmitToken()">Token&hellip;</button>
+              <button class="subsend" id="subsend" onclick="submitMethod()">Compose e-mail</button>
+              <button class="subtok" onclick="copySubmit()">No mail program? Copy the text instead</button>
               <span class="substatus" id="substatus"></span>
+            </div>
+            <div class="subfallback" id="subfallback">
+              <p class="subhint">Send this to <strong>ayeh@fredhutch.org</strong> with the subject
+                shown on the first line, and attach your file.</p>
+              <textarea id="subfalltext" readonly onclick="this.select()"></textarea>
             </div>
           </div>
         </div>
@@ -334,7 +353,7 @@
         <div class="stats" id="stats"><strong>168</strong> methods and reference documents
             across <strong>11</strong> sections &middot;
             155.1 MB on disk &middot; 109 downloadable
-            (45.4 MB) &middot; catalog built 2026-11-04</div>
+            (45.4 MB) &middot; catalog built 2026-11-06</div>
 
         <div class="secnav">
             <a href="#human">Human Sample Processing<span class="n">13</span></a>
@@ -5818,23 +5837,33 @@
     <script>
 
 /* ===== Submit a method ====================================================
-   GitHub Pages is static, so a submission is a commit: the file and a
-   submission.json are PUT into the private repo acyeh-lab/lab-method-submissions via
-   the contents API, using a fine-grained token the submitter supplies. The
-   cluster side e-mails Albert and installs it on his "approve" reply.
+   NO TOKEN AND NO ACCOUNT. GitHub Pages has no server and a browser cannot
+   send mail, so the panel composes a mailto: to ayeh@fredhutch.org with a
+   machine-readable header block, and the submitter attaches the file and
+   sends it from their own mail client.
 
-   Deliberately its OWN localStorage key and its OWN repo: a token scopes to a
-   repository, so reusing the reagents or tasks token here would hand every
-   submitter those repos as well.
+   The GitHub-commit version of this panel needed a token per submitter; on a
+   personal account fine-grained tokens do not work for collaborators, so the
+   only token that would have worked is a CLASSIC one with full `repo` scope.
+   That is strictly worse than mail. See submit_panel.py for the full note.
+
+   A browser cannot attach a file to a mailto: link -- that is a platform
+   limit, not an oversight. The picked file is NAMED in the body so a missing
+   attachment is detectable; do not add code that pretends to upload it.
    ========================================================================= */
-var SUBMIT_REPO = 'acyeh-lab/lab-method-submissions';
-var SUBMIT_TOKEN_KEY = 'yehlab_methods_submit_token';
+var SUBMIT_TO = 'ayeh@fredhutch.org';
+var SUBJECT_PREFIX = '[Method Submission]';
 var TAKEN = {"101": "Prot 101 \u2014 Human Antibody Staining (General)", "102": "Prot 102 \u2014 PBMC Harvest from Whole Blood (Ficoll-Paque)", "103": "Prot 103 \u2014 PBMC PMA/Ionomycin Stimulation + Intracellular Staining", "104": "Prot 104 \u2014 Freezing and Thawing PBMCs", "105": "Prot 105 \u2014 Human Endoscopy Sample Freezing &amp; Formalin Fixation", "106": "Prot 106 \u2014 Human Biopsy Prep for Single-Cell Assays (base version)", "107": "Prot 107 \u2014 CMV Peptide Stimulation", "108": "Prot 108 \u2014 51Cr Release Assay", "109": "Prot 109 \u2014 xCELLigence eSight Live Microscopy / Impedance Assay", "201": "Prot 201 \u2014 Mouse Transplant Donor Prep (BM and Spleen)", "202": "Prot 202 \u2014 Mouse Whole Skin Digestion (CD4-preserving)", "203": "Prot 203 \u2014 Mouse GI Harvest", "204": "Prot 204 \u2014 Mouse TCD and BioMag T (combined)", "205": "Prot 205 \u2014 Mouse BM T-Cell Depletion", "206": "Prot 206 \u2014 Mouse BioMag T-Cell Enrichment", "207": "Prot 207 \u2014 Violet Proliferation Dye and CFSE Labelling", "208": "Prot 208 \u2014 Mouse Peripheral Blood Processing", "209": "Prot 209 \u2014 Tamoxifen Reconstitution for ERT2 Reporters", "210": "Prot 210 \u2014 Antibiotic Cocktail (microbiome depletion)", "211": "Prot 211 \u2014 Mouse Microbiome / 16S rRNA Sequencing", "212": "Prot 212 \u2014 CD11c Mouse Splenocyte Isolation (DC gradient)", "213": "Prot 213A \u2014 15-plex BD Cytokine Bead Array (mouse Flex Set)", "214": "Prot 214 \u2014 Organ Harvesting for CMV Experiments", "215": "Prot 215 \u2014 FLT3 Dendritic Cell Expansion", "216": "Prot 216 \u2014 Immunopeptidomics Sample Generation", "217": "Prot 217 \u2014 Dendritic Cell Activation", "301": "Prot 301 \u2014 Accessing Digital Histology and HALO", "302": "Prot 302 \u2014 Bacterial Maxi Prep", "303": "Prot 303 \u2014 Cell Transduction (Primary Cells)", "304": "Prot 304 \u2014 Cell Transduction (T Hybridomas)", "305": "Prot 305 \u2014 eSight Hybridoma Screen and MLR", "306": "Prot 306 \u2014 TCR Cas9 RNP Knockout", "307": "Prot 307 \u2014 Transfection of Plat-E Cells (retrovirus)", "308": "Prot 308 \u2014 Codon Optimization for TCR Engineering", "309": "Prot 309 \u2014 Vector Sequencing (MP71)", "310": "Prot 310 \u2014 10x Sequencing (lab tips)", "311": "Prot 311 \u2014 qPCR (SYBR Green, Roche LightCycler 480)", "401": "Prot 401 \u2014 Bacterial Agar Plates with Ampicillin", "402": "Prot 402 \u2014 Sterile Lysates / Bacterial Growth Curves", "403": "Prot 403 \u2014 CD4 Antigen Detection Assay", "404": "Prot 404 \u2014 Topical Application of S. epidermidis", "405": "Prot 405 \u2014 Growing E. faecalis and Lachnospiraceae", "406": "Prot 406a \u2014 Phospho-Western Blot, Bacterial Lysate", "407": "Prot 407 \u2014 Embedding Bacterial Pellet in HistoGel", "408": "Prot 408 \u2014 Bacterial Glycerol Stocks: Freezing and Revival", "409": "Prot 409 \u2014 CH Typing of E. coli Strains", "501": "Prot 501 \u2014 TCR Design (overview)", "502": "Prot 502 \u2014 Concentrated TCR Lentivirus Stock Production", "503": "Prot 503 \u2014 PC.008 Rapid Expansion Protocol (REP)", "504": "Prot 504 \u2014 Monocyte-derived Dendritic Cells", "505": "Prot 505 \u2014 Cloning by Limiting Dilution", "601": "Prot 601 \u2014 Tetramer Staining Protocols", "701": "Prot 701 \u2014 GitHub Account Setup and Lab Repository Access", "702": "Prot 702 \u2014 Cluster Access and the labctl Toolkit", "703": "Prot 703 \u2014 Running Jobs on the gizmo SLURM Cluster", "704": "Prot 704 \u2014 Building a Literature Reference Set", "705": "Prot 705 \u2014 Single-Cell RNA-seq Analysis Pipeline", "706": "Prot 706 \u2014 Spatial Transcriptomics of Host Tissue and Gut Microbes", "707": "Prot 707 \u2014 The Reagent Inventory and its Two-Way Sync", "708": "Prot 708 \u2014 Internal Site Build Chains and Adding a Protocol", "709": "Prot 709 \u2014 Scheduled Jobs, Heartbeats and the Dead-Man\u2019s Switch"};
 var NEXT_FREE = {"1": 110, "2": 218, "3": 312, "4": 410, "5": 506, "6": 602, "7": 710};
 var SERIES_NAME = {'1':'human','2':'mouse','3':'molecular / cell engineering',
                    '4':'bacterial','5':'TCR engineering','6':'tetramer',
                    '7':'computational'};
 var PICKED = null;
+
+/* Windows caps a mailto: URL near 2048 characters and silently truncates
+   past it, which would eat the end of a long reason. Over this, fall back to
+   the copy box rather than hand the submitter a half-written e-mail. */
+var MAILTO_MAX = 1900;
 
 function escSub(t) {
     return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -5890,24 +5919,10 @@ function pickFile() {
     if (!f) { PICKED = null; el.textContent = 'No file chosen'; return; }
     PICKED = f;
     el.textContent = f.name + '  (' + (f.size / 1024).toFixed(1) + ' KB)';
-}
-
-function getSubmitToken() { return localStorage.getItem(SUBMIT_TOKEN_KEY); }
-
-function setupSubmitToken() {
-    var cur = getSubmitToken();
-    var msg = cur
-        ? 'A submissions token is set. Enter a new one to replace it, or leave blank to keep it:'
-        : 'To submit a method you need a GitHub Personal Access Token.\n\n'
-          + 'Create one at: github.com/settings/tokens\n\n'
-          + 'FINE-GRAINED token, Repository access = ' + SUBMIT_REPO + ',\n'
-          + 'Permissions > Contents = Read and write.\n\n'
-          + 'This token is for submissions ONLY and reaches no other lab repo.\n'
-          + 'It is stored in this browser and sent only to github.com.\n\nPaste token:';
-    var t = prompt(msg);
-    if (t && t.trim()) {
-        localStorage.setItem(SUBMIT_TOKEN_KEY, t.trim());
-        setSubStatus('Token saved.', 'ok');
+    if (f.size > 20 * 1024 * 1024) {
+        setSubStatus('That file is over 20 MB and may bounce \u2014 send a link instead.', 'bad');
+    } else {
+        setSubStatus('');
     }
 }
 
@@ -5917,103 +5932,114 @@ function setSubStatus(msg, cls) {
     s.className = 'substatus' + (cls ? ' ' + cls : '');
 }
 
-function b64(buf) {
-    var bytes = new Uint8Array(buf), s = '', CH = 0x8000;
-    for (var i = 0; i < bytes.length; i += CH) {
-        s += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
-    }
-    return btoa(s);
-}
-
-function slugify(s) {
-    return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48);
-}
-
-async function ghPutSubmission(path, contentB64, message, token) {
-    var r = await fetch('https://api.github.com/repos/' + SUBMIT_REPO + '/contents/' + path, {
-        method: 'PUT',
-        headers: { 'Authorization': 'token ' + token,
-                   'Accept': 'application/vnd.github+json',
-                   'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: message, content: contentB64 })
-    });
-    if (!r.ok) {
-        var e = await r.json().catch(function(){ return {}; });
-        throw new Error((e.message || ('HTTP ' + r.status))
-            + (r.status === 404 ? ' \u2014 the token may not cover ' + SUBMIT_REPO : ''));
-    }
-    return r.json();
-}
-
-async function submitMethod() {
+/* Collect and validate the four fields. Returns null and sets the status
+   line if anything is missing, so both buttons share one definition of a
+   complete submission. */
+function readSubmission() {
     var num = document.getElementById('subnum').value.trim();
     var title = document.getElementById('subtitle').value.trim();
     var reason = document.getElementById('subreason').value.trim();
 
-    if (!/^\d{3}$/.test(num)) { setSubStatus('Enter a three-digit protocol number.', 'bad'); return; }
-    if (!SERIES_NAME[num.charAt(0)]) { setSubStatus('There is no ' + num.charAt(0) + '00s series.', 'bad'); return; }
-    if (!title) { setSubStatus('Enter a title.', 'bad'); return; }
-    if (!PICKED) { setSubStatus('Choose a file to upload.', 'bad'); return; }
-    if (PICKED.size > 10 * 1024 * 1024) { setSubStatus('That file is over 10 MB \u2014 e-mail it to Albert instead.', 'bad'); return; }
-    if (!reason) { setSubStatus('Say why you are submitting it.', 'bad'); return; }
+    if (!/^\d{3}$/.test(num)) { setSubStatus('Enter a three-digit protocol number.', 'bad'); return null; }
+    if (!SERIES_NAME[num.charAt(0)]) { setSubStatus('There is no ' + num.charAt(0) + '00s series.', 'bad'); return null; }
+    if (!title) { setSubStatus('Enter a title.', 'bad'); return null; }
+    if (!PICKED) { setSubStatus('Choose the protocol file so the e-mail can name it.', 'bad'); return null; }
+    if (!reason) { setSubStatus('Say why you are submitting it.', 'bad'); return null; }
+    return { num: num, title: title, reason: reason,
+             series: SERIES_NAME[num.charAt(0)],
+             file: PICKED.name, size: PICKED.size,
+             revises: TAKEN[num] || null };
+}
 
-    if (!getSubmitToken()) { setupSubmitToken(); if (!getSubmitToken()) return; }
-    var token = getSubmitToken();
+function submissionSubject(s) {
+    return SUBJECT_PREFIX + ' Prot ' + s.num + ' \u2014 ' + s.title;
+}
 
-    var btn = document.getElementById('subsend');
-    btn.disabled = true;
-    setSubStatus('Uploading\u2026');
+/* A fixed "Key: value" header block, then the free text. Written so the
+   cluster side can parse it without guessing; keep the keys stable. */
+function submissionBody(s) {
+    var L = [];
+    L.push('Protocol-Number: ' + s.num);
+    L.push('Title: ' + s.title);
+    L.push('Series: ' + s.series);
+    L.push('File: ' + s.file + '   <-- ATTACH THIS FILE');
+    L.push('File-Size-Bytes: ' + s.size);
+    L.push('Submitted-UTC: ' + new Date().toISOString());
+    if (s.revises) L.push('Revises: ' + s.revises);
+    L.push('');
+    L.push('Reason for submission:');
+    L.push(s.reason);
+    L.push('');
+    L.push('-- ');
+    L.push('Sent from the Submit-a-method panel on the Yeh Lab methods page.');
+    L.push('ALBERT: reply "approve" to install this into the methods library,');
+    L.push('or "reject" to discard it. Reply on its own line, above the quoted');
+    L.push('text. Nothing is published until you do.');
+    return L.join('\n');
+}
 
-    try {
-        var who = 'unknown';
-        try {
-            var ur = await fetch('https://api.github.com/user', {
-                headers: { 'Authorization': 'token ' + token,
-                           'Accept': 'application/vnd.github+json' } });
-            if (ur.status === 401) {
-                localStorage.removeItem(SUBMIT_TOKEN_KEY);
-                throw new Error('Token rejected. Click Token\u2026 and paste a current one.');
-            }
-            if (ur.ok) { var u = await ur.json(); who = u.login || 'unknown'; }
-        } catch (e) { if (/rejected/.test(e.message)) throw e; }
+function clearSubmission() {
+    document.getElementById('subnum').value = '';
+    document.getElementById('subtitle').value = '';
+    document.getElementById('subreason').value = '';
+    document.getElementById('subfile').value = '';
+    document.getElementById('subfilename').textContent = 'No file chosen';
+    PICKED = null;
+    checkNum();
+}
 
-        var buf = await PICKED.arrayBuffer();
-        var now = new Date();
-        var stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
-        var folder = 'submissions/' + stamp + '_Prot' + num + '_' + (slugify(title) || 'method');
+function showFallback(s) {
+    var box = document.getElementById('subfallback');
+    document.getElementById('subfalltext').value =
+        'To: ' + SUBMIT_TO + '\nSubject: ' + submissionSubject(s) + '\n\n' + submissionBody(s);
+    box.style.display = 'block';
+    return box;
+}
 
-        var meta = {
-            protocol_number: num,
-            series: SERIES_NAME[num.charAt(0)],
-            title: title,
-            reason: reason,
-            filename: PICKED.name,
-            size_bytes: PICKED.size,
-            submitted_by: who,
-            submitted_utc: now.toISOString(),
-            replaces_existing: TAKEN[num] || null,
-            status: 'new'
-        };
+function submitMethod() {
+    var s = readSubmission();
+    if (!s) return;
 
-        await ghPutSubmission(folder + '/' + PICKED.name, b64(buf),
-            'Submission: Prot ' + num + ' ' + title + ' (file)', token);
-        await ghPutSubmission(folder + '/submission.json',
-            btoa(unescape(encodeURIComponent(JSON.stringify(meta, null, 2) + '\n'))),
-            'Submission: Prot ' + num + ' ' + title + ' (metadata)', token);
+    var url = 'mailto:' + encodeURIComponent(SUBMIT_TO)
+            + '?subject=' + encodeURIComponent(submissionSubject(s))
+            + '&body=' + encodeURIComponent(submissionBody(s));
 
-        setSubStatus('\u2713 Submitted. Albert has been notified \u2014 it appears here once he approves.', 'ok');
-        document.getElementById('subnum').value = '';
-        document.getElementById('subtitle').value = '';
-        document.getElementById('subreason').value = '';
-        document.getElementById('subfile').value = '';
-        document.getElementById('subfilename').textContent = 'No file chosen';
-        PICKED = null;
-        checkNum();
-    } catch (err) {
-        setSubStatus('Failed: ' + err.message, 'bad');
-    } finally {
-        btn.disabled = false;
+    if (url.length > MAILTO_MAX) {
+        showFallback(s);
+        setSubStatus('Your reason is too long for a mail link \u2014 copy the text below instead.', 'bad');
+        return;
     }
+
+    /* If no mail client is registered the browser does nothing visible, so
+       say what should have happened and leave the copy box one click away
+       rather than claim it was sent. */
+    window.location.href = url;
+    setSubStatus('\u2713 E-mail composed \u2014 attach ' + s.file + ' and send it. '
+        + 'Nothing opened? Use the copy link.', 'ok');
+}
+
+function copySubmit() {
+    var s = readSubmission();
+    if (!s) return;
+    var box = showFallback(s);
+    var ta = document.getElementById('subfalltext');
+    ta.select();
+    var done = false;
+    try { done = document.execCommand('copy'); } catch (e) { done = false; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ta.value).then(function () {
+            setSubStatus('\u2713 Copied \u2014 paste it into an e-mail to ' + SUBMIT_TO
+                + ' and attach ' + s.file + '.', 'ok');
+        }, function () {
+            setSubStatus('Select the text below and copy it manually.', 'bad');
+        });
+    } else if (done) {
+        setSubStatus('\u2713 Copied \u2014 paste it into an e-mail to ' + SUBMIT_TO
+            + ' and attach ' + s.file + '.', 'ok');
+    } else {
+        setSubStatus('Select the text below and copy it manually.', 'bad');
+    }
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function toggleCard(card) { card.classList.toggle('open'); }
