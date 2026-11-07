@@ -1,0 +1,1199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scSeq Annotator — Yeh Lab</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --panel:#ffffff; --border:#d8dde3; --ink:#1d2430; --muted:#6b7684;
+    --accent:#1f6feb; --accent2:#0b7285; --warn:#b54708; --good:#116329;
+    --tum:#d62728; --row:#fbfcfd; --hl:#eaf2ff;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 var(--sans)}
+  header{background:#0d1b2a;color:#fff;padding:10px 16px;display:flex;align-items:center;
+         gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:20}
+  header h1{font-size:15px;margin:0;font-weight:700;letter-spacing:.2px}
+  header .ds{font:12px var(--mono);color:#9fd0ff}
+  header .sp{flex:1}
+  header button{font-size:12px}
+  button{font:13px var(--sans);padding:6px 11px;border:1px solid var(--border);
+         background:#fff;color:var(--ink);border-radius:5px;cursor:pointer}
+  button:hover{background:var(--hl);border-color:var(--accent)}
+  button.pri{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+  button.pri:hover{background:#1757b8}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  a{color:var(--accent)}
+
+  /* ---------- welcome / loader ---------- */
+  #welcome{max-width:760px;margin:40px auto;padding:0 16px}
+  #drop{border:2px dashed var(--border);border-radius:10px;background:var(--panel);
+        padding:34px 22px;text-align:center;transition:.15s}
+  #drop.over{border-color:var(--accent);background:var(--hl)}
+  #drop h2{margin:0 0 6px;font-size:18px}
+  #drop p{color:var(--muted);margin:6px 0 16px}
+  .steps{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+         padding:16px 20px;margin-top:20px}
+  .steps ol{margin:8px 0 0;padding-left:22px} .steps li{margin:7px 0}
+  .dsrow{display:flex;gap:12px;align-items:center;justify-content:space-between;
+         padding:8px 10px;border:1px solid var(--border);border-radius:8px;
+         margin:6px 0;background:var(--bg)}
+  .dsname{font-weight:600;font-size:13px}
+  .dspath{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;
+          color:var(--muted);margin-top:3px;word-break:break-all;user-select:all}
+  code{font:12px var(--mono);background:#eef1f5;padding:1px 5px;border-radius:3px}
+  pre{font:12px var(--mono);background:#0d1b2a;color:#e6edf3;padding:11px 13px;
+      border-radius:7px;overflow-x:auto;margin:8px 0}
+
+  /* ---------- layout ---------- */
+  #app{display:none;grid-template-columns:286px 1fr;gap:0;min-height:calc(100vh - 42px)}
+  #side{background:var(--panel);border-right:1px solid var(--border);padding:14px;
+        overflow-y:auto;max-height:calc(100vh - 42px);position:sticky;top:42px}
+  #main{padding:14px 18px;min-width:0}
+  .grp{margin-bottom:16px}
+  .grp h3{margin:0 0 7px;font-size:11px;text-transform:uppercase;letter-spacing:.6px;
+          color:var(--muted);font-weight:700}
+  label.f{display:block;margin:7px 0 3px;font-size:12px;color:var(--muted)}
+  select,input[type=text],input[type=search],textarea{
+    width:100%;font:13px var(--sans);padding:6px 8px;border:1px solid var(--border);
+    border-radius:5px;background:#fff;color:var(--ink)}
+  textarea{font:12px var(--mono);resize:vertical;min-height:72px}
+  .hint{font-size:11px;color:var(--muted);margin-top:4px}
+
+  nav.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:14px;
+           flex-wrap:wrap}
+  nav.tabs button{border:none;border-bottom:2px solid transparent;border-radius:0;
+                  background:none;padding:8px 13px;color:var(--muted);font-weight:600}
+  nav.tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+  nav.tabs button:hover{background:var(--hl)}
+  .pane{display:none} .pane.on{display:block}
+
+  table{border-collapse:collapse;width:100%;font-size:13px;background:var(--panel)}
+  th,td{padding:5px 8px;border-bottom:1px solid var(--border);text-align:left;
+        vertical-align:middle}
+  th{background:#eef1f5;font-size:11px;text-transform:uppercase;letter-spacing:.4px;
+     color:var(--muted);position:sticky;top:42px;z-index:5;cursor:pointer;white-space:nowrap}
+  th.nos{cursor:default}
+  tbody tr:nth-child(even){background:var(--row)}
+  tbody tr:hover{background:var(--hl)}
+  td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12px}
+  td.lab input{width:100%;padding:4px 6px;font-size:13px}
+  .sw{display:inline-block;width:11px;height:11px;border-radius:3px;
+      border:1px solid #0003;vertical-align:-1px;margin-right:6px}
+  .chip{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;
+        border:1px solid var(--border);background:#fff;font-weight:600}
+  .chip.lo{color:var(--warn);border-color:#f0c9a0;background:#fff8f0}
+  .chip.hi{color:var(--good);border-color:#b7e0c0;background:#f2fbf4}
+  .wrap{background:var(--panel);border:1px solid var(--border);border-radius:8px;
+        padding:12px;margin-bottom:14px}
+  .wrap h4{margin:0 0 9px;font-size:13px}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+  canvas{max-width:100%;border-radius:6px;background:#fff}
+  .legend{display:flex;flex-wrap:wrap;gap:3px 13px;margin-top:9px;font-size:12px}
+  .legend span.i{display:flex;align-items:center;gap:5px}
+  .note{background:#fff8f0;border:1px solid #f0c9a0;border-left:3px solid var(--warn);
+        border-radius:5px;padding:9px 12px;font-size:12px;margin:10px 0}
+  .ok{background:#f2fbf4;border:1px solid #b7e0c0;border-left:3px solid var(--good);
+      border-radius:5px;padding:9px 12px;font-size:12px;margin:10px 0}
+  footer{color:var(--muted);font-size:11px;font-family:var(--mono);padding:16px 18px 26px;
+         border-top:1px solid var(--border);margin-top:18px;line-height:1.6;word-break:break-all}
+  #tip{position:fixed;display:none;background:#0d1b2a;color:#fff;font:11px var(--mono);
+       padding:5px 8px;border-radius:5px;pointer-events:none;z-index:99;white-space:pre}
+  .scroll{overflow:auto;max-height:70vh;border:1px solid var(--border);border-radius:8px}
+
+  /* --- internal-site nav (injected by deploy_to_website.py) --- */
+  nav.site-nav { flex-shrink:0; text-align:center; padding:8px 10px; background:#0d1b2a;
+                 border-bottom:1px solid #22354a; font-family:Roboto,-apple-system,sans-serif; }
+  nav.site-nav a { text-decoration:none; margin:0 15px; color:#9fd0ff; font-weight:bold;
+                   font-size:0.92em; }
+  nav.site-nav a:hover { text-decoration:underline; }
+  nav.site-nav a.active { color:#000; background:#4fc3f7; padding:6px 14px; border-radius:4px;
+                          text-decoration:none; }
+  nav.site-nav a.active:hover { text-decoration:none; }
+  nav.site-nav a .lockicon { width:.72em; height:.72em; fill:currentColor; margin-left:4px;
+                             vertical-align:baseline; }
+</style>
+</head>
+<body>
+<!-- GENERATED by software/scseq-annotator/bin/deploy_to_website.py — do not edit. -->
+<nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="methods.html">Methods</a>
+        <a href="transplants.html">Transplants</a>
+        <a href="reagents.html">Reagents</a>
+        <a href="flow.html">Flow</a>
+        <a href="openflow.html">OpenFlow</a>
+        <a href="scseq-annotator.html" class="active">Annotator</a>
+        <a href="journal-watch.html">Journal Watch</a>
+        <a href="grants.html">Grants</a>
+        <a href="tasks.html">Task Tracker<svg class="lockicon" viewBox="0 0 24 24" role="img" aria-label="password protected"><title>Password protected</title><path d="M12 2a5 5 0 0 0-5 5v3H6a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V11a1 1 0 0 0-1-1h-1V7a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V7a3 3 0 0 1 3-3z"/></svg></a>
+    </nav>
+
+<header>
+  <h1>scSeq&nbsp;Annotator</h1>
+  <span class="ds" id="hdrDs">no dataset loaded</span>
+  <span class="sp"></span>
+  <button id="btnOpen">Open dataset…</button>
+  <button class="pri" id="btnDl" disabled>Download labels</button>
+</header>
+
+<!-- ============================ welcome ============================ -->
+<div id="welcome">
+  <div id="drop">
+    <h2>Open a dataset to begin</h2>
+    <p>Drag a <code>*.bundle.json</code> here, or pick one from the list below.</p>
+    <button class="pri" id="btnPick">Choose file…</button>
+    <input type="file" id="file" accept=".json,.gz,.npz,.h5ad" hidden>
+  </div>
+
+  <div class="steps">
+    <h3 style="margin:0 0 4px;font-size:13px">Datasets ready to open</h3>
+    <p class="hint" style="margin:4px 0 10px">
+      These are already converted and sitting on the lab share. Click <b>Copy path</b>,
+      then paste it into the file dialog. Nothing is uploaded — the file is read
+      locally by your browser.
+    </p>
+    <div id="dsList"></div>
+
+    <h3 style="margin:16px 0 4px;font-size:13px">Pick a reference library</h3>
+    <p class="hint" style="margin:4px 0 8px">
+      Clusters are scored against one library of marker gene sets at a time. The
+      tissue-matched library is pre-selected when you open a dataset, and you can
+      change it at any time in the left sidebar — the table rescores instantly.
+    </p>
+    <div id="libList"></div>
+
+    <h3 style="margin:16px 0 4px;font-size:13px">Something else you want to label?</h3>
+    <p class="hint" style="margin:4px 0 6px">
+      A raw <code>.annsummary.npz</code> or <code>.h5ad</code> cannot be opened here —
+      it has to be converted once on the cluster (one command, a couple of minutes):
+    </p>
+    <pre>cd /fh/fast/yeh_a/grp/software/scseq-annotator
+sbatch shell/convert.sh /path/to/IN.annsummary.npz --name MY_DATASET --embed</pre>
+    <p class="hint">Writes <code>data/MY_DATASET.bundle.json</code> — then open that
+      here. Ask Albert if you do not have an <code>.annsummary.npz</code> yet.</p>
+  </div>
+</div>
+
+<!-- ============================== app ============================== -->
+<div id="app">
+  <aside id="side">
+    <div class="grp">
+      <h3>Clustering</h3>
+      <label class="f" for="res">Resolution</label>
+      <select id="res"></select>
+      <div class="hint" id="resInfo"></div>
+    </div>
+
+    <div class="grp">
+      <h3>Gene sets</h3>
+      <label class="f" for="lib">Library</label>
+      <select id="lib"></select>
+      <div class="hint" id="libWhy" style="margin-top:4px"></div>
+      <div class="hint" id="libRef"></div>
+      <label class="f" for="method">Scoring</label>
+      <select id="method">
+        <option value="zscore_mean">z-score mean (relative enrichment)</option>
+        <option value="mean">mean log-expression</option>
+      </select>
+      <label class="f" for="minGenes">Min genes in panel</label>
+      <select id="minGenes">
+        <option value="1">1</option><option value="2" selected>2</option>
+        <option value="3">3</option>
+      </select>
+      <label class="f" for="custom">Your own sets (one per line)</label>
+      <textarea id="custom" placeholder="My T cells: CD3D, CD3E, CD8A
+Tumour: CA9, VEGFA"></textarea>
+      <div class="hint">Added to the library above. Scored with a 1-gene minimum.</div>
+    </div>
+
+    <div class="grp">
+      <h3>Labels</h3>
+      <button id="btnFill" style="width:100%;margin-bottom:6px">Fill blanks with argmax</button>
+      <button id="btnLoad" style="width:100%;margin-bottom:6px">Load labels file…</button>
+      <input type="file" id="labFile" accept=".json" hidden>
+      <button id="btnClear" style="width:100%">Clear all labels</button>
+      <div class="hint" id="labCount"></div>
+    </div>
+  </aside>
+
+  <main id="main">
+    <nav class="tabs">
+      <button class="on" data-p="clusters">Clusters &amp; labels</button>
+      <button data-p="scores">Score heatmap</button>
+      <button data-p="umap">UMAP</button>
+      <button data-p="dot">Gene dot plot</button>
+      <button data-p="comp">Composition</button>
+      <button data-p="export">Save &amp; apply</button>
+    </nav>
+
+    <section class="pane on" id="p-clusters">
+      <div class="note" id="clustNote" style="display:none"></div>
+      <div class="scroll"><table id="tbl">
+        <thead><tr>
+          <th data-s="cl">Cluster</th><th data-s="n">Cells</th><th data-s="pct">%</th>
+          <th data-s="arg">Argmax gene set</th><th data-s="score">Score</th>
+          <th data-s="runner">Runner-up</th><th data-s="margin">Margin</th>
+          <th data-s="gpc">Genes/cell</th><th class="nos">Your label</th>
+        </tr></thead><tbody></tbody>
+      </table></div>
+      <p class="hint">Click a header to sort. <b>Margin</b> is the gap to the runner-up —
+        a small margin means the call is ambiguous and deserves a look.
+        <b>Genes/cell</b> is a transcript-content proxy; low values flag junk clusters.</p>
+    </section>
+
+    <section class="pane" id="p-scores">
+      <div class="wrap">
+        <h4>Cluster × gene-set scores</h4>
+        <div class="row">
+          <label style="font-size:12px"><input type="checkbox" id="hmRow" checked>
+            scale each row to its own max</label>
+        </div>
+        <div class="scroll" id="hmWrap"></div>
+      </div>
+    </section>
+
+    <section class="pane" id="p-umap">
+      <div class="wrap">
+        <h4>UMAP</h4>
+        <div class="row">
+          <span>Colour by</span>
+          <select id="umapBy" style="width:auto;min-width:180px"></select>
+          <input type="search" id="geneSearch" placeholder="gene symbol…"
+                 style="width:auto;min-width:150px;display:none">
+          <label style="font-size:12px"><input type="checkbox" id="umapLbl" checked>
+            cluster numbers</label>
+          <span class="hint" id="umapInfo"></span>
+        </div>
+        <canvas id="umap" width="900" height="700"></canvas>
+        <div class="legend" id="umapLeg"></div>
+      </div>
+    </section>
+
+    <section class="pane" id="p-dot">
+      <div class="wrap">
+        <h4>Gene dot plot</h4>
+        <div class="row">
+          <span>Gene set</span>
+          <select id="dotSet" style="width:auto;min-width:240px"></select>
+          <span class="hint">dot size = % of cells expressing · colour = mean, min–max scaled per gene</span>
+        </div>
+        <div class="scroll" id="dotWrap"></div>
+      </div>
+    </section>
+
+    <section class="pane" id="p-comp">
+      <div class="wrap">
+        <h4>Metadata composition</h4>
+        <div class="row">
+          <span>Column</span>
+          <select id="compCol" style="width:auto;min-width:180px"></select>
+          <span class="hint">fraction of each cluster's cells · a cluster dominated by one
+            patient deserves a second look before it becomes a cell type</span>
+        </div>
+        <div class="scroll" id="compWrap"></div>
+      </div>
+    </section>
+
+    <section class="pane" id="p-export">
+      <div class="wrap">
+        <h4>Save your labels</h4>
+        <p style="margin:0 0 10px">Labels download as the same
+          <code>manual_labels.json</code> sidecar the Python tools read, so nothing
+          downstream has to change.</p>
+        <button class="pri" id="btnDl2">Download labels JSON</button>
+        <div id="exportStatus"></div>
+        <h4 style="margin-top:16px">Then apply them to the h5ad</h4>
+        <p style="margin:0 0 6px">Copy the downloaded file next to the source object, then run:</p>
+        <pre id="applyCmd"></pre>
+        <div class="note"><b>This overwrites the existing sidecar.</b> If someone else
+          authored the labels for this dataset, copy the old file aside first — it is the
+          only record of how those clusters were named.</div>
+        <h4 style="margin-top:16px">Preview</h4>
+        <pre id="jsonPreview" style="max-height:300px"></pre>
+      </div>
+    </section>
+
+    <footer id="foot"></footer>
+  </main>
+</div>
+<div id="tip"></div>
+
+<script>
+/* GENESETS_BEGIN - generated by bin/build_genesets.py - do not edit */
+const GENESETS = {"libraries":{"Basic immunology":{"CD4 T":["CD3D","CD3E","CD4"],"CD8 T":["CD3D","CD3E","CD8A"],"B cell":["CD19","MS4A1","CD79A","IGHD","TCL1A"],"NK":["KLRD1","KLRF1","KLRK1","NCAM1","FCGR3A"],"Macrophage":["CD68","CD163","CSF1R","C1QB","MRC1","LYZ","CD14"],"DC":["CLEC9A","CD1C","CLEC10A","LAMP3","ITGAX","CLEC4A","HLA-DRA"],"Mast cell":["KIT","CD33"],"Stromal":["COL1A1","DCN","LUM","PDGFRB","RGS5","ACTA2","PECAM1","VWF"]},"Gut (Teichmann Nature 2024)":{"Stem cell (LGR5+)":["LGR5","OLFM4","ASCL2","RGMB","SMOC2","SLC12A2","AXIN2","SOX9"],"TA / proliferating":["MKI67","TOP2A","PCNA","BIRC5","CDK1","UBE2C","CENPF","TUBA1B"],"Enterocyte (absorptive)":["FABP2","RBP2","APOA1","APOA4","APOB","ALPI","SI","ANPEP","SLC5A1","FABP1"],"Colonocyte (mature)":["CA1","CA2","SLC26A3","GUCA2A","GUCA2B","AQP8","MS4A12","CEACAM7","CEACAM1"],"BEST4+ enterocyte":["BEST4","OTOP2","CA7","SPIB","MT1G","GUCA2B"],"Goblet cell":["MUC2","TFF3","CLCA1","ZG16","FCGBP","SPINK4","AGR2","REG4","ITLN1","SPDEF"],"Paneth cell":["DEFA5","DEFA6","REG3A","REG3G","LYZ","PLA2G2A","ITLN2","MMP7"],"Tuft cell":["POU2F3","TRPM5","SH2D6","LRMP","AVIL","HCK","GNAT3","ALOX5AP","BMX"],"Enteroendocrine":["CHGA","CHGB","NEUROD1","NEUROG3","PYY","GCG","SST","TPH1","SCGN","CCK","GIP"],"Microfold (M) cell":["SPIB","CCL20","GP2","TNFAIP2","ANXA5","MARCKSL1"],"Fibroblast":["PDGFRA","COL1A1","COL1A2","COL3A1","COL6A2","LUM","DCN","ADAMDEC1","DPT","CCL11"],"Myofibroblast":["ACTA2","TAGLN","MYH11","DES","PDGFRB","NOTCH3","ACTG2"],"Pericyte":["RGS5","NOTCH3","PDGFRB","KCNJ8","ABCC9","CSPG4"],"Smooth muscle":["DES","ACTA2","MYH11","CNN1","TAGLN","ACTG2","MYLK","LMOD1"],"Interstitial cell of Cajal":["KIT","ANO1","ETV1","PRKCQ"],"Enteric glia":["S100B","PLP1","SOX10","GFAP","NRXN1","CRYAB"],"Endothelial (vascular)":["PECAM1","VWF","CDH5","CLDN5","FLT1","KDR","EGFL7","PLVAP","CD34"],"Endothelial (lymphatic)":["LYVE1","PROX1","PDPN","CCL21","MMRN1","FLT4"],"T cell":["CD3D","CD3E","CD3G","CD2","TRAC","TRBC2","CD7","IL7R"],"CD4 T / Treg":["CD4","IL7R","FOXP3","CTLA4","RORC","CCR7"],"CD8 T (cytotoxic)":["CD8A","CD8B","GZMK","GZMA","NKG7","CCL5"],"NK cell":["NCAM1","NKG7","GNLY","KLRD1","KLRF1","GZMB","PRF1","FCGR3A"],"B cell":["MS4A1","CD19","CD79A","CD79B","BANK1","PAX5","TNFRSF13C"],"Plasma cell":["MZB1","XBP1","DERL3","SDC1","TNFRSF17","JCHAIN","PRDM1","CD38","IGHA1","IGHG1"],"Macrophage":["CD68","CD163","C1QA","C1QB","C1QC","MRC1","CSF1R","APOE","FOLR2","MPEG1"],"Monocyte":["FCN1","VCAN","S100A8","S100A9","LYZ","CD14"],"Dendritic cell":["FLT3","CLEC9A","XCR1","CD1C","FCER1A","LAMP3","CCR7","IRF8"],"Plasmacytoid DC":["LILRA4","IRF7","GZMB","CLEC4C","TCF4"],"Mast cell":["TPSAB1","TPSB2","CPA3","MS4A2","KIT","GATA2","HPGDS"],"Neutrophil":["FCGR3B","CSF3R","S100A8","S100A9","CXCR2","FUT4"],"Enteric neuron":["ELAVL4","RET","PHOX2B","NEFM","NEFL","STMN2","TUBB2B","UCHL1","SNAP25"]},"Renal (Lake Nature 2023)":{"podocyte":["PTPRQ","WT1","NTNG1","NPHS1","NPHS2","CLIC5","PODXL"],"parietal_epithelial":["CLDN1","VCAM1","CFH","RBFOX1","ALDH1A2"],"proximal_tubule":["LRP2","CUBN","SLC13A1","SLC5A12","SLC13A3","SLC22A6","PRODH2","SLC5A2","SLC22A8","SLC34A1","SLC22A7","MOGAT1","SLC5A11","SLC22A24","SLC7A13","SLC5A8","ABCC3","SATB2"],"thin_limb":["CRYAB","TACSTD2","SLC44A5","KLRG2","COL26A1","BOC","VCAM1","SLC39A8","AQP1","LRRC4C","LRP2","UNC5D","SATB2","JAG1","ADGRL3","ID1","CLDN1","AKR1B1","CLDN4","BCL6","SH3GL3","SLC14A2","SMOC2","BCAS1","CLCNKA","CLDN10","PROX1"],"thick_ascending_limb":["CASR","SLC12A1","UMOD","NELL1","ESRRB","EGF","CLDN14","PROX1","MFSD4A","KCTD16","RAP1GAP","ANK2","CYFIP2","PPM1E","GP2","ENOX1","TMEM207","TMEM52B","CLDN16","WNK1"],"macula_densa":["NOS1","ROBO2","CALCR","PPFIA2","PAPPA2"],"distal_convoluted_tubule":["SLC12A3","CNNM2","FGF13","KLHL3","LHX1","TRPM6","TRPM7","ADAMTS17","ITPKB","ZNF385D","HS6ST2","TRPV5","SLC8A1","SCN2A","HSD11B2","CALB1"],"connecting_tubule":["SLC8A1","SCN2A","HSD11B2","CALB1","KITLG","PCDH7","RALYL","TOX","SGPP1","SCNN1G","SCNN1B","KCNIP1"],"principal_cell":["GATA3","AQP2","AQP3","SCNN1G","SCNN1B","FXYD4","SOX5","PDE10A","SLC25A29","ST6GAL1","PAPPA","SYK","FAM81A","PROM1","KCNK13","PHACTR1","PCDH7","SLC14A2","HS3ST5"],"intercalated":["ATP6V0D2","ATP6V1C2","TMEM213","CLNK","SLC4A1","SLC26A7","HS6ST3","NXPH2","LEF1","ADGRF5","SLC8A1","SCN2A","CALB1","KIT","AQP6","STAP1","FAM184B","CALCA","SLC4A9","SLC35F3","SLC26A4","INSRR","TLDC2"],"papillary_epithelial":["TACSTD2","TP63","GPX2","FXYD3","KRT5"],"endothelial":["CD34","PECAM1","PTPRB","MEIS2","FLT1","EMCN","HECW2","PLAT","ITGA8","EHD3","KDR","SOST","BTNL9","ADAMTS6","PALMD","AQP1","TM4SF1","VEGFC","CCDC3","CDH5","SERPINE2","FBLN5","CXCL12","SOX17","MCTP1","SLC14A1","ENPP2","LYPD6B","CEACAM1","DNASE1L3","PLVAP","PITPNC1","GRB10","SLCO2A1","RAPGEF4","GPM6A","EDIL3","TLL1","ZNF385D","NR2F2"],"lymphatic_EC":["MMRN1","CD36","TBX1","PKHD1L1","PROX1"],"vsmc_pericyte":["NOTCH3","PDGFRB","ITGA8","NTRK3","MYH11","RGS6","ADRA1A","LDB3","MCAM","CCDC102B","RGS5","ABCC9","ADCY3","ADGRB3"],"mesangial":["PIP5K1B","ROBO1","PIEZO2","DAAM2","PHTF2","GATA3","POSTN"],"renin_JG":["PIP5K1B","ROBO1","REN","PDE10A","ABCC8","COL13A1","GRID2"],"fibroblast":["COL1A1","COL1A2","C7","NEGR1","FBLN5","DCN","CDH11","LAMA2","GGT5","LUM","AEBP1","C1S","SFRP1","MEG3","CXCL12","SYT1","TNC","PLCXD3","GABRG3","GREB1L","KCNK2","ADAMTSL1","CLMP","NCAM1","FREM1","IGFBP5","MGP","BGN","IGFBP2"],"myofibroblast":["SYNPO2","PCDH7","KCNMA1","LMOD1","TTLL7","DTNA","COL14A1","LAMA2","COL16A1","SULF1","COL6A3","NTM","GLI2","COL5A1","FN1","SLC24A3","CDH13","SMOC2","ANO3","RXFP1"],"b_cell":["BANK1","BLK","MS4A1","BACH2"],"plasma_cell":["IGKC","TENT5C","MZB1","FCRL5","CD38","JCHAIN","SDC1","TNFRSF17"],"t_cell":["CD96","CD247","THEMIS","BCL11B","CAMK4","IL7R","CD3D","CD3E"],"nk_t_cell":["CD96","CD247","RUNX3","GNLY","NKG7","CCL5","KLRF1","CCL4","GZMA"],"mast":["MS4A2","CPA3","KIT"],"macrophage_M2":["F13A1","MRC1","CD163","STAB1","SLC1A3","CD14","FOLR2"],"monocyte_derived":["MSR1","ITGAX","HLA-DQA1","HLA-DRB1","CSF2RA","CD14","TRPM2"],"cDC":["ITGAX","HLA-DQA1","HLA-DRA","CSF2RA","CIITA","WDFY4","FLT3","ZNF366","CADM1","ZBTB46","CLEC9A"],"pDC":["IRF8","CUX2","P2RY14","IL3RA","CLEC4C"],"non_classical_monocyte":["CTSS","IRAK3","TCF7L2","TNFRSF1B","FCN1","HLA-DRA","FCGR3A"],"neutrophil":["S100A9","S100A8","IFITM2","FCGR3B","CD1C"],"schwann_neural":["CDH19","NRXN1","GINS3"],"adaptive_state (altered)":["ITGB8","CDH6","DCDC2","TPM1","VCAM1","DLGAP1","ACSM3","KIF26B","HAVCR1","ITGB6","PROM1","FLRT2","FGF14","PRRX1","NAV3","ABI3BP","IGF1"],"degenerative_state (altered)":["CDKN1C","SPOCK2","B2M","CD81","S100A6","IGFBP2","APOE","PDZK1IP1","CCNI","GATM","ALDOB","SERPINA1","SPP1","NNMT","USP43","S100A4","FTL","FTH1","DEFB1","TPT1","ACTB","WFDC2","SFRP1","KNG1","CST3","CA2","FXYD2","PIGR","S100A11","CLU","CD24","PTGER1","PCSK1N","FGL2","EPCAM","CDH16","PSAP","PTGS1","KCNK3","AOC1","CLDN8","MMP7","SLPI","CRYAB","DSG2","CKB","TMSB4X","TMSB10","HLA-B","IGFBP5","DHFR","GPX3","PEBP1","TAGLN","FLNA","MYL9","ACTA2","DSTN","IGFBP7","VIM","C1R","KRT19","AKR1B1"],"cycling_state (altered)":["APOLD1","CENPF","DIAPH3","MKI67","TOP2A","ANLN","EZH2","BRIP1","MELK","TPX2"]},"Skin (Restrepo Nat Genet 2026)":{"Basal keratinocyte":["COL17A1","DST","ITGA6","ITGB4","MIR205HG","CXCL14","KRT14","KRT15","KRT5","POSTN","PDLIM1","TGFBI","S100A2","HOPX","SYT8","CYR61","FTH1","ASS1","ATP1B3","ZFP36L2"],"Spinous keratinocyte":["CCND1","CLCA4","GSTA3","HES1","MT1E","MT1X","MUC15","RHOV","SERPINB4","EPHB6","S100A8","KRTDAP","DMKN","SBSN","KRT1","LYPD3","KRT10","DSC1","KCNK7","PERP"],"Granular keratinocyte":["FLG","KLK7","SBSN","CALML5","KRTDAP","DMKN","SPINK5","SULT2B1","SCEL","TMEM45A","CSTA","CLIC3","LYPD3","KRT2","LY6G6C","SLURP1","CTNNBIP1","ELOVL4","GLTP","SPRR1B"],"Cycling keratinocyte":["PTTG1","CENPF","HMGB1","CCNB1","CDKN3","BIRC5","HMGB2","CDC20","PCNA","TOP2A","CCNB2","UBE2C","MKI67","CENPW","NUSAP1","SMC4","TUBA1B","ASPM"],"Hair follicle epithelium":["KRT83","LGR5","EPCAM","LMCD1","CD34","DIO2","RCAN1","WIF1","KRT15","BNC2","KRT75","KRT32","KRT35","PTN","KRT28","KRT74","FST","PTHLH","ANGPTL7","LGALS1"],"Sebocyte":["AR","ITGA3","KRT4","KRT79","SCARB1","TKT","WFDC2","ASS1","MGST1","CTSB"],"Eccrine duct":["FGF7","GJB2","GJB6","KRT77","SEMA3C","SESN3","TBX3","KRT23","ATP1B3","ATP1A1","DEFB1","TM4SF1","SAT1","ATP1B1","SLC25A5","SCPEP1","CRABP2","CHCHD10","TFCP2L1","LBH"],"Eccrine gland":["ABI3BP","CLDN10","CLDN3","DNER","SFRP1","TSPAN8","SCGB1B2P","KRT19","KRT7","KRT18","AQP5","KRT8","PPP1R1B","AZGP1","DCD","SCGB1D2","SCGB2A2","LRRC26","SLC12A2","PIP"],"Merkel cell":["CHGA","KRT20"],"Melanocyte":["SOX10","MLANA","PMEL","TYR","DCT","MITF","FRZB","VIM","CD59","TYRP1","CD63","FTL","LGALS1","GPM6B","FTH1","QPCT","APOD","EMP3","CAPN3","IGFBP7"],"Fibroblast":["APOE","GREM1","NREP","ANGPTL5","AADAC","FMO1","GPC3","LSP1","STC2","DPP4","SFRP2","DDR1","ANXA3","APCDD1","C3","CCDC80","CCL19","COL1A1","COL4A1","CXCL12"],"Perivascular fibroblast":["APOE","GREM1","NREP","ANGPTL5","AADAC","FMO1","GPC3","LSP1","STC2","DPP4","SFRP2","DDR1","ANXA3","APCDD1","C3","CCDC80","CCL19","COL1A1","COL4A1","CXCL12"],"Dermal papilla fibroblast":["COCH","CRABP1","PLXDC1","FIBIN","ASPN","SPARCL1","TCF4","PTGDS","TNN","OGN","EMID1","TRPS1","F13A1","PGRMC1","DKK2","MXRA5","ZBTB20","TNMD"],"Dermal sheath fibroblast":["ACAN","COL11A1","DPEP1","LRRC15","MYL4","TNN","INHBA","POSTN","CPE","PTMA","FGFBP2","APOD","GSN","MALAT1","TRPS1","WNT5A","SPON2","GPC3","IGFBP2","TIMP3"],"Pericyte":["RGS5","PDGFRB","NOTCH3","ACTA2","RERGL","RGS16","TCIM","PLN","TINAGL1","APOLD1","ZNF442","TPM2","TAGLN","MYLK","MYL9","MYH11","CSRP1","CNN1","ACTG2"],"Smooth muscle":["DES","JAG1","MCAM","MYH11","TPM2","TPM1","ACTA2","ACTG2","TAGLN","MYL9","CNN1","CSRP1","MYLK","DSTN","FLNA","PPP1R14A","CALD1","MYL6","NDUFA4","LMOD1"],"Adipocyte":["ADIPOQ","PLIN1","CD36","LEP","LRP1"],"Vascular endothelium":["ACKR1","ACKR2","FLT1","KDR","VWF","ETS1","TIMP3","SELE","TM4SF1","CD74","IFI27","HLA-DRB1","HLA-DRA","PLVAP","AQP1","HLA-DPA1","SPARCL1","HLA-DPB1","HLA-E","ICAM1"],"Lymphatic endothelium":["ANGPT2","CCL21","ELK3","LYVE1","TFF3","TFPI","EFEMP1","MMRN1","PPFIBP1","GNG11","CLDN5","ECSCR","ARL4A","LAPTM5","RAMP2","HLA-E","PROX1","TM4SF1","CAVIN2","PTPRE"],"Schwann cell":["SOX10","NRXN1","CDH19","MPZ","PLP1","GPM6B","SCN7A","DST","S100B","PMP22","PRNP","CD9","CRYAB","MATN2","VWA1","GFRA3","XKR4","PCSK2","ITGA6"],"Neuron":["NRXN1","SOX10","TRPV1","TRPV2","TRPV3"],"T cell":["CD3D","CD3E","IL7R","CD2","RORA","SPOCK2","DNAJB1","SARAF","IL32","ZFP36L2","NR3C1","CREM","KLF6","DUSP4","PTPRC","EML4","SYNE2"],"Regulatory T cell":["FOXP3","IL2RA","CTLA4","TIGIT","IL32","NSD3","UGP2","IKZF2","PMAIP1","ICOS","TBC1D4","TNFRSF18","TNFRSF9","CLEC2D","HLA-A","BATF","ARID5B","DUSP4"],"Cytotoxic T cell":["CD8A","GZMB","GZMK","NKG7","GNLY","CCL5","IL32","CD52","S100A4","CTSW","XCL2","XCL1","CD3D","CST7"],"NK cell":["KLRK1","NCR1","KLRD1","NKG7","GNLY","KLRF1"],"B cell":["CD19","MS4A1","CD79A","CD79B"],"Plasma cell":["CD79A","JCHAIN","MZB1","TNFRSF17","SDC1","IGKC","HERPUD1","MS4A1","LY9","MEF2C","COBLL1","RALGPS2","DERL3","SSR4","FCRL5","SEC11C","TCF4"],"Dendritic cell":["HLA-DRA","HLA-DQA1","HLA-DPA1","CST3","HLA-DPB1","HLA-DRB1","HLA-DQB1","CD74","FCER1A","CLEC10A","HLA-DMA","LYZ","FCER1G","AIF1","DNASE1L3","CPVL","IRF8","CLEC9A"],"Langerhans cell":["CD1A","CD207","HLA-DQB2","LST1","FCGBP","CD74","HLA-DQB1","FCER1A","HLA-DPB1","SERPINF1","PLEK2","GSN","TACSTD2","NDRG2","SPI1","HLA-DMB","HLA-DQA2"],"Macrophage":["CD68","CD163","CSF1R","C1QB","C1QA","MRC1","CD14","LYZ","FOLR2","STAB1","FCGR2A","CTSB","PSAP","RNASE1","CTSL","C1QC","MS4A7"],"Monocyte":["CD14","FCN1","VCAN","S100A9","S100A8","CCR2","CD33","SOD2","EREG","TIMP1","LYZ","BCL2A1","CTSS","IL1B","SAT1","CEBPB","AQP9"],"Mast cell":["KIT","IL1RL1","CPA3","TPSAB1","HPGD","CTSG","TPSB2","GATA2","GLUL","HDC","LGALS3","SGK1","HPGDS","S100A6","FOSB"]},"Albert's panels (ccRCC / hypoxia)":{"CA9 only (gold-standard ccRCC)":["CA9"],"ccRCC markers feat. Young2018 [CA9/CA12/MUC1]":["CA9","CA12","MUC1"],"ccRCC marker feat. Kondo2017 [SLC2A1]":["SLC2A1"],"ccRCC markers feat. Su2024 [STC1/PDK4/GDF15/IGFBP7/CRYAB]":["STC1","PDK4","GDF15","IGFBP7","CRYAB"],"ccRCC markers feat. Bi2021 [VEGFA/ESM1/SPP1]":["VEGFA","ESM1","SPP1"],"ccRCC markers feat. Krishna2021 [EPAS1/CD44/APOE/CD274]":["EPAS1","CD44","APOE","CD274"],"MSigDB HALLMARK_HYPOXIA":["ACKR3","ADM","ADORA2B","AK4","AKAP12","ALDOA","ALDOB","ALDOC","AMPD3","ANGPTL4","ANKZF1","ANXA2","ATF3","ATP7A","B3GALT6","B4GALNT2","BCAN","BCL2","BGN","BHLHE40","BNIP3L","BRS3","BTG1","CA12","CASP6","CAV1","CAVIN1","CAVIN3","CCN1","CCN2","CCN5","CCNG2","CDKN1A","CDKN1B","CDKN1C","CHST2","CHST3","CITED2","COL5A1","CP","CSRP2","CXCR4","DCN","DDIT3","DDIT4","DPYSL4","DTNA","DUSP1","EDN2","EFNA1","EFNA3","EGFR","ENO1","ENO2","ENO3","ERO1A","ERRFI1","ETS1","EXT1","F3","FAM162A","FBP1","FOS","FOSL2","FOXO3","GAA","GALK1","GAPDH","GAPDHS","GBE1","GCK","GCNT2","GLRX","GPC1","GPC3","GPC4","GPI","GRHPR","GYS1","HAS1","HDLBP","HEXA","HK1","HK2","HMOX1","HOXB9","HS3ST1","HSPA5","IDS","IER3","IGFBP1","IGFBP3","IL6","ILVBL","INHA","IRS2","ISG20","JMJD6","JUN","KDELR3","KDM3A","KIF5A","KLF6","KLF7","KLHL24","LALBA","LARGE1","LDHA","LDHC","LOX","LXN","MAFF","MAP3K1","MIF","MT1E","MT2A","MXI1","MYH9","NAGK","NCAN","NDRG1","NDST1","NDST2","NEDD4L","NFIL3","NOCT","NR3C1","P4HA1","P4HA2","PAM","PCK1","PDGFB","PDK1","PDK3","PFKFB3","PFKL","PFKP","PGAM2","PGF","PGK1","PGM1","PGM2","PHKG1","PIM1","PKLR","PKP1","PLAC8","PLAUR","PLIN2","PNRC1","PPARGC1A","PPFIA4","PPP1R15A","PPP1R3C","PRDX5","PRKCA","PYGM","RBPJ","RORA","RRAGD","S100A4","SAP30","SCARB1","SDC2","SDC3","SDC4","SELENBP1","SERPINE1","SIAH2","SLC25A1","SLC2A1","SLC2A3","SLC2A5","SLC37A4","SLC6A6","SRPX","STBD1","STC1","STC2","SULT2B1","TES","TGFB3","TGFBI","TGM2","TIPARP","TKTL1","TMEM45A","TNFAIP3","TPBG","TPD52","TPI1","TPST2","UGP2","VEGFA","VHL","VLDLR","WSB1","XPNPEP1","ZFP36","ZNF292"],"MSigDB HARRIS_HYPOXIA":["ADM","AK3","ALDOA","ANGPT2","APEX1","BHLHE40","BIK","BNIP3","BNIP3L","CA12","CA9","CCL2","CCNG2","CD99","CDKN1A","CDKN1B","COL5A1","CP","CXCL8","DDIT3","EDN1","EDN2","ENO1","ENPEP","EPAS1","EPO","F3","FGF3","FLT1","FOS","FTL","GAPDH","HDAC9","HGF","HIF1A","HK1","HK2","HMOX1","IGF2","IGFBP1","IGFBP2","IGFBP3","IL6","JUN","L1CAM","LDHA","LRP8","MIF","MMP13","NFKB1","P4HA1","PDGFB","PFKL","PFKP","PGF","PGK1","PKM","PLAUR","PRPS1","PTGS2","RP1","SAT1","SLC2A1","SLC2A3","SPP1","STC1","TAGLN","TEK","TF","TFF3","TFRC","TGFA","TGFB1","TGFB3","TGM2","TH","TXN","VEGFA","VIM","XRCC5","XRCC6"],"MSigDB ELVIDGE_HYPOXIA_UP":["ADGRE2","ADM","ADORA2B","AHNAK2","AK4","AKAP12","ALDOC","ANG","ANGPTL4","ANKZF1","ARTN","ASPH","ATF3","ATG14","ATXN1","B3GNT4","BBX","BCOR","BHLHE40","BNIP3","BNIP3L","CA9","CADM1","CAV1","CAVIN1","CCN1","CCN5","CCNG2","CD59","CEMIP","CITED2","CSGALNACT1","CSRP2","CXCR4","CYB5A","CYP1B1","DAAM1","DDIT4","DDR1","DPYSL2","DPYSL4","DSC2","DST","DTNA","DUSP1","ECE1","EFNA3","EGFR","EGLN1","EGLN3","EGR1","ELF3","ENO2","ENSG00000301105","ERO1A","FAM13A","FAM162A","FAM216A","FLNB","FOS","FYN","GADD45B","GBE1","GDF15","GJA1","GLRX","GPR87","GPRC5A","GUSBP14","GYS1","HCFC1R1","HEY1","HILPDA","HK2","HLA-DRB1","IGFBP3","IGFBP5","ILVBL","INHA","INSIG2","ISG20","ITPR1","JUN","KDM3A","KDM4B","KLF6","KLF7","KLHL24","KRT15","KRT7","LOX","LOXL1","LOXL2","MAFF","MET","MT-ND5","MXI1","NAP1L1","NDRG1","NFIL3","NOL3","NR3C1","NREP","OBSL1","OLFML2A","OPN3","ORAI3","P4HA1","P4HA2","PAM","PDGFB","PDGFRL","PDK1","PFKFB3","PFKP","PGAP1","PGK1","PGM1","PIM1","PLAC8","PLAUR","PLIN2","PPFIA4","PRKCA","PXDN","QSOX1","RASA4","RBCK1","RBPJ","RLF","RNASE4","RRAGD","S100A2","S100A4","S100A6","SAMD4A","SAT1","SCARB1","SCNN1B","SERPINE1","SFXN3","SH3GL3","SLC2A1","SLCO4A1","SORL1","SOX9","SPAG4","SPOCK1","SPRY1","SRD5A3","SRPX","STBD1","STC1","STC2","TBC1D3F","TGFBI","TIPARP","TMEFF1","TMEM265","TMEM45A","TNFAIP8","TXNIP","UPK1A","VEGFA","VEGFC","VLDLR","WSB1","YEATS2","YPEL1","ZMYND8","ZNF292","ZNF395","ZNF654"],"MSigDB WINTER_HYPOXIA_UP":["ADORA2B","AK4","ALDOA","ANGPTL4","ANKRD37","ANKRD9","ANLN","B4GALT2","BCAR1","BMS1","BNIP3","C16orf74","CA12","CA9","CDCA4","CNIH4","COL4A5","CORO1C","CXCL8","DPM2","EEF1AKMT4","EIF2S1","GAPDH","GEMIN2","GMFB","GPN3","GSS","HAUS2","HES2","HILPDA","HOMER1","IGF2BP2","KCTD11","KRT17","LDHA","LDLR","METTL22","MIF","MNAT1","MRGBP","MRPL14","MRPS17","MTX1","NDRG1","NDUFA4L2","NME1","NTMT1","NUDT15","P4HA1","PAWR","PDZD11","PEDS1","PFKFB4","PGAM1","PGF","PGK1","PLAU","PLEKHG3","PPARD","PPP4R1","PSMA7","PSMB7","PSMD2","PTGFRN","PVR","PYGL","RAN","RHOC","RNF24","RNPS1","RUVBL2","S100A10","S100A3","SLC16A1","SLC2A1","SLC6A8","SLCO1B3","SLIRP","SNX24","TANC2","TEAD4","TFAP2C","TIMM23","TMEM30B","TMTC3","TNS4","TPBG","TPD52L2","TPI1","TRMT5","TUBB4B","VAPB","VEGFA","VEZT","XPO5"],"MSigDB KEGG_RENAL_CELL_CARCINOMA":["AKT1","AKT2","AKT3","ARAF","ARNT","ARNT2","BRAF","CDC42","CREBBP","CRK","CRKL","CUL2","EGLN1","EGLN2","EGLN3","ELOB","ELOC","EP300","EPAS1","ETS1","FH","FLCN","GAB1","GRB2","HGF","HIF1A","HRAS","JUN","KRAS","MAP2K1","MAP2K2","MAPK1","MAPK3","MET","NRAS","PAK1","PAK2","PAK3","PAK4","PAK5","PAK6","PDGFB","PGF","PIK3CA","PIK3CB","PIK3CD","PIK3CG","PIK3R1","PIK3R2","PIK3R3","PIK3R5","PTPN11","RAC1","RAF1","RAP1A","RAP1B","RAPGEF1","RBX1","SLC2A1","SOS1","SOS2","TGFA","TGFB1","TGFB2","TGFB3","VEGFA","VEGFB","VEGFC","VEGFD","VHL"],"MSigDB SEMENZA_HIF1_TARGETS":["ADM","ADRA1B","AK3","ALDOA","ALDOC","BNIP3","CA9","CDKN1A","CITED2","CP","EDN1","ENO1","EPO","FLT1","GAPDH","HK1","HK2","HMOX1","IGF2","IGFBP1","IGFBP2","IGFBP3","LDHA","NOS2","P4HA2","PFKL","PGK1","PKM","SERPINE1","SLC2A1","SLC2A3","TF","TFRC","TGFB3","TPI1","VEGFA"],"MSigDB REACTOME_CELLULAR_RESPONSE_TO_HYPOXIA":["ADRM1","AJUBA","ARNT","CA9","CITED2","CREBBP","CUL2","EGLN1","EGLN2","EGLN3","ELOB","ELOC","EP300","EPAS1","EPO","HIF1A","HIF1AN","HIF3A","HIGD1A","LIMD1","PSMA1","PSMA2","PSMA3","PSMA4","PSMA5","PSMA6","PSMA7","PSMB1","PSMB2","PSMB3","PSMB4","PSMB5","PSMB6","PSMB7","PSMC1","PSMC2","PSMC3","PSMC4","PSMC5","PSMC6","PSMD1","PSMD11","PSMD12","PSMD13","PSMD14","PSMD2","PSMD3","PSMD6","PSMD7","PSMD8","RBX1","RPS27A","SEM1","UBA52","UBB","UBC","UBE2D1","UBE2D2","UBE2D3","VEGFA","VHL","WTIP"]}},"references":{"Renal (Lake Nature 2023)":"Lake BB, Menon R, Winfree S, et al. (KPMP). An atlas of healthy and injured cell states and niches in the human kidney. Nature 2023;619(7970):585-594. doi:10.1038/s41586-023-05769-3","Gut (Teichmann Nature 2024)":"Oliver TRW, Lindeboom RGH, ... Teichmann SA, et al. Single-cell integration reveals metaplasia in inflammatory gut diseases. Nature 2024;635:732-742. doi:10.1038/s41586-024-07571-1 (Human Gut Cell Atlas, gutcellatlas.org). Taxonomy also per Elmentaite et al. Nature 2021;597:250-255.","Skin (Restrepo Nat Genet 2026)":"Restrepo P, Wilder A, Houser A, et al. Single-cell spatial transcriptomic analysis of human skin anatomy. Nature Genetics 2026;58(4):903-915. doi:10.1038/s41588-026-02552-8 (PMC13083264).","Basic immunology":"Curated for the Singular g4x 384-gene panel and tuned for argmax discriminability; not from a single publication.","Albert's panels (ccRCC / hypoxia)":"Albert's own panels as saved in the marimo app; set names carry their source (Young 2018, Kondo 2017, Su 2024, Bi 2021, Krishna 2021) plus MSigDB hypoxia/HIF/KEGG-RCC collections."},"singleGeneOk":["Albert's panels (ccRCC / hypoxia)"]};
+/* GENESETS_END */
+/* DATASETS_BEGIN */
+const DATASETS = {"dir":"/fh/fast/yeh_a/grp/software/scseq-annotator/data","datasets":[{"name":"Gut_resolvi_genes4","file":"Gut_resolvi_genes4.bundle.json","bytes":12391163,"gz":"Gut_resolvi_genes4.bundle.json.gz","standalone":"Gut_resolvi_genes4.html","n_cells":372284,"n_genes":343,"resolutions":["leiden_resolvi_0.4","leiden_resolvi_0.6","leiden_resolvi_0.8","leiden_resolvi_1.0","leiden_resolvi_1.2","leiden_resolvi_1.4"],"generated":"2026-11-06 15:20","suggest_lib":"Gut (Teichmann Nature 2024)"},{"name":"Melanoma_annotated","file":"Melanoma_annotated.bundle.json","bytes":13762397,"gz":"Melanoma_annotated.bundle.json.gz","standalone":"Melanoma_annotated.html","n_cells":692383,"n_genes":380,"resolutions":["leiden_0.4","leiden_0.6","leiden_0.8","leiden_1.0","leiden_1.2","leiden_1.4"],"generated":"2026-11-06 15:20","suggest_lib":"Skin (Restrepo Nat Genet 2026)"},{"name":"RCC_kidney_resolvi_genes4","file":"RCC_kidney_resolvi_genes4.bundle.json","bytes":12226571,"gz":"RCC_kidney_resolvi_genes4.bundle.json.gz","standalone":"RCC_kidney_resolvi_genes4.html","n_cells":4257268,"n_genes":334,"resolutions":["leiden_resolvi_0.4","leiden_resolvi_0.6","leiden_resolvi_0.8","leiden_resolvi_1.0","leiden_resolvi_1.2","leiden_resolvi_1.4"],"generated":"2026-11-06 13:01","suggest_lib":"Renal (Lake Nature 2023)"}]};
+/* DATASETS_END */
+</script>
+<script>
+/* BUNDLE_INLINE */
+</script>
+<script>
+"use strict";
+/* =====================================================================
+   scSeq Annotator — self-contained browser app.
+   Scoring mirrors core.py of the marimo tool exactly:
+     zscore_mean : z-score each gene's cluster-mean ACROSS clusters (sd==0 -> 1),
+                   then average over the set's in-panel genes.
+     mean        : plain mean of cluster-mean log-expression.
+   Argmax label, runner-up and margin = top - second, as in argmax_labels().
+   ===================================================================== */
+
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+/* ---------- binary helpers ---------- */
+/* Decoding is memoised per packed object: the UMAP tooltip runs on every
+   mousemove and base64-decoding 25k codes each time is visibly janky. */
+const _decCache = new WeakMap();
+function unb64(o){
+  const hit = _decCache.get(o);
+  if (hit) return hit;
+  const bin = atob(o.b64), n = bin.length, u = new Uint8Array(n);
+  for (let i=0;i<n;i++) u[i] = bin.charCodeAt(i);
+  let out;
+  switch(o.dtype){
+    case "float32": out = new Float32Array(u.buffer); break;
+    case "uint16":  out = new Uint16Array(u.buffer); break;
+    case "uint8":   out = u; break;
+    default: throw new Error("dtype " + o.dtype);
+  }
+  _decCache.set(o, out);
+  return out;
+}
+
+/* ---------- state ---------- */
+const S = {
+  B:null, res:null, G:0, geneIdx:null,
+  mean:null, frac:null, clusters:[], sizes:[],
+  labels:{},            // {res: {cluster: label}}
+  lib:{}, libName:"", scores:null, setNames:[], argmax:[],
+  umap:null, sort:{k:"cl",dir:1},
+};
+
+const PAL = ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2",
+  "#7f7f7f","#bcbd22","#17becf","#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5",
+  "#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5","#393b79","#637939","#8c6d31",
+  "#843c39","#7b4173","#3182bd","#e6550d","#31a354","#756bb1","#636363"];
+const col = i => PAL[((i % PAL.length) + PAL.length) % PAL.length];
+
+/* viridis-ish ramp for continuous values */
+const RAMP = [[68,1,84],[72,40,120],[62,74,137],[49,104,142],[38,130,142],
+              [31,158,137],[53,183,121],[109,205,89],[180,222,44],[253,231,37]];
+function ramp(t){
+  t = Math.max(0, Math.min(1, t));
+  const x = t*(RAMP.length-1), i = Math.floor(x), f = x-i;
+  const a = RAMP[i], b = RAMP[Math.min(i+1, RAMP.length-1)];
+  return `rgb(${Math.round(a[0]+(b[0]-a[0])*f)},${Math.round(a[1]+(b[1]-a[1])*f)},${Math.round(a[2]+(b[2]-a[2])*f)})`;
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt = (v,d=2) => (v==null || !isFinite(v)) ? "—" : v.toFixed(d);
+
+/* ---------- loading ---------- */
+function activate(B){
+  S.B = B;
+  S.G = B.genes.length;
+  S.geneIdx = new Map(B.genes.map((g,i)=>[g,i]));
+  S.labels = {};
+  if (B.labels_existing) for (const [r,m] of Object.entries(B.labels_existing))
+    S.labels[r] = Object.assign({}, m);
+
+  $("#hdrDs").textContent =
+    `${B.name} · ${(B.n_cells||0).toLocaleString()} cells · ${B.n_genes} genes`;
+  $("#welcome").style.display = "none";
+  $("#app").style.display = "grid";
+  $("#btnDl").disabled = false;
+
+  const res = $("#res"); res.innerHTML = "";
+  Object.keys(B.res).forEach(r=>{
+    const o = document.createElement("option");
+    o.value = r;
+    o.textContent = `${r}  (${B.res[r].clusters.length} clusters)`;
+    res.appendChild(o);
+  });
+  // default to the resolution that already has the most labels, else 1.0, else first
+  let def = Object.keys(B.res)[0];
+  let best = -1;
+  for (const r of Object.keys(B.res)){
+    const n = S.labels[r] ? Object.keys(S.labels[r]).length : 0;
+    if (n > best){ best = n; def = r; }
+  }
+  if (best <= 0) def = Object.keys(B.res).find(r=>/1\.0$/.test(r)) || def;
+  res.value = def;
+
+  fillLibSelect(B);
+
+  const cc = $("#compCol"); cc.innerHTML = "";
+  (B.meta_cols||[]).forEach(c=>{
+    const o = document.createElement("option"); o.value = c; o.textContent = c;
+    cc.appendChild(o);
+  });
+
+  buildUmapBy();
+  stampFooter();
+  setRes();
+}
+
+function setRes(){
+  const B = S.B;
+  S.res = $("#res").value;
+  const blk = B.res[S.res];
+  S.clusters = blk.clusters;
+  S.sizes = blk.sizes;
+  S.mean = unb64(blk.mean);
+  S.frac = unb64(blk.frac);
+  if (!S.labels[S.res]) S.labels[S.res] = {};
+  const tot = S.sizes.reduce((a,b)=>a+b,0);
+  $("#resInfo").textContent =
+    `${S.clusters.length} clusters · ${tot.toLocaleString()} cells aggregated`;
+  recompute();
+}
+
+/* ---------- scoring (mirrors core.py) ---------- */
+function parseCustom(text){
+  const lib = {}, loose = [];
+  text.split(/\n/).forEach(raw=>{
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) return;
+    const i = line.indexOf(":");
+    if (i > 0){
+      const name = line.slice(0,i).trim();
+      const genes = line.slice(i+1).split(/[,\s]+/).map(s=>s.trim()).filter(Boolean);
+      if (genes.length) lib[name] = genes;
+    } else {
+      loose.push(...line.split(/[,\s]+/).map(s=>s.trim()).filter(Boolean));
+    }
+  });
+  if (loose.length) lib["custom"] = loose;
+  return lib;
+}
+
+function inPanel(genes){
+  const out = [];
+  for (const g of genes){ const i = S.geneIdx.get(g); if (i !== undefined) out.push(i); }
+  return out;
+}
+
+/** per-cluster score for one gene set */
+function moduleScore(cols, method){
+  const k = S.clusters.length, G = S.G, out = new Float64Array(k);
+  if (!cols.length){ out.fill(NaN); return out; }
+  if (method === "mean"){
+    for (let c=0;c<k;c++){
+      let s = 0; for (const g of cols) s += S.mean[c*G+g];
+      out[c] = s / cols.length;
+    }
+    return out;
+  }
+  // zscore_mean: z-score each gene across clusters, then average over genes
+  for (const g of cols){
+    let mu = 0;
+    for (let c=0;c<k;c++) mu += S.mean[c*G+g];
+    mu /= k;
+    let v = 0;
+    for (let c=0;c<k;c++){ const d = S.mean[c*G+g]-mu; v += d*d; }
+    let sd = Math.sqrt(v/k);            // numpy std = population (ddof=0)
+    if (sd === 0) sd = 1;
+    for (let c=0;c<k;c++) out[c] += (S.mean[c*G+g]-mu)/sd;
+  }
+  for (let c=0;c<k;c++) out[c] /= cols.length;
+  return out;
+}
+
+function recompute(){
+  S.libName = $("#lib").value;
+  const base = GENESETS.libraries[S.libName] || {};
+  const custom = parseCustom($("#custom").value);
+  S.lib = Object.assign({}, base, custom);
+
+  const method = $("#method").value;
+  const minG = parseInt($("#minGenes").value, 10);
+  const always = new Set([...(GENESETS.singleGeneOk||[]), ...Object.keys(custom)]);
+  const alwaysSet = new Set(Object.keys(custom));
+  if ((GENESETS.singleGeneOk||[]).includes(S.libName))
+    Object.keys(base).forEach(n=>alwaysSet.add(n));
+
+  S.setNames = []; const cols = [];
+  for (const [name, genes] of Object.entries(S.lib)){
+    const idx = inPanel(genes);
+    const thr = alwaysSet.has(name) ? 1 : minG;
+    if (idx.length >= thr){ S.setNames.push(name); cols.push(moduleScore(idx, method)); }
+  }
+  S.scores = cols;
+
+  // argmax + runner-up + margin
+  const k = S.clusters.length;
+  S.argmax = [];
+  for (let c=0;c<k;c++){
+    let b1=-Infinity,b2=-Infinity,i1=-1,i2=-1;
+    for (let j=0;j<cols.length;j++){
+      const v = cols[j][c];
+      if (!isFinite(v)) continue;
+      if (v > b1){ b2=b1; i2=i1; b1=v; i1=j; } else if (v > b2){ b2=v; i2=j; }
+    }
+    S.argmax.push({
+      label: i1>=0 ? S.setNames[i1] : "—", score: i1>=0 ? b1 : NaN,
+      runner: i2>=0 ? S.setNames[i2] : "—",
+      margin: (i1>=0 && i2>=0) ? b1-b2 : NaN,
+    });
+  }
+
+  const nSets = S.setNames.length;
+  const note = $("#clustNote");
+  if (!nSets){
+    note.style.display = "block";
+    note.innerHTML = "<b>No gene set met the minimum.</b> This library's genes are not in " +
+      "this dataset's panel — pick another library, or lower the minimum.";
+  } else { note.style.display = "none"; }
+
+  relabelLibOptions();
+  $("#libRef").textContent = GENESETS.references[S.libName] || "";
+  renderTable(); renderHeat(); renderDotSel(); renderDot(); renderComp();
+  drawUmap(); updateLabCount(); updateExport();
+}
+
+/* ---------- cluster table ---------- */
+function genesPerCell(c){            // = sum over genes of frac (core.py)
+  const G = S.G; let s = 0;
+  for (let g=0; g<G; g++) s += S.frac[c*G+g];
+  return s;
+}
+
+function renderTable(){
+  const tb = $("#tbl tbody"); tb.innerHTML = "";
+  const tot = S.sizes.reduce((a,b)=>a+b,0) || 1;
+  const rows = S.clusters.map((cl,i)=>({
+    i, cl, n:S.sizes[i], pct:100*S.sizes[i]/tot,
+    arg:S.argmax[i].label, score:S.argmax[i].score,
+    runner:S.argmax[i].runner, margin:S.argmax[i].margin,
+    gpc:genesPerCell(i),
+  }));
+  const k = S.sort.k, dir = S.sort.dir;
+  rows.sort((a,b)=>{
+    let x=a[k], y=b[k];
+    if (k==="cl"){ const nx=+a.cl, ny=+b.cl;
+      if (isFinite(nx)&&isFinite(ny)) return (nx-ny)*dir; }
+    if (typeof x === "string") return x.localeCompare(y)*dir;
+    if (!isFinite(x)) x = -Infinity; if (!isFinite(y)) y = -Infinity;
+    return (x-y)*dir;
+  });
+
+  const sugg = new Set(S.setNames);
+  Object.values(S.labels).forEach(m=>Object.values(m).forEach(v=>v && sugg.add(v)));
+  let dl = $("#sugg");
+  if (!dl){ dl = document.createElement("datalist"); dl.id = "sugg"; document.body.appendChild(dl); }
+  dl.innerHTML = [...sugg].sort().map(s=>`<option value="${esc(s)}">`).join("");
+
+  const gpcVals = rows.map(r=>r.gpc).sort((a,b)=>a-b);
+  const gpcLo = gpcVals[Math.floor(gpcVals.length*0.15)] ?? 0;
+
+  for (const r of rows){
+    const tr = document.createElement("tr");
+    /* margin 0 = two gene sets scored identically (usually twins that reduce to
+       the same in-panel genes). The argmax is then undetermined, so say so
+       rather than showing a confident label with a bare 0.00 beside it. */
+    const mg = !isFinite(r.margin) ? "—"
+      : r.margin < 1e-9
+        ? `<span class="chip lo" title="exact tie with ${esc(r.runner)} — the panel cannot separate these two gene sets">tie</span>`
+        : `<span class="chip ${r.margin < 0.25 ? "lo" : ""}">${fmt(r.margin)}</span>`;
+    const gp = `<span class="chip ${r.gpc <= gpcLo ? "lo" : ""}">${fmt(r.gpc,1)}</span>`;
+    tr.innerHTML =
+      `<td><span class="sw" style="background:${col(r.i)}"></span><b>${esc(r.cl)}</b></td>`+
+      `<td class="n">${r.n.toLocaleString()}</td>`+
+      `<td class="n">${fmt(r.pct,1)}</td>`+
+      `<td>${esc(r.arg)}</td>`+
+      `<td class="n">${fmt(r.score)}</td>`+
+      `<td style="color:var(--muted)">${esc(r.runner)}</td>`+
+      `<td class="n">${mg}</td>`+
+      `<td class="n">${gp}</td>`+
+      `<td class="lab"><input type="text" list="sugg" data-cl="${esc(r.cl)}" `+
+        `value="${esc(S.labels[S.res][r.cl]||"")}" placeholder="type a label…"></td>`;
+    tb.appendChild(tr);
+  }
+  tb.querySelectorAll("input[data-cl]").forEach(inp=>{
+    inp.addEventListener("input", e=>{
+      const cl = e.target.dataset.cl, v = e.target.value.trim();
+      if (v) S.labels[S.res][cl] = v; else delete S.labels[S.res][cl];
+      updateLabCount(); updateExport(); drawUmap();
+    });
+  });
+}
+
+/* ---------- score heatmap ---------- */
+function renderHeat(){
+  const w = $("#hmWrap");
+  if (!S.setNames.length){ w.innerHTML = "<p class='hint'>nothing to show</p>"; return; }
+  const byRow = $("#hmRow").checked;
+  const k = S.clusters.length;
+  let html = "<table><thead><tr><th class='nos'>Cluster</th>";
+  S.setNames.forEach(n=>{
+    html += `<th class="nos" style="writing-mode:vertical-rl;transform:rotate(180deg);`+
+            `max-width:26px;font-size:10px;text-transform:none;letter-spacing:0">${esc(n)}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+  // global range computed once, not per cell
+  let g0 = Infinity, g1 = -Infinity;
+  if (!byRow){
+    for (const arr of S.scores) for (const v of arr){
+      if (!isFinite(v)) continue;
+      if (v < g0) g0 = v;
+      if (v > g1) g1 = v;
+    }
+  }
+  for (let c=0;c<k;c++){
+    const vals = S.setNames.map((_,j)=>S.scores[j][c]);
+    let lo = Infinity, hi = -Infinity;
+    if (byRow) for (const v of vals){ if (!isFinite(v)) continue;
+      if (v < lo) lo = v; if (v > hi) hi = v; }
+    html += `<tr><td style="white-space:nowrap"><span class="sw" style="background:${col(c)}"></span>`+
+            `<b>${esc(S.clusters[c])}</b></td>`;
+    vals.forEach((v,j)=>{
+      const t = byRow ? ((hi===lo) ? 0.5 : (v-lo)/(hi-lo))
+                      : ((g1===g0) ? 0.5 : (v-g0)/(g1-g0));
+      const bg = isFinite(v) ? ramp(t) : "#eee";
+      html += `<td style="background:${bg};width:26px;padding:0" `+
+              `title="${esc(S.clusters[c])} · ${esc(S.setNames[j])} = ${fmt(v)}">`+
+              `&nbsp;</td>`;
+    });
+    html += "</tr>";
+  }
+  w.innerHTML = html + "</tbody></table>";
+}
+
+/* ---------- dot plot ---------- */
+function renderDotSel(){
+  const sel = $("#dotSet"), prev = sel.value;
+  sel.innerHTML = "";
+  S.setNames.forEach(n=>{
+    const o = document.createElement("option"); o.value = n; o.textContent = n;
+    sel.appendChild(o);
+  });
+  if (prev && S.setNames.includes(prev)) sel.value = prev;
+}
+
+function renderDot(){
+  const w = $("#dotWrap"), name = $("#dotSet").value;
+  if (!name || !S.lib[name]){ w.innerHTML = "<p class='hint'>pick a gene set</p>"; return; }
+  const idx = inPanel(S.lib[name]);
+  const names = idx.map(i=>S.B.genes[i]);
+  if (!idx.length){ w.innerHTML = "<p class='hint'>no gene of this set is in the panel</p>"; return; }
+  const k = S.clusters.length, G = S.G;
+  // min-max scale mean per gene (core.py dotplot_data)
+  const lo = [], hi = [];
+  idx.forEach((g,j)=>{
+    let a=Infinity,b=-Infinity;
+    for (let c=0;c<k;c++){ const v=S.mean[c*G+g]; if(v<a)a=v; if(v>b)b=v; }
+    lo[j]=a; hi[j]=(b===a)?a+1:b;
+  });
+  let html = "<table><thead><tr><th class='nos'>Cluster</th>";
+  names.forEach(n=>html += `<th class="nos" style="font-size:10px;text-transform:none;`+
+    `letter-spacing:0;text-align:center">${esc(n)}</th>`);
+  html += "</tr></thead><tbody>";
+  for (let c=0;c<k;c++){
+    html += `<tr><td style="white-space:nowrap"><span class="sw" style="background:${col(c)}"></span>`+
+            `<b>${esc(S.clusters[c])}</b></td>`;
+    idx.forEach((g,j)=>{
+      const m = (S.mean[c*G+g]-lo[j])/(hi[j]-lo[j]);
+      const f = S.frac[c*G+g];
+      const d = Math.max(2, Math.round(3 + f*15));
+      html += `<td style="text-align:center;padding:2px" title="${esc(S.clusters[c])} · `+
+        `${esc(names[j])}\nmean ${fmt(S.mean[c*G+g],3)} (scaled ${fmt(m)})\n`+
+        `${(f*100).toFixed(1)}% expressing">`+
+        `<span style="display:inline-block;width:${d}px;height:${d}px;border-radius:50%;`+
+        `background:${ramp(m)}"></span></td>`;
+    });
+    html += "</tr>";
+  }
+  w.innerHTML = html + "</tbody></table>";
+}
+
+/* ---------- composition ---------- */
+function renderComp(){
+  const w = $("#compWrap"), c0 = $("#compCol").value;
+  const blk = S.B.res[S.res];
+  if (!c0 || !blk.comp || !blk.comp[c0]){
+    w.innerHTML = "<p class='hint'>no composition stored for this column</p>"; return;
+  }
+  const M = blk.comp[c0], cats = (S.B.meta_cats[c0]||[]).map(String);
+  let html = `<table><thead><tr><th class='nos'>Cluster</th><th class='nos'>Cells</th>`+
+             `<th class='nos' style="width:60%">${esc(c0)}</th><th class='nos'>Top</th></tr></thead><tbody>`;
+  M.forEach((row,c)=>{
+    const tot = row.reduce((a,b)=>a+b,0) || 1;
+    let bars = "", mx = -1, mi = 0;
+    row.forEach((v,j)=>{
+      const p = 100*v/tot;
+      if (v > mx){ mx = v; mi = j; }
+      if (p > 0) bars += `<span title="${esc(cats[j]||j)}: ${p.toFixed(1)}% (${v})" `+
+        `style="display:inline-block;height:14px;width:${p}%;background:${col(j)}"></span>`;
+    });
+    const dom = 100*mx/tot;
+    html += `<tr><td style="white-space:nowrap"><span class="sw" style="background:${col(c)}"></span>`+
+      `<b>${esc(S.clusters[c])}</b></td><td class="n">${tot.toLocaleString()}</td>`+
+      `<td style="padding:3px 8px"><span style="display:flex;border-radius:3px;overflow:hidden">${bars}</span></td>`+
+      `<td style="white-space:nowrap"><span class="chip ${dom>=70?"lo":""}">`+
+      `${esc(cats[mi]||mi)} ${dom.toFixed(0)}%</span></td></tr>`;
+  });
+  html += "</tbody></table>";
+  const leg = cats.map((c,j)=>`<span class="i"><span class="sw" style="background:${col(j)}"></span>${esc(c)}</span>`).join("");
+  w.innerHTML = html + `<div class="legend" style="padding:8px">${leg}</div>`;
+}
+
+/* ---------- UMAP ---------- */
+function buildUmapBy(){
+  const sel = $("#umapBy"); sel.innerHTML = "";
+  const add = (v,t)=>{ const o=document.createElement("option"); o.value=v; o.textContent=t; sel.appendChild(o); };
+  add("cluster","cluster");
+  add("label","your label");
+  (S.B.meta_cols||[]).forEach(c=>{ if (S.B.umap?.meta?.[c]) add("meta:"+c, c); });
+  if (S.B.umap?.expr) add("gene","gene expression");
+  if (!S.B.umap){
+    $("#umapInfo").textContent = "this bundle has no UMAP";
+    $("#umap").style.display = "none";
+  }
+}
+
+function umapPoints(){
+  const u = S.B.umap;
+  if (!u) return null;
+  if (S.umap && S.umap.n === u.n) return S.umap;
+  const xq = unb64(u.x), yq = unb64(u.y), n = u.n;
+  const [x0,x1] = u.xrange, [y0,y1] = u.yrange;
+  const x = new Float32Array(n), y = new Float32Array(n);
+  for (let i=0;i<n;i++){
+    x[i] = x0 + (xq[i]/65535)*(x1-x0);
+    y[i] = y0 + (yq[i]/65535)*(y1-y0);
+  }
+  S.umap = {n, x, y};
+  return S.umap;
+}
+
+function drawUmap(){
+  const u = S.B.umap; if (!u) return;
+  const P = umapPoints();
+  const cv = $("#umap"), dpr = window.devicePixelRatio || 1;
+  const W = Math.min(900, $("#main").clientWidth - 40), H = Math.round(W*0.78);
+  cv.width = W*dpr; cv.height = H*dpr; cv.style.width = W+"px"; cv.style.height = H+"px";
+  const g = cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
+  g.clearRect(0,0,W,H);
+
+  const pad = 16;
+  const [x0,x1] = u.xrange, [y0,y1] = u.yrange;
+  const sx = v => pad + (v-x0)/((x1-x0)||1)*(W-2*pad);
+  const sy = v => H - pad - (v-y0)/((y1-y0)||1)*(H-2*pad);
+
+  const by = $("#umapBy").value;
+  let colorOf, legend = [];
+  const labBlock = u.lab[S.res];
+
+  if (by === "gene"){
+    const gene = ($("#geneSearch").value||"").trim().toUpperCase();
+    const gi = S.geneIdx.get(gene);
+    if (gi === undefined){
+      g.fillStyle = "#6b7684"; g.font = "13px sans-serif";
+      g.fillText(gene ? `gene "${gene}" is not in this panel` : "type a gene symbol above", pad, 24);
+      colorOf = () => "#dfe3e8";
+    } else {
+      const q = unb64(u.expr.q), gmax = u.expr.gmax[gi], G = S.G;
+      const vals = new Float32Array(P.n);
+      for (let i=0;i<P.n;i++) vals[i] = (q[i*G+gi]/255)*gmax;
+      let hi = 0; for (const v of vals) if (v>hi) hi=v;
+      colorOf = i => vals[i] <= 0 ? "#e9edf1" : ramp(hi ? vals[i]/hi : 0);
+      $("#umapInfo").textContent = `${gene} · max ${fmt(hi,2)} (log-norm)`;
+      for (let t=0;t<=4;t++)
+        legend.push([ramp(t/4), `${fmt(hi*t/4,1)}`]);
+    }
+  } else if (by === "cluster" || by === "label"){
+    if (!labBlock){ colorOf = () => "#bbb"; }
+    else {
+      const codes = unb64(labBlock.codes), lev = labBlock.levels;
+      const pos = new Map(S.clusters.map((c,i)=>[c,i]));
+      if (by === "cluster"){
+        colorOf = i => col(pos.get(lev[codes[i]]) ?? codes[i]);
+        legend = S.clusters.map((c,i)=>[col(i), `${c}${S.labels[S.res][c] ? " — "+S.labels[S.res][c] : ""}`]);
+      } else {
+        const uniq = [...new Set(S.clusters.map(c=>S.labels[S.res][c]||"(unlabelled)"))];
+        const li = new Map(uniq.map((u2,i)=>[u2,i]));
+        colorOf = i => {
+          const cl = lev[codes[i]];
+          return col(li.get(S.labels[S.res][cl]||"(unlabelled)"));
+        };
+        legend = uniq.map((u2,i)=>[col(i), u2]);
+      }
+      $("#umapInfo").textContent = `${P.n.toLocaleString()} of ${(S.B.n_cells||0).toLocaleString()} cells shown`;
+    }
+  } else if (by.startsWith("meta:")){
+    const c0 = by.slice(5), blk = u.meta[c0];
+    const codes = unb64(blk.codes), lev = blk.levels;
+    colorOf = i => col(codes[i]);
+    legend = lev.map((l,i)=>[col(i), l]);
+  }
+
+  const order = new Uint32Array(P.n);
+  for (let i=0;i<P.n;i++) order[i]=i;
+  // deterministic shuffle so no category is painted last on top
+  let seed = 42;
+  for (let i=P.n-1;i>0;i--){
+    seed = (seed*1103515245 + 12345) & 0x7fffffff;
+    const j = seed % (i+1);
+    const t = order[i]; order[i] = order[j]; order[j] = t;
+  }
+  const r = P.n > 60000 ? 0.8 : P.n > 20000 ? 1.1 : 1.6;
+  for (let oi=0; oi<P.n; oi++){
+    const i = order[oi];
+    g.fillStyle = colorOf(i);
+    g.beginPath(); g.arc(sx(P.x[i]), sy(P.y[i]), r, 0, 6.2832); g.fill();
+  }
+
+  if ($("#umapLbl").checked && labBlock && (by==="cluster"||by==="label")){
+    const codes = unb64(labBlock.codes), lev = labBlock.levels;
+    const acc = new Map();
+    for (let i=0;i<P.n;i++){
+      const cl = lev[codes[i]];
+      let a = acc.get(cl); if (!a){ a=[0,0,0]; acc.set(cl,a); }
+      a[0]+=P.x[i]; a[1]+=P.y[i]; a[2]++;
+    }
+    g.font = "bold 11px sans-serif"; g.textAlign="center"; g.textBaseline="middle";
+    for (const [cl,a] of acc){
+      if (a[2] < 8) continue;
+      const X = sx(a[0]/a[2]), Y = sy(a[1]/a[2]);
+      g.lineWidth = 3; g.strokeStyle = "rgba(255,255,255,.92)";
+      g.strokeText(cl, X, Y); g.fillStyle = "#111"; g.fillText(cl, X, Y);
+    }
+  }
+
+  $("#umapLeg").innerHTML = legend.slice(0,60).map(([c,t])=>
+    `<span class="i"><span class="sw" style="background:${c}"></span>${esc(t)}</span>`).join("");
+}
+
+/* ---------- labels / export ---------- */
+function updateLabCount(){
+  const m = S.labels[S.res]||{}, n = Object.keys(m).length;
+  $("#labCount").textContent = `${n} of ${S.clusters.length} clusters labelled at ${S.res}`;
+}
+
+function labelPayload(){
+  const out = {};
+  for (const [r,m] of Object.entries(S.labels)){
+    const clean = {};
+    for (const [c,v] of Object.entries(m)) if (v && v.trim()) clean[c] = v.trim();
+    if (Object.keys(clean).length) out[r] = clean;
+  }
+  return out;
+}
+
+function updateExport(){
+  const p = labelPayload();
+  $("#jsonPreview").textContent = JSON.stringify(p, null, 2) || "{}";
+  const sc = S.B.label_sidecar || "<stem>.manual_labels.json";
+  const h5 = S.B.source_h5ad || "INPUT.h5ad";
+  $("#applyCmd").textContent =
+    `# 1. put the downloaded file here (it is the file the Python tools read)\n`+
+    `cp ~/Downloads/${sc.split("/").pop()} \\\n   ${sc}\n\n`+
+    `# 2. bake the labels into the object as obs['cell_type']\n`+
+    `cd /fh/fast/hill_g/acyeh_lab/projects/scSeq-annotator\n`+
+    `sbatch shell/apply_labels.sh ${h5} --in-place`;
+  const n = Object.values(p).reduce((a,m)=>a+Object.keys(m).length,0);
+  $("#exportStatus").innerHTML = n
+    ? `<div class="ok">${n} labels across ${Object.keys(p).length} resolution(s) ready.</div>`
+    : `<div class="note">No labels yet — type one into the “Your label” column.</div>`;
+}
+
+function download(){
+  const p = labelPayload();
+  if (!Object.keys(p).length){ alert("No labels to save yet."); return; }
+  const name = (S.B.label_sidecar || "manual_labels.json").split("/").pop();
+  const blob = new Blob([JSON.stringify(p, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+}
+
+/* ---------- welcome screen: what is on the share, and what to score with ---------- */
+function fmtBytes(n){
+  return n >= 1e6 ? (n/1e6).toFixed(1)+" MB" : Math.round(n/1e3)+" kB";
+}
+
+/** Copy to the clipboard, returning whether it actually worked.
+ *  The async Clipboard API is unavailable under file://, so fall back to the
+ *  legacy command. The caller reports failure to the user rather than
+ *  pretending the copy happened. */
+function copyText(t){
+  if (navigator.clipboard && window.isSecureContext)
+    return navigator.clipboard.writeText(t).then(()=>true, ()=>false);
+  const ta = document.createElement("textarea");
+  ta.value = t;
+  ta.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+  document.body.appendChild(ta); ta.select();
+  let ok = false;
+  try { ok = document.execCommand("copy"); } catch(e){ ok = false; }
+  ta.remove();
+  return Promise.resolve(ok);
+}
+
+function renderDsList(){
+  const host = $("#dsList"); if (!host) return;
+  const ds = (typeof DATASETS !== "undefined" && DATASETS.datasets) || [];
+  if (!ds.length){
+    host.innerHTML = '<p class="hint">No datasets are catalogued in this copy of '+
+      'the page. Convert one with <code>shell/convert.sh</code>, then run '+
+      '<code>python3 bin/build_catalog.py</code>.</p>';
+    return;
+  }
+  host.innerHTML = ds.map(d=>{
+    const path = DATASETS.dir + "/" + d.file;
+    const bits = [
+      (d.n_cells||0).toLocaleString() + " cells",
+      d.n_genes + " genes",
+      d.resolutions.length + " resolutions",
+      fmtBytes(d.bytes),
+    ];
+    if (d.suggest_lib) bits.push("library: " + d.suggest_lib);
+    return '<div class="dsrow"><div>'+
+      '<div class="dsname">'+esc(d.name)+'</div>'+
+      '<div class="hint">'+esc(bits.join(" · "))+'</div>'+
+      '<div class="dspath">'+esc(path)+'</div>'+
+      (d.standalone ? '<div class="hint">or double-click <code>'+
+        esc(d.standalone)+'</code> in that folder — data already baked in</div>' : '')+
+      '</div><div style="white-space:nowrap">'+
+      '<button data-copy="'+esc(path)+'">Copy path</button></div></div>';
+  }).join("");
+  host.querySelectorAll("button[data-copy]").forEach(b=>{
+    b.onclick = async () => {
+      const ok = await copyText(b.getAttribute("data-copy"));
+      b.textContent = ok ? "Copied \u2713" : "Select the path \u2192";
+      setTimeout(()=>{ b.textContent = "Copy path"; }, 2000);
+    };
+  });
+}
+
+function renderLibList(){
+  const host = $("#libList"); if (!host) return;
+  host.innerHTML = Object.keys(GENESETS.libraries).map(n=>{
+    const total = Object.keys(GENESETS.libraries[n]).length;
+    return '<div class="dsrow"><div>'+
+      '<div class="dsname">'+esc(n)+' <span class="hint">\u00b7 '+total+' sets</span></div>'+
+      '<div class="hint">'+esc(GENESETS.references[n] || "")+'</div>'+
+      '</div></div>';
+  }).join("");
+}
+
+/* ---------- library chooser ---------- */
+/** How many of a library's sets can actually be scored on this dataset's panel.
+ *  A library whose markers are mostly absent scores badly for reasons that have
+ *  nothing to do with biology, so this is the most useful thing to know before
+ *  choosing one. */
+function libUsable(name){
+  const sets = GENESETS.libraries[name] || {};
+  const single = (GENESETS.singleGeneOk||[]).includes(name);
+  const minG = single ? 1 : Math.max(1, parseInt($("#minGenes").value, 10) || 2);
+  let usable = 0;
+  for (const genes of Object.values(sets))
+    if (inPanel(genes).length >= minG) usable++;
+  return { usable, total: Object.keys(sets).length };
+}
+
+function guessLib(B){
+  const nm = (B.name + " " + (B.source_h5ad||"")).toLowerCase();
+  return /kidney|renal|rcc/.test(nm) ? "Renal (Lake Nature 2023)"
+       : /gut|colon|ileum|gvhd/.test(nm) ? "Gut (Teichmann Nature 2024)"
+       : /mel|skin/.test(nm) ? "Skin (Restrepo Nat Genet 2026)" : null;
+}
+
+function libOptionText(n){
+  const {usable, total} = libUsable(n);
+  return n + " \u2014 " + usable + "/" + total + " sets usable here";
+}
+
+/** Rewrite the option labels without disturbing the selection. */
+function relabelLibOptions(){
+  [...$("#lib").options].forEach(o=>{
+    o.textContent = libOptionText(o.value);
+    o.disabled = libUsable(o.value).usable === 0;
+  });
+}
+
+function fillLibSelect(B){
+  const lib = $("#lib"); lib.innerHTML = "";
+  for (const n of Object.keys(GENESETS.libraries)){
+    const o = document.createElement("option");
+    o.value = n; o.textContent = libOptionText(n);
+    o.disabled = libUsable(n).usable === 0;
+    lib.appendChild(o);
+  }
+  const guess = guessLib(B);
+  if (guess && GENESETS.libraries[guess] && libUsable(guess).usable > 0){
+    lib.value = guess;
+    $("#libWhy").textContent = "Auto-selected from the dataset name \u2014 "+
+      "change it freely, everything rescores at once.";
+  } else {
+    const first = [...lib.options].find(o=>!o.disabled);
+    if (first) lib.value = first.value;
+    $("#libWhy").textContent = "No tissue matched the dataset name \u2014 "+
+      "choose the library yourself.";
+  }
+}
+
+/* ---------- file intake ---------- */
+async function readBundle(file){
+  const low = file.name.toLowerCase();
+  if (/\.(npz|h5ad|h5|loom|rds|zarr)$/.test(low)){
+    const npz = low.endsWith(".npz");
+    throw new Error(
+      `"${file.name}" is a raw dataset, not a browser bundle.\n\n` +
+      (npz
+        ? "A .npz cannot be read in a browser: its string arrays are Python "+
+          "pickles and its expression matrix is ~200 MB. It has to be "+
+          "converted once on the cluster:\n\n"+
+          "  cd /fh/fast/yeh_a/grp/software/scseq-annotator\n"+
+          `  sbatch shell/convert.sh ${file.name} --name MY_DATASET --embed\n\n`
+        : "An .h5ad has to be summarised first, then converted:\n\n"+
+          "  cd /fh/fast/hill_g/acyeh_lab/projects/scSeq-annotator\n"+
+          `  sbatch shell/precompute.sh ${file.name}\n`+
+          "  cd /fh/fast/yeh_a/grp/software/scseq-annotator\n"+
+          "  sbatch shell/convert.sh <that>.annsummary.npz --name MY_DATASET --embed\n\n") +
+      "Then open the resulting *.bundle.json here. Ask Albert if you get stuck.");
+  }
+  let text;
+  if (file.name.endsWith(".gz")){
+    if (!("DecompressionStream" in window))
+      throw new Error("this browser cannot read .gz — use the plain .bundle.json");
+    const ds = new DecompressionStream("gzip");
+    text = await new Response(file.stream().pipeThrough(ds)).text();
+  } else {
+    text = await file.text();
+  }
+  const B = JSON.parse(text);
+  if (!B.format || !String(B.format).startsWith("scseq-annotator-bundle"))
+    throw new Error("That is a JSON file, but not a scSeq-annotator bundle.\n\n"+
+      "Open a file named *.bundle.json from\n"+DATASETS.dir);
+  return B;
+}
+
+function wireIntake(){
+  const drop = $("#drop"), input = $("#file");
+  $("#btnPick").onclick = () => input.click();
+  $("#btnOpen").onclick = () => input.click();
+  input.onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try { activate(await readBundle(f)); }
+    catch(err){ alert("Could not open that file:\n\n" + err.message); }
+    input.value = "";
+  };
+  ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev, e=>{
+    e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev, e=>{
+    e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", async e=>{
+    const f = e.dataTransfer.files[0]; if (!f) return;
+    try { activate(await readBundle(f)); }
+    catch(err){ alert("Could not open that file:\n\n" + err.message); }
+  });
+}
+
+function stampFooter(){
+  const B = S.B;
+  $("#foot").innerHTML =
+    `app: /fh/fast/yeh_a/grp/software/scseq-annotator/index.html<br>`+
+    `bundle: ${esc(B.summary_npz||"?")}<br>`+
+    `source h5ad: ${esc(B.source_h5ad||"?")}<br>`+
+    `label sidecar: ${esc(B.label_sidecar||"?")}<br>`+
+    `bundle built: ${esc(B.generated||"?")} by ${esc(B.generator||"?")}`+
+    (B.dropped_meta?.length ? `<br>metadata columns omitted: ${esc(B.dropped_meta.join(", "))}` : "");
+}
+
+/* ---------- wiring ---------- */
+function wire(){
+  $("#res").onchange = setRes;
+  ["#lib","#method","#minGenes"].forEach(s=>$(s).onchange = recompute);
+  let t; $("#custom").oninput = () => { clearTimeout(t); t = setTimeout(recompute, 350); };
+  $("#hmRow").onchange = renderHeat;
+  $("#dotSet").onchange = renderDot;
+  $("#compCol").onchange = renderComp;
+  $("#umapBy").onchange = () => {
+    $("#geneSearch").style.display = $("#umapBy").value === "gene" ? "" : "none";
+    drawUmap();
+  };
+  let gt; $("#geneSearch").oninput = () => { clearTimeout(gt); gt = setTimeout(drawUmap, 250); };
+  $("#umapLbl").onchange = drawUmap;
+  $("#btnDl").onclick = download;
+  $("#btnDl2").onclick = download;
+
+  $("#btnFill").onclick = () => {
+    S.clusters.forEach((cl,i)=>{
+      if (!S.labels[S.res][cl] && S.argmax[i] && S.argmax[i].label !== "—")
+        S.labels[S.res][cl] = S.argmax[i].label;
+    });
+    renderTable(); updateLabCount(); updateExport(); drawUmap();
+  };
+  $("#btnClear").onclick = () => {
+    if (!confirm(`Clear all labels at ${S.res}? This only affects this browser tab — `+
+                 `the file on disk is untouched.`)) return;
+    S.labels[S.res] = {};
+    renderTable(); updateLabCount(); updateExport(); drawUmap();
+  };
+  $("#btnLoad").onclick = () => $("#labFile").click();
+  $("#labFile").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      const obj = JSON.parse(await f.text());
+      let n = 0;
+      for (const [r,m] of Object.entries(obj)){
+        if (typeof m !== "object" || m === null) continue;
+        S.labels[r] = Object.assign(S.labels[r]||{}, m);
+        n += Object.keys(m).length;
+      }
+      alert(`Loaded ${n} labels across ${Object.keys(obj).length} resolution(s).`);
+      renderTable(); updateLabCount(); updateExport(); drawUmap();
+    } catch(err){ alert("Could not read that labels file:\n\n" + err.message); }
+    e.target.value = "";
+  };
+
+  $$("nav.tabs button").forEach(b=>b.onclick = () => {
+    $$("nav.tabs button").forEach(x=>x.classList.remove("on"));
+    $$(".pane").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); $("#p-"+b.dataset.p).classList.add("on");
+    if (b.dataset.p === "umap") drawUmap();
+  });
+  $$("#tbl th[data-s]").forEach(th=>th.onclick = () => {
+    const k = th.dataset.s;
+    S.sort = {k, dir: (S.sort.k === k ? -S.sort.dir : (k==="cl"?1:-1))};
+    renderTable();
+  });
+
+  // tooltips on canvas
+  const cv = $("#umap"), tip = $("#tip");
+  cv.addEventListener("mousemove", e=>{
+    const u = S.B?.umap; if (!u) return;
+    const P = umapPoints(), rect = cv.getBoundingClientRect();
+    const W = rect.width, H = rect.height, pad = 16;
+    const [x0,x1]=u.xrange,[y0,y1]=u.yrange;
+    const mx = e.clientX-rect.left, my = e.clientY-rect.top;
+    let best=-1, bd=64;
+    for (let i=0;i<P.n;i+=3){
+      const X = pad+(P.x[i]-x0)/((x1-x0)||1)*(W-2*pad);
+      const Y = H-pad-(P.y[i]-y0)/((y1-y0)||1)*(H-2*pad);
+      const d = (X-mx)*(X-mx)+(Y-my)*(Y-my);
+      if (d<bd){ bd=d; best=i; }
+    }
+    if (best<0){ tip.style.display="none"; return; }
+    const lb = u.lab[S.res];
+    const cl = lb ? lb.levels[unb64(lb.codes)[best]] : "?";
+    tip.textContent = `cluster ${cl}` + (S.labels[S.res][cl] ? `\n${S.labels[S.res][cl]}` : "");
+    tip.style.display="block";
+    tip.style.left = (e.clientX+12)+"px"; tip.style.top = (e.clientY+12)+"px";
+  });
+  cv.addEventListener("mouseleave", ()=>$("#tip").style.display="none");
+  window.addEventListener("resize", ()=>{ if (S.B) drawUmap(); });
+}
+
+wireIntake(); wire(); renderDsList(); renderLibList();
+if (window.__BUNDLE__) activate(window.__BUNDLE__);
+</script>
+</body>
+</html>
