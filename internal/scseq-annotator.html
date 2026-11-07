@@ -84,8 +84,12 @@
   table{border-collapse:collapse;width:100%;font-size:13px;background:var(--panel)}
   th,td{padding:5px 8px;border-bottom:1px solid var(--border);text-align:left;
         vertical-align:middle}
+  /* Every table on this page lives inside a .scroll box, so a sticky th offsets
+     from THAT box, not the viewport. top:42px parked the header 42px down inside
+     the table, where it sat over the first data row instead of capping the
+     column. The page header is outside the scroll box and never overlaps it. */
   th{background:#eef1f5;font-size:11px;text-transform:uppercase;letter-spacing:.4px;
-     color:var(--muted);position:sticky;top:42px;z-index:5;cursor:pointer;white-space:nowrap}
+     color:var(--muted);position:sticky;top:0;z-index:5;cursor:pointer;white-space:nowrap}
   th.nos{cursor:default}
   tbody tr:nth-child(even){background:var(--row)}
   tbody tr:hover{background:var(--hl)}
@@ -112,6 +116,17 @@
          border-top:1px solid var(--border);margin-top:18px;line-height:1.6;word-break:break-all}
   #tip{position:fixed;display:none;background:#0d1b2a;color:#fff;font:11px var(--mono);
        padding:5px 8px;border-radius:5px;pointer-events:none;z-index:99;white-space:pre}
+  /* Dot plot: genes that belong to the gene set but are NOT on this dataset's
+     panel. They are kept as narrow hatched reference columns rather than
+     dropped -- a marker you could not measure is a reason a call is weak, and
+     hiding it makes the panel look more complete than it is. */
+  th.gabs{writing-mode:vertical-rl;transform:rotate(180deg);max-width:15px;
+          font-size:9px;font-style:italic;color:#9aa5b1;background:#e9edf2;
+          padding:4px 1px;cursor:default}
+  td.gabs{width:15px;padding:0;background:repeating-linear-gradient(45deg,
+          #f5f7fa,#f5f7fa 3px,#eaeef3 3px,#eaeef3 6px)}
+  /* a hairline so a run of adjacent absent genes reads as N columns, not one block */
+  th.gabs,td.gabs{border-left:1px solid #dfe4ea}
   .scroll{overflow:auto;max-height:70vh;border:1px solid var(--border);border-radius:8px}
 
   /* --- internal-site nav (injected by deploy_to_website.py) --- */
@@ -288,6 +303,7 @@ Tumour: CA9, VEGFA"></textarea>
           <span>Gene set</span>
           <select id="dotSet" style="width:auto;min-width:240px"></select>
           <span class="hint">dot size = % of cells expressing · colour = mean, min–max scaled per gene</span>
+          <span class="hint" id="dotMiss"></span>
         </div>
         <div class="scroll" id="dotWrap"></div>
       </div>
@@ -685,36 +701,64 @@ function renderDotSel(){
 }
 
 function renderDot(){
-  const w = $("#dotWrap"), name = $("#dotSet").value;
-  if (!name || !S.lib[name]){ w.innerHTML = "<p class='hint'>pick a gene set</p>"; return; }
-  const idx = inPanel(S.lib[name]);
-  const names = idx.map(i=>S.B.genes[i]);
-  if (!idx.length){ w.innerHTML = "<p class='hint'>no gene of this set is in the panel</p>"; return; }
+  const w = $("#dotWrap"), miss = $("#dotMiss"), name = $("#dotSet").value;
+  if (!name || !S.lib[name]){
+    w.innerHTML = "<p class='hint'>pick a gene set</p>"; miss.textContent = ""; return;
+  }
+  /* Every gene of the set, in the library's own order, flagged by whether this
+     dataset's panel carries it. Absent genes are NOT dropped -- they render as
+     narrow hatched columns in the place they would have occupied, because a
+     marker that could not be measured is itself the reason a call is weak.
+     Scoring is untouched: only genes with an index contribute, exactly as
+     inPanel() selects them. */
+  const cols = S.lib[name].map(g => ({ g, i: S.geneIdx.get(g) }));
   const k = S.clusters.length, G = S.G;
-  // min-max scale mean per gene (core.py dotplot_data)
-  const lo = [], hi = [];
-  idx.forEach((g,j)=>{
+
+  // min-max scale mean per gene, over the measured genes only (core.py dotplot_data)
+  const lo = new Map(), hi = new Map();
+  for (const {i} of cols){
+    if (i === undefined) continue;
     let a=Infinity,b=-Infinity;
-    for (let c=0;c<k;c++){ const v=S.mean[c*G+g]; if(v<a)a=v; if(v>b)b=v; }
-    lo[j]=a; hi[j]=(b===a)?a+1:b;
-  });
-  let html = "<table><thead><tr><th class='nos'>Cluster</th>";
-  names.forEach(n=>html += `<th class="nos" style="font-size:10px;text-transform:none;`+
-    `letter-spacing:0;text-align:center">${esc(n)}</th>`);
+    for (let c=0;c<k;c++){ const v=S.mean[c*G+i]; if(v<a)a=v; if(v>b)b=v; }
+    lo.set(i,a); hi.set(i,(b===a)?a+1:b);
+  }
+
+  const nAbs = cols.filter(x=>x.i===undefined).length;
+  miss.textContent = nAbs
+    ? `· ${nAbs} of ${cols.length} gene${cols.length===1?"":"s"} not on this panel `+
+      `(hatched columns, no data)`
+    : `· all ${cols.length} gene${cols.length===1?"":"s"} are on this panel`;
+
+  let html = "";
+  if (nAbs === cols.length)
+    html += `<p class="hint" style="padding:8px 10px;margin:0">No gene of this set is in `+
+            `this dataset's ${G}-gene panel — the columns below are reference only.</p>`;
+  html += "<table><thead><tr><th class='nos'>Cluster</th>";
+  for (const {g,i} of cols){
+    html += (i === undefined)
+      ? `<th class="nos gabs" title="${esc(g)} is not in this dataset's ${G}-gene panel `+
+        `— shown for reference, not measured">${esc(g)}</th>`
+      : `<th class="nos" style="font-size:10px;text-transform:none;letter-spacing:0;`+
+        `text-align:center">${esc(g)}</th>`;
+  }
   html += "</tr></thead><tbody>";
   for (let c=0;c<k;c++){
     html += `<tr><td style="white-space:nowrap"><span class="sw" style="background:${col(c)}"></span>`+
             `<b>${esc(S.clusters[c])}</b></td>`;
-    idx.forEach((g,j)=>{
-      const m = (S.mean[c*G+g]-lo[j])/(hi[j]-lo[j]);
-      const f = S.frac[c*G+g];
+    for (const {g,i} of cols){
+      if (i === undefined){
+        html += `<td class="gabs" title="${esc(g)} not on this panel">&nbsp;</td>`;
+        continue;
+      }
+      const m = (S.mean[c*G+i]-lo.get(i))/(hi.get(i)-lo.get(i));
+      const f = S.frac[c*G+i];
       const d = Math.max(2, Math.round(3 + f*15));
       html += `<td style="text-align:center;padding:2px" title="${esc(S.clusters[c])} · `+
-        `${esc(names[j])}\nmean ${fmt(S.mean[c*G+g],3)} (scaled ${fmt(m)})\n`+
+        `${esc(g)}\nmean ${fmt(S.mean[c*G+i],3)} (scaled ${fmt(m)})\n`+
         `${(f*100).toFixed(1)}% expressing">`+
         `<span style="display:inline-block;width:${d}px;height:${d}px;border-radius:50%;`+
         `background:${ramp(m)}"></span></td>`;
-    });
+    }
     html += "</tr>";
   }
   w.innerHTML = html + "</tbody></table>";
