@@ -44,6 +44,16 @@
   .dsname{font-weight:600;font-size:13px}
   .dspath{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;
           color:var(--muted);margin-top:3px;word-break:break-all;user-select:all}
+  .pick{cursor:pointer}
+  .pick:hover{border-color:var(--accent);background:var(--hl)}
+  .pick.sel{border-color:var(--accent);background:var(--hl);
+            box-shadow:inset 3px 0 0 var(--accent)}
+  .tick{color:var(--accent);font-weight:700;margin-left:6px}
+  .howto{background:var(--hl);border:1px solid var(--border);border-radius:8px;
+         padding:8px 10px;margin:6px 0 10px;font-size:12px;line-height:1.55}
+  .howto kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;
+             border:1px solid var(--border);border-radius:4px;padding:1px 5px;
+             background:var(--panel)}
   code{font:12px var(--mono);background:#eef1f5;padding:1px 5px;border-radius:3px}
   pre{font:12px var(--mono);background:#0d1b2a;color:#e6edf3;padding:11px 13px;
       border-radius:7px;overflow-x:auto;margin:8px 0}
@@ -151,18 +161,16 @@
 
   <div class="steps">
     <h3 style="margin:0 0 4px;font-size:13px">Datasets ready to open</h3>
-    <p class="hint" style="margin:4px 0 10px">
-      These are already converted and sitting on the lab share. Click <b>Copy path</b>,
-      then paste it into the file dialog. Nothing is uploaded — the file is read
-      locally by your browser.
-    </p>
+    <div class="howto" id="openHow"></div>
     <div id="dsList"></div>
 
-    <h3 style="margin:16px 0 4px;font-size:13px">Pick a reference library</h3>
+    <h3 style="margin:16px 0 4px;font-size:13px">Reference library</h3>
     <p class="hint" style="margin:4px 0 8px">
-      Clusters are scored against one library of marker gene sets at a time. The
-      tissue-matched library is pre-selected when you open a dataset, and you can
-      change it at any time in the left sidebar — the table rescores instantly.
+      Clusters are scored against one library of marker gene sets at a time.
+      <b>Leave this alone</b> and the tissue-matched library is picked for you
+      when the dataset opens. Click one below only if you want to override that
+      — and you can still change it any time in the sidebar once the dataset is
+      loaded.
     </p>
     <div id="libList"></div>
 
@@ -936,6 +944,42 @@ function copyText(t){
   return Promise.resolve(ok);
 }
 
+/* The share is mounted under a different name on every OS, and a Linux path
+   is useless in a Windows file dialog, so show the one that matches. */
+function isWin(){ return /Windows|Win32|Win64/i.test(navigator.userAgent || ""); }
+function isMac(){ return /Mac OS X|Macintosh/i.test(navigator.userAgent || ""); }
+
+function winPath(posix){
+  const m = /^\/fh\/fast\/(.*)$/.exec(posix);
+  return m ? "\\\\fast\\" + m[1].replace(/\//g, "\\") : null;
+}
+
+/** The path to show and copy, for whatever machine this is. */
+function sharePath(file){
+  const posix = DATASETS.dir + "/" + file;
+  if (isWin()){ const w = winPath(posix); if (w) return w; }
+  return posix;
+}
+
+/** Where the pasted path actually goes. This was the missing instruction:
+ *  there IS a paste target, it is inside the file-open dialog. */
+function renderOpenHow(){
+  const host = $("#openHow"); if (!host) return;
+  const where = isWin()
+    ? 'paste it into the <b>File name</b> box and press <kbd>Enter</kbd>'
+    : isMac()
+      ? 'press <kbd>\u2318</kbd><kbd>\u21e7</kbd><kbd>G</kbd>, paste, then press <kbd>Enter</kbd>'
+      : 'press <kbd>Ctrl</kbd><kbd>L</kbd>, paste, then press <kbd>Enter</kbd>';
+  host.innerHTML =
+    '<b>To open one:</b> click <b>Open\u2026</b> on a row below. A file dialog '+
+    'appears \u2014 in it, '+where+'. The path is copied to your clipboard '+
+    'automatically when you click Open.'+
+    '<div class="hint" style="margin-top:6px">Needs the lab share mounted on '+
+    'this computer. If it is not, double-click the <code>.html</code> file named '+
+    'on each row instead \u2014 same app, data already inside, no file to pick. '+
+    'Nothing is ever uploaded; the file is read locally by your browser.</div>';
+}
+
 function renderDsList(){
   const host = $("#dsList"); if (!host) return;
   const ds = (typeof DATASETS !== "undefined" && DATASETS.datasets) || [];
@@ -954,33 +998,66 @@ function renderDsList(){
       fmtBytes(d.bytes),
     ];
     if (d.suggest_lib) bits.push("library: " + d.suggest_lib);
+    const shown = sharePath(d.file);
     return '<div class="dsrow"><div>'+
       '<div class="dsname">'+esc(d.name)+'</div>'+
-      '<div class="hint">'+esc(bits.join(" · "))+'</div>'+
-      '<div class="dspath">'+esc(path)+'</div>'+
-      (d.standalone ? '<div class="hint">or double-click <code>'+
-        esc(d.standalone)+'</code> in that folder — data already baked in</div>' : '')+
+      '<div class="hint">'+esc(bits.join(" \u00b7 "))+'</div>'+
+      '<div class="dspath">'+esc(shown)+'</div>'+
+      (d.standalone ? '<div class="hint">no share mounted? double-click <code>'+
+        esc(d.standalone)+'</code> instead</div>' : '')+
       '</div><div style="white-space:nowrap">'+
-      '<button data-copy="'+esc(path)+'">Copy path</button></div></div>';
+      '<button class="pri" data-open="'+esc(shown)+'" '+
+        'data-file="'+esc(d.file)+'">Open\u2026</button> '+
+      '<button data-copy="'+esc(shown)+'">Copy path</button></div></div>';
   }).join("");
+
+  // "Open..." copies the path AND raises the file dialog, so the two steps
+  // that have to happen together cannot be done half-way.
+  host.querySelectorAll("button[data-open]").forEach(b=>{
+    b.onclick = async () => {
+      S.wantFile = b.getAttribute("data-file");
+      await copyText(b.getAttribute("data-open"));
+      $("#file").click();
+    };
+  });
   host.querySelectorAll("button[data-copy]").forEach(b=>{
     b.onclick = async () => {
       const ok = await copyText(b.getAttribute("data-copy"));
-      b.textContent = ok ? "Copied \u2713" : "Select the path \u2192";
-      setTimeout(()=>{ b.textContent = "Copy path"; }, 2000);
+      b.textContent = ok ? "Copied \u2713" : "Select the path below";
+      setTimeout(()=>{ b.textContent = "Copy path"; }, 2200);
     };
   });
 }
+
+/** Library chosen on the welcome screen, overriding the tissue guess.
+ *  null = let the dataset name decide (the normal case). */
+let PENDING_LIB = null;
 
 function renderLibList(){
   const host = $("#libList"); if (!host) return;
   host.innerHTML = Object.keys(GENESETS.libraries).map(n=>{
     const total = Object.keys(GENESETS.libraries[n]).length;
-    return '<div class="dsrow"><div>'+
-      '<div class="dsname">'+esc(n)+' <span class="hint">\u00b7 '+total+' sets</span></div>'+
+    const sel = PENDING_LIB === n;
+    return '<div class="dsrow pick'+(sel ? " sel" : "")+'" data-lib="'+esc(n)+'" '+
+      'role="button" tabindex="0" aria-pressed="'+(sel ? "true" : "false")+'"><div>'+
+      '<div class="dsname">'+esc(n)+
+        ' <span class="hint">\u00b7 '+total+' sets</span>'+
+        (sel ? '<span class="tick">\u2713 will be used</span>' : '')+'</div>'+
       '<div class="hint">'+esc(GENESETS.references[n] || "")+'</div>'+
       '</div></div>';
   }).join("");
+
+  const choose = n => {
+    PENDING_LIB = (PENDING_LIB === n) ? null : n;   // click again to clear
+    renderLibList();
+  };
+  host.querySelectorAll(".pick").forEach(r=>{
+    const n = r.getAttribute("data-lib");
+    r.onclick = () => choose(n);
+    r.onkeydown = e => {
+      if (e.key === "Enter" || e.key === " "){ e.preventDefault(); choose(n); }
+    };
+  });
 }
 
 /* ---------- library chooser ---------- */
@@ -1025,6 +1102,14 @@ function fillLibSelect(B){
     o.value = n; o.textContent = libOptionText(n);
     o.disabled = libUsable(n).usable === 0;
     lib.appendChild(o);
+  }
+  // an explicit choice on the welcome screen beats the name-based guess
+  if (PENDING_LIB && GENESETS.libraries[PENDING_LIB] &&
+      libUsable(PENDING_LIB).usable > 0){
+    lib.value = PENDING_LIB;
+    $("#libWhy").textContent = "You chose this on the welcome screen \u2014 "+
+      "change it any time, everything rescores at once.";
+    return;
   }
   const guess = guessLib(B);
   if (guess && GENESETS.libraries[guess] && libUsable(guess).usable > 0){
@@ -1192,7 +1277,7 @@ function wire(){
   window.addEventListener("resize", ()=>{ if (S.B) drawUmap(); });
 }
 
-wireIntake(); wire(); renderDsList(); renderLibList();
+wireIntake(); wire(); renderOpenHow(); renderDsList(); renderLibList();
 if (window.__BUNDLE__) activate(window.__BUNDLE__);
 </script>
 </body>
