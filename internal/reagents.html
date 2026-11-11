@@ -333,8 +333,10 @@
           row you type in Excel appears here. Each row carries a hidden <code>RID</code>
           column that keeps the two sides matched up &mdash; don't delete it.</p>
           <p><strong>The inventory is private.</strong> It is not in this public repository:
-          it lives in <code>acyeh-lab/lab-internal</code> and is fetched &mdash; and written back
-          &mdash; with the GitHub token in this browser, the same way Task Tracker works.</p>
+          it lives in <code>acyeh-lab/lab-reagents</code> and is fetched &mdash; and written back
+          &mdash; with the GitHub token in this browser. It sits in its own repository, apart
+          from the rest of the internal site, so a token issued for this page reaches the
+          freezer inventory and nothing else.</p>
         </div>
 
         <div id="body"><div class="loading">Loading reagent inventory&hellip;</div></div>
@@ -468,9 +470,12 @@ function toast(msg, ms) {
 
 /* ===== GitHub read/write ==================================================
    Same contract as tasks.html: a fine-grained PAT with Contents=read+write on
-   acyeh-lab/lab-internal, held in this browser's localStorage. Reads use the
-   raw media type; writes need the blob sha, which is what makes a concurrent
-   change detectable instead of silently clobbered.
+   acyeh-lab/lab-reagents, held in this browser's localStorage. The inventory
+   moved OUT of lab-internal on 2026-09-11 into a repo of its own, because a
+   fine-grained token scopes to a repository and not to a file -- on the old
+   layout a token for this page also reached tasks, grants and transplant data.
+   Reads use the raw media type; writes need the blob sha, which is what makes
+   a concurrent change detectable instead of silently clobbered.
    ======================================================================== */
 
 function getToken() { return localStorage.getItem(TOKEN_KEY); }
