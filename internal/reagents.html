@@ -397,6 +397,14 @@ let SEL = { rack: null, slot: null, well: null, placing: null };
    navigation could only ever paste within the box you copied from. */
 const CLIP_KEY = 'ayeh-lab-reagents-clip';
 let CLIP = null;          // { slot:'1A4', well:'C8', items:[{rid, role}] }
+
+/* RIDs placed by the MOST RECENT paste. The occupancy caution is a warning
+   about what was in the target BEFORE you pasted, so it has to exclude what
+   you just put there -- otherwise pasting into an empty well immediately
+   announces that the well "already holds 1 item", which is the item you are
+   looking at. Cleared the moment a different well is selected, so a genuinely
+   occupied target still warns. */
+let JUST = new Set();
 const F = { q: '', cats: new Set() };
 
 const esc = s => String(s == null ? '' : s)
@@ -1201,12 +1209,13 @@ function renderBoxPanel() {
                   + '</button>';
         }
         if (CLIP && !(CLIP.slot === SEL.slot && CLIP.well === SEL.well)) {
+            const prior = occ.filter(r => !JUST.has(r.rid));   // exclude this paste's own work
             side += '<div class="clipbar"><b>On the clipboard:</b> '
                   + CLIP.items.length + ' item' + (CLIP.items.length > 1 ? 's' : '')
                   + ' from box ' + esc(CLIP.slot) + ' \u00b7 ' + esc(CLIP.well)
-                  + (occ.length
+                  + (prior.length
                       ? '<div class="warn">' + esc(SEL.well) + ' already holds '
-                        + occ.length + ' item' + (occ.length > 1 ? 's' : '')
+                        + prior.length + ' item' + (prior.length > 1 ? 's' : '')
                         + '. Pasting ADDS to this position \u2014 nothing here is '
                         + 'overwritten or deleted.</div>'
                       : '')
@@ -1240,6 +1249,7 @@ function clickWell(w) {
         }
         SEL.placing = null; SEL.well = w;
     } else {
+        if (SEL.well !== w) JUST = new Set();   // new target: its occupants are genuinely prior
         SEL.well = SEL.well === w ? null : w;
     }
     renderBoxPanel();
@@ -1267,6 +1277,7 @@ function copyWell() {
     const items = wellOccupants(SEL.slot, SEL.well);
     if (!items.length) { toast('Nothing at ' + SEL.well + ' to copy'); return; }
     CLIP = { slot: SEL.slot, well: SEL.well, items: items };
+    JUST = new Set();                       // a fresh copy starts a fresh operation
     try { localStorage.setItem(CLIP_KEY, JSON.stringify(CLIP)); } catch (e) { /* quota */ }
     toast('Copied ' + items.length + ' item' + (items.length > 1 ? 's' : '')
         + ' from ' + SEL.slot + ' ' + SEL.well + ' \u2014 now pick the target well');
@@ -1287,6 +1298,7 @@ function pasteWell(mode) {
         toast('That is where it already is'); return;
     }
     let n = 0;
+    JUST = new Set();
     CLIP.items.forEach(it => {
         const rec = itemById(it.rid);
         if (!rec) return;                       // deleted since the copy
@@ -1295,6 +1307,7 @@ function pasteWell(mode) {
         if (mode === 'move') {
             loc.rack = +m[1]; loc.col = m[2]; loc.brow = +m[3];
             loc.well = SEL.well; loc.raw = rawOf(loc);
+            JUST.add(rec.rid);
             markDirty(rec.rid);
         } else {
             const dup = JSON.parse(JSON.stringify(rec));
@@ -1306,6 +1319,7 @@ function pasteWell(mode) {
             dl.rack = +m[1]; dl.col = m[2]; dl.brow = +m[3];
             dl.well = SEL.well; dl.raw = rawOf(dl);
             DATA.records.push(dup);
+            JUST.add(dup.rid);
             markDirty(dup.rid);
         }
         n++;
