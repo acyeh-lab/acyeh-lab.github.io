@@ -213,6 +213,13 @@
         .well.f { color: #fff; font-weight: 700; border-color: transparent; }
         .well.on { box-shadow: 0 0 0 2px #0056b3; }
         .well.tgt { border-style: dashed; border-color: #c9752b; background: #fff6ec; }
+        /* Clipboard bar: shown in the box side panel while a well is on the
+           clipboard, so the armed state is visible from the panel you are
+           looking at and not only from the dashed wells. */
+        .clipbar { border: 1px solid #c9752b; background: #fff6ec; border-radius: 6px;
+                   padding: 8px 10px; margin: 0 0 10px; font-size: .85em; color: #6b4216; }
+        .clipbar .warn { margin-top: 5px; color: #8a5a1c; font-size: .95em; }
+        .clipbar .clipbtns { display: flex; gap: 6px; margin-top: 7px; flex-wrap: wrap; }
         .boxside { flex: 1 1 300px; min-width: 280px; }
         .boxside h5 { margin: 0 0 6px; font-size: .74em; text-transform: uppercase;
             letter-spacing: .7px; color: #0056b3; font-weight: 700; }
@@ -384,6 +391,12 @@ let DIRTY = new Set();          // rids edited here since the last successful sa
 let FILE_SHA = null;            // GitHub blob sha, for a safe read-modify-write
 let VIEW = 'map';
 let SEL = { rack: null, slot: null, well: null, placing: null };
+
+/* Well clipboard. Deliberately NOT cleared by openRack/openSlot: moving a vial
+   from one box to another is the common case, and a clipboard that emptied on
+   navigation could only ever paste within the box you copied from. */
+const CLIP_KEY = 'ayeh-lab-reagents-clip';
+let CLIP = null;          // { slot:'1A4', well:'C8', items:[{rid, role}] }
 const F = { q: '', cats: new Set() };
 
 const esc = s => String(s == null ? '' : s)
@@ -1119,7 +1132,7 @@ function renderBoxPanel() {
                                        : '  [plasmid, NOT sequence verified]') : '')).join(' | ')
                 : w + ' — empty';
             g += '<button class="well' + (occ.length ? ' f' : '')
-               + (SEL.well === w ? ' on' : '') + (SEL.placing ? ' tgt' : '') + '"'
+               + (SEL.well === w ? ' on' : '') + ((SEL.placing || CLIP) ? ' tgt' : '') + '"'
                + (col ? ' style="background:' + col + '"' : '')
                + ' title="' + esc(w + ' — ' + tip) + '" onclick="clickWell(\'' + w + '\')">'
                + (occ.length > 1 ? occ.length : (occ.length ? '' : w)) + '</button>';
@@ -1181,6 +1194,29 @@ function renderBoxPanel() {
     if (SEL.well) {
         const occ = atWell[SEL.well] || [];
         side += '<h5>Position ' + SEL.well + '</h5>';
+
+        if (occ.length) {
+            side += '<button class="btn sm" onclick="copyWell()">Copy '
+                  + (occ.length > 1 ? 'these ' + occ.length + ' items' : 'this item')
+                  + '</button>';
+        }
+        if (CLIP && !(CLIP.slot === SEL.slot && CLIP.well === SEL.well)) {
+            side += '<div class="clipbar"><b>On the clipboard:</b> '
+                  + CLIP.items.length + ' item' + (CLIP.items.length > 1 ? 's' : '')
+                  + ' from box ' + esc(CLIP.slot) + ' \u00b7 ' + esc(CLIP.well)
+                  + (occ.length
+                      ? '<div class="warn">' + esc(SEL.well) + ' already holds '
+                        + occ.length + ' item' + (occ.length > 1 ? 's' : '')
+                        + '. Pasting ADDS to this position \u2014 nothing here is '
+                        + 'overwritten or deleted.</div>'
+                      : '')
+                  + '<div class="clipbtns">'
+                  + '<button class="btn sm" onclick="pasteWell(\'move\')">Move here</button>'
+                  + '<button class="btn sm" onclick="pasteWell(\'copy\')">Copy here</button>'
+                  + '<button class="btn sm" onclick="clearClip()">Cancel</button>'
+                  + '</div></div>';
+        }
+
         side += occ.length
             ? occ.map(r => itemCard(r, true)).join('')
             : '<div style="font-size:.85em;color:#8794a1;margin-bottom:8px">Empty.</div>'
@@ -1207,6 +1243,84 @@ function clickWell(w) {
         SEL.well = SEL.well === w ? null : w;
     }
     renderBoxPanel();
+}
+
+/* ===== well clipboard: copy a position, paste it onto another ============
+   Pastes ADD to the target. A well legitimately holds more than one record in
+   this model (atWell[w] is a list), and an overwrite would silently destroy
+   location data with no undo in the page -- so "paste over" is deliberately
+   "paste into", with the occupant count shown before you commit.
+   ======================================================================== */
+
+function wellOccupants(slot, well) {
+    const fz = freezer(); if (!fz || !slot || !well) return [];
+    const key = fz.id + '|' + slot;
+    const out = [];
+    itemsInSlot(key).forEach(r => (r.locs || []).forEach(l => {
+        if (l.kind === 'freezer' && slotKey(l) === key && l.well === well)
+            out.push({ rid: r.rid, role: l.role });
+    }));
+    return out;
+}
+
+function copyWell() {
+    const items = wellOccupants(SEL.slot, SEL.well);
+    if (!items.length) { toast('Nothing at ' + SEL.well + ' to copy'); return; }
+    CLIP = { slot: SEL.slot, well: SEL.well, items: items };
+    try { localStorage.setItem(CLIP_KEY, JSON.stringify(CLIP)); } catch (e) { /* quota */ }
+    toast('Copied ' + items.length + ' item' + (items.length > 1 ? 's' : '')
+        + ' from ' + SEL.slot + ' ' + SEL.well + ' \u2014 now pick the target well');
+    renderBoxPanel();
+}
+
+function clearClip() {
+    CLIP = null;
+    try { localStorage.removeItem(CLIP_KEY); } catch (e) { /* quota */ }
+    renderBoxPanel();
+}
+
+function pasteWell(mode) {
+    if (!CLIP || !SEL.slot || !SEL.well) return;
+    const m = /^(\d+)([A-D])([1-4])$/.exec(SEL.slot);
+    if (!m) { toast('Cannot read the target box address ' + SEL.slot); return; }
+    if (CLIP.slot === SEL.slot && CLIP.well === SEL.well) {
+        toast('That is where it already is'); return;
+    }
+    let n = 0;
+    CLIP.items.forEach(it => {
+        const rec = itemById(it.rid);
+        if (!rec) return;                       // deleted since the copy
+        const loc = (rec.locs || []).find(l => l.role === it.role && l.kind === 'freezer');
+        if (!loc) return;
+        if (mode === 'move') {
+            loc.rack = +m[1]; loc.col = m[2]; loc.brow = +m[3];
+            loc.well = SEL.well; loc.raw = rawOf(loc);
+            markDirty(rec.rid);
+        } else {
+            const dup = JSON.parse(JSON.stringify(rec));
+            dup.rid = nextWebRid();             // scans DATA.records, so push as we go
+            // Keep only the location we copied: a plasmid record copied by its
+            // Plasmid role must not also claim the virus's freezer address.
+            dup.locs = (dup.locs || []).filter(l => l.role === it.role);
+            const dl = dup.locs[0];
+            dl.rack = +m[1]; dl.col = m[2]; dl.brow = +m[3];
+            dl.well = SEL.well; dl.raw = rawOf(dl);
+            DATA.records.push(dup);
+            markDirty(dup.rid);
+        }
+        n++;
+    });
+    if (!n) { toast('Nothing left to paste \u2014 those records are gone'); clearClip(); return; }
+
+    if (mode === 'move') {
+        toast('Moved ' + n + ' item' + (n > 1 ? 's' : '') + ' to ' + SEL.slot + ' ' + SEL.well
+            + ' \u2014 Save to push it to the spreadsheet');
+        clearClip();                            // the source well is empty now
+    } else {
+        toast('Copied ' + n + ' new record' + (n > 1 ? 's' : '') + ' into ' + SEL.slot + ' '
+            + SEL.well + ' \u2014 clipboard kept, paste again for more aliquots');
+        renderBoxPanel();
+    }
 }
 
 function startPlace(rid, role) { SEL.placing = { rid: rid, role: role }; renderBoxPanel(); }
@@ -1900,6 +2014,8 @@ document.addEventListener('keydown', e => {
     // Show local work immediately if there is unsaved work, so a reload during
     // a stocktake never looks like it lost everything.
     try {
+        const c = localStorage.getItem(CLIP_KEY);
+        if (c) CLIP = JSON.parse(c);
         const l = localStorage.getItem(LOCAL_KEY);
         const d = JSON.parse(localStorage.getItem(DIRTY_KEY) || '[]');
         if (l && d.length) { DATA = JSON.parse(l); DIRTY = new Set(d); render(); }
