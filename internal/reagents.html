@@ -213,6 +213,28 @@
         .well.f { color: #fff; font-weight: 700; border-color: transparent; }
         .well.on { box-shadow: 0 0 0 2px #0056b3; }
         .well.tgt { border-style: dashed; border-color: #c9752b; background: #fff6ec; }
+        /* The 5-character preview printed inside the square itself (Albert,
+           2026-11-12). Sized BY LENGTH rather than one flat size: a 34px well
+           less its 2px of border leaves 32px, Roboto 700 runs ~0.6em per
+           character, so 5 characters need to drop to ~8.5px while a 2-character
+           name at that size would be a speck. */
+        .well { position: relative; }
+        .well .sn { display: block; width: 100%; text-align: center; font-weight: 700;
+            color: #fff; line-height: 1; white-space: nowrap; overflow: hidden; }
+        .well .sn.l1, .well .sn.l2 { font-size: 13px; }
+        .well .sn.l3 { font-size: 11px; letter-spacing: -.2px; }
+        .well .sn.l4 { font-size: 9.5px; letter-spacing: -.3px; }
+        .well .sn.l5 { font-size: 8.5px; letter-spacing: -.4px; }
+        /* The vial count keeps its signal when a short name takes the centre:
+           a well holding three vials must not look like one holding one. */
+        .well .cnt { position: absolute; top: 0; right: 1px; font-size: 8px;
+            font-weight: 700; color: #fff; opacity: .9; line-height: 1.1; }
+        /* Box label / notes have no card of their own, so their only Save used
+           to be the one at the very top of the page. This one sits where the
+           typing ends and appears the moment anything is unsaved. */
+        .panelsave { display: none; justify-content: flex-end; margin-top: 12px;
+            padding-top: 10px; border-top: 1px solid #f0f3f7; }
+        .panelsave.show { display: flex; }
         /* Clipboard bar: shown in the box side panel while a well is on the
            clipboard, so the armed state is visible from the panel you are
            looking at and not only from the dashed wells. */
@@ -302,6 +324,11 @@
         @media (max-width: 620px) {
             .grid9 { grid-template-columns: 18px repeat(9, 28px); }
             .well { width: 28px; height: 28px; font-size: .55em; }
+            .well .sn.l1, .well .sn.l2 { font-size: 11px; }
+            .well .sn.l3 { font-size: 9px; }
+            .well .sn.l4 { font-size: 8px; }
+            .well .sn.l5 { font-size: 7px; }
+            .well .cnt { font-size: 7px; }
         }
     </style>
 </head>
@@ -455,7 +482,14 @@ const NOT_PLASMID  = '#2b579a';   // everything else — one blue
    Enumerated once, here, because they have to be handled in two unrelated
    places: this file's save() and nowhere else. Add a fourth key and you edit
    this line only. */
-const PAGE_KEYS = ['is_plasmid', 'seq_verified', 'sequence'];
+const PAGE_KEYS = ['is_plasmid', 'seq_verified', 'sequence', 'short_name'];
+
+/* How many characters the box map can actually print. The well is 34px wide
+   (28px on a phone), which is what sets this -- not a guess about how short a
+   useful abbreviation is. Change it here and the input cap, the label, the
+   stored value and the .sn size ladder all follow. */
+const SHORT_NAME_MAX = 5;
+const shortNameOf = r => ((r && r.short_name) || '').trim().slice(0, SHORT_NAME_MAX);
 
 const isPlasmid  = r => !!(r && r.is_plasmid);
 const isVerified = r => !!(r && r.is_plasmid && r.seq_verified);
@@ -474,6 +508,47 @@ function wellColor(rec) {
     if (!rec) return '';
     if (!isPlasmid(rec)) return NOT_PLASMID;
     return isVerified(rec) ? PLASMID_OK : PLASMID_BAD;
+}
+
+/* What is PRINTED inside a well. Three cases, in this order:
+     - occupied, and occ[0] carries a short name -> that name, bold white and
+       centred, with the vial count tucked into the corner if there is more
+       than one vial in the well;
+     - occupied with no short name -> exactly the old behaviour, a count when
+       more than one vial sits there and otherwise nothing;
+     - empty -> the well's own address, as before.
+   Only occ[0] is consulted, which is the same record wellColor() takes its
+   colour from -- so the square's label and its colour always describe the
+   same vial, and never two different ones. */
+function wellFace(occ, w) {
+    if (!occ.length) return esc(w);
+    const sn = shortNameOf(occ[0]);
+    if (!sn) return occ.length > 1 ? String(occ.length) : '';
+    return '<span class="sn l' + sn.length + '">' + esc(sn) + '</span>'
+         + (occ.length > 1 ? '<span class="cnt">' + occ.length + '</span>' : '');
+}
+
+/* The records sitting in one well, in the same order renderBoxPanel builds
+   atWell[] in, so occ[0] is the same record in both. */
+function recsAtWell(slotLab, well) {
+    const fz = freezer(); if (!fz || !slotLab || !well) return [];
+    const key = fz.id + '|' + slotLab;
+    return itemsInSlot(key).filter(r => (r.locs || []).some(
+        l => l.kind === 'freezer' && slotKey(l) === key && l.well === well));
+}
+
+/* Repaint the one square a record sits in, WITHOUT rebuilding the grid. The
+   input being typed into lives inside the box side panel, so re-rendering the
+   panel to refresh the preview would take the cursor with it. */
+function repaintWellFace(rid) {
+    const fz = freezer(); if (!fz || !SEL.slot) return;
+    const key = fz.id + '|' + SEL.slot;
+    const r = itemById(rid); if (!r) return;
+    (r.locs || []).forEach(l => {
+        if (l.kind !== 'freezer' || slotKey(l) !== key || !l.well) return;
+        const btn = document.querySelector('.grid9 .well[data-w="' + l.well + '"]');
+        if (btn) btn.innerHTML = wellFace(recsAtWell(SEL.slot, l.well), l.well);
+    });
 }
 
 /* Counts for the box panel, so "3 unverified" is visible without hunting. */
@@ -589,6 +664,9 @@ function syncSaveButtons() {
         b.title = n ? 'Saves all ' + n + ' unsaved change' + (n === 1 ? '' : 's')
                     : 'Nothing to save';
     });
+    // The panel Save APPEARS rather than sitting there greyed out -- there is no
+    // card around it to explain a dead button.
+    document.querySelectorAll('.panelsave').forEach(d => d.classList.toggle('show', !!n));
 }
 
 async function save() {
@@ -1142,8 +1220,9 @@ function renderBoxPanel() {
             g += '<button class="well' + (occ.length ? ' f' : '')
                + (SEL.well === w ? ' on' : '') + ((SEL.placing || CLIP) ? ' tgt' : '') + '"'
                + (col ? ' style="background:' + col + '"' : '')
+               + ' data-w="' + w + '"'
                + ' title="' + esc(w + ' — ' + tip) + '" onclick="clickWell(\'' + w + '\')">'
-               + (occ.length > 1 ? occ.length : (occ.length ? '' : w)) + '</button>';
+               + wellFace(occ, w) + '</button>';
         }
     });
     g += '</div>';
@@ -1174,10 +1253,10 @@ function renderBoxPanel() {
         + 'Tagged boxes get their own tab at the top of this page.</div></div>'
         + '<div class="fld" style="margin-bottom:8px"><label>Box label</label>'
         + '<input value="' + esc(meta.label || '') + '" placeholder="e.g. Bacterial lysate"'
-        + ' onchange="setBoxMeta(\'' + key + '\',\'label\',this.value)"></div>'
+        + ' oninput="setBoxMeta(\'' + key + '\',\'label\',this.value)"></div>'
         + '<div class="fld" style="margin-bottom:10px"><label>Box notes</label>'
         + '<textarea placeholder="anything worth knowing about this box"'
-        + ' onchange="setBoxMeta(\'' + key + '\',\'notes\',this.value)">' + esc(meta.notes || '') + '</textarea></div>';
+        + ' oninput="setBoxMeta(\'' + key + '\',\'notes\',this.value)">' + esc(meta.notes || '') + '</textarea></div>';
 
     if (SEL.placing) {
         const r = itemById(SEL.placing.rid);
@@ -1232,6 +1311,11 @@ function renderBoxPanel() {
               + '<button class="btn" onclick="addItem(\'' + SEL.slot + '\',\'' + SEL.well + '\')">'
               + '+ Add a reagent here</button>';
     }
+    // Albert, 2026-11-12: typing a box label offered no Save anywhere near it --
+    // the only one was at the top of the page. Same .jsave contract as the
+    // in-card buttons, so syncSaveButtons() labels it and save() clears it.
+    side += '<div class="panelsave">'
+          + '<button class="btn pri sm jsave" onclick="save()">Save</button></div>';
     side += '</div>';
 
     el.innerHTML = '<div class="boxpanel"><div class="boxwrap">'
@@ -1346,8 +1430,7 @@ function setBoxMeta(key, field, val) {
     DATA.boxes[key][field] = val;
     // Box labels have no spreadsheet column — they live only here, so they are
     // saved with the payload rather than marked as a record edit.
-    saveLocal(); renderSyncBar();
-    DIRTY.add('__boxes__'); renderSyncBar();
+    DIRTY.add('__boxes__'); saveLocal(); renderSyncBar();
 }
 
 /* Tagging a box adds, renames or removes a tab, so unlike a label or a note it
@@ -1701,7 +1784,14 @@ function editor(r) {
                + ' onchange="setField(\'' + r.rid + '\',this.dataset.h,this.value)">'
                + '</div>';
         });
+        h += shortNameFld(r);
         h += '</div></div>';
+    } else {
+        // A sheet with no name columns still needs somewhere to set the short
+        // name, or the box map could never be labelled for those records.
+        h += '<div class="namebox"><h5>Box map label'
+           + '<span class="hint">printed in the square this vial sits in</span>'
+           + '</h5><div class="nrow">' + shortNameFld(r) + '</div></div>';
     }
 
     h += plasmidBlock(r);
@@ -1841,6 +1931,29 @@ function setSequence(rid, val) {
     if (v) r.sequence = v; else delete r.sequence;
     markDirty(rid);
     refreshItem(rid);
+}
+
+/* SHORT NAME. Page-owned (PAGE_KEYS) and so deliberately absent from the
+   spreadsheet: it exists only to be printed in the 9x9 box map, and giving it
+   a [Storage] column would make the cluster sync treat it as lab data. Capped
+   at SHORT_NAME_MAX by the input itself as well as here, because a paste
+   ignores maxlength in some browsers. */
+function shortNameFld(r) {
+    return '<div class="fld"><label>Short name (' + SHORT_NAME_MAX
+         + ' char max)</label>'
+         + '<input value="' + esc((r.short_name || '').slice(0, SHORT_NAME_MAX)) + '"'
+         + ' maxlength="' + SHORT_NAME_MAX + '" placeholder="shown in the box map"'
+         + ' oninput="setShortName(\'' + r.rid + '\',this.value)"></div>';
+}
+
+/* Commits on every keystroke, like the other in-card editors, so the Save
+   button appears as you type rather than when you click away. */
+function setShortName(rid, val) {
+    const r = itemById(rid); if (!r) return;
+    const v = (val || '').slice(0, SHORT_NAME_MAX);
+    if (v.trim()) r.short_name = v; else delete r.short_name;
+    markDirty(rid);
+    repaintWellFace(rid);
 }
 
 function setField(rid, header, val) {
