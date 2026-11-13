@@ -1,1 +1,6 @@
 __pycache__/
+
+# Timestamped editor backups. These are local working files, never site content.
+# Two were swept into a public commit on 2026-11-12 by a careless `git add internal/`;
+# this is what stops that happening again.
+*.bak_*
