@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeh Lab Internal Site</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; margin: 0; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            background: #0056b3;
+            background-image: linear-gradient(160deg, #0056b3, #003b7a); }
+        .lockbox { background: #fff; border-radius: 10px; padding: 30px 34px;
+            width: min(400px, 90vw); box-shadow: 0 8px 30px rgba(0,0,0,.3);
+            text-align: center; }
+        .lockbox h1 { font-size: 1.5em; margin: 0 0 2px; color: #0056b3; letter-spacing: 1px; }
+        .lockbox h2 { font-size: .95em; margin: 0 0 18px; color: #778; font-weight: 400; }
+        .lockbox input { width: 100%; box-sizing: border-box; padding: 10px 14px;
+            border: 1px solid #ccd; border-radius: 6px; font-size: 1em;
+            font-family: 'Roboto', sans-serif; text-align: center; letter-spacing: 3px; }
+        .lockbox input:focus { outline: none; border-color: #0056b3; }
+        .lockbox button { width: 100%; margin-top: 12px; padding: 10px;
+            background: #0056b3; color: #fff; border: none; border-radius: 6px;
+            font-size: .95em; font-family: 'Roboto', sans-serif; cursor: pointer; }
+        .lockbox button:hover { background: #003d80; }
+        .lockerr { color: #b00020; font-size: .85em; min-height: 1.2em;
+            margin: 10px 0 0; visibility: hidden; }
+        .lockerr.show { visibility: visible; }
+        .locknote { font-size: .74em; color: #aab; margin: 16px 0 0; line-height: 1.4; }
+        .locknote code { background: #f4f4f9; padding: 1px 4px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="lockbox">
+      <h1>Yeh Lab</h1>
+      <h2>Internal site &mdash; locked</h2>
+      <form onsubmit="return tryUnlock(event)">
+        <input type="password" id="lockpw" placeholder="Password"
+               autocomplete="current-password" autofocus>
+        <button type="submit">Unlock</button>
+      </form>
+      <p class="lockerr" id="lockerr">Wrong password</p>
+      <p class="locknote">One password for every internal page, asked once per
+      browser session. This lock keeps the pages out of casual view on a shared
+      machine &mdash; it is <strong>not</strong> security. Lab data is protected by
+      living in the private <code>lab-internal</code> and <code>lab-reagents</code>
+      repositories behind a GitHub token.</p>
+    </div>
+
+    <script>
+    /* ===== The gate ==========================================================
+       Reached only from gate.js, which redirects here in <head> before the
+       requested page can run any of its own scripts. See gate.js for what this
+       lock does and does not do.
+
+       The password is XOR-obfuscated against a fixed key and base64'd, purely so
+       it is not greppable in a public repository. That is obfuscation, not
+       encryption, and anyone who reads this file can recover it in one line.
+       ====================================================================== */
+    (function () {
+        'use strict';
+        var KEY   = 'yehlab-internal';
+        var BLOB  = 'Hw0LD1NSH18=';
+        var FLAG  = 'yeh-internal-unlocked';
+        var TASKS = 'yeh-tasks-unlocked';   /* tasks.html's own older gate */
+
+        /* Every page the gate is allowed to send a visitor back to. A bare
+           whitelist, because `r` arrives in the URL: without it this page is an
+           open redirect that any link could point anywhere. */
+        var PAGES = ['index.html', 'methods.html', 'transplants.html',
+                     'reagents.html', 'flow.html', 'openflow.html',
+                     'journal-watch.html', 'grants.html', 'tasks.html',
+                     'scseq-annotator.html'];
+
+        function secret() {
+            var raw = atob(BLOB), out = '';
+            for (var i = 0; i < raw.length; i++) {
+                out += String.fromCharCode(
+                    raw.charCodeAt(i) ^ KEY.charCodeAt(i % KEY.length));
+            }
+            return out;
+        }
+
+        /* Where to go once unlocked. The query keeps the page's own ?params and
+           #hash, so a deep link survives the round trip, but the PAGE part has to
+           be one of ours or we fall back to the home page. */
+        function target() {
+            var m = /[?&]r=([^&]*)/.exec(location.search);
+            var r = m ? decodeURIComponent(m[1]) : '';
+            var base = r.split(/[?#]/)[0];
+            if (PAGES.indexOf(base) === -1) return 'index.html';
+            return r;
+        }
+
+        window.tryUnlock = function (ev) {
+            ev.preventDefault();
+            var box = document.getElementById('lockpw');
+            if (box.value === secret()) {
+                try {
+                    sessionStorage.setItem(FLAG, '1');
+                    sessionStorage.setItem(TASKS, '1');
+                } catch (e) {}
+                location.replace(target());
+            } else {
+                document.getElementById('lockerr').classList.add('show');
+                box.value = '';
+                box.focus();
+            }
+            return false;
+        };
+
+        document.getElementById('lockpw').addEventListener('input', function () {
+            document.getElementById('lockerr').classList.remove('show');
+        });
+    })();
+    </script>
+</body>
+</html>

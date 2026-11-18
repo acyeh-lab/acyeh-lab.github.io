@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- shared internal-site lock: must be the FIRST thing in <head> so the
+         page is never parsed, and never boots its own scripts, while locked -->
+    <script src="gate.js"></script>
     <meta name="robots" content="noindex, nofollow">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
@@ -234,7 +237,7 @@
         </ul>
         <p class="pubnote">Mirrored from the public
         <a href="https://acyeh-lab.github.io/publications.html" target="_blank" rel="noopener">publications page</a>
-        &middot; generated 2026-11-12. To update, edit <code>publications.html</code> on the
+        &middot; generated 2026-11-18. To update, edit <code>publications.html</code> on the
         public site and re-run <code>build_internal_home.py</code>.</p>
 
     </div>
