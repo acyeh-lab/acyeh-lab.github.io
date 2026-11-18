@@ -365,10 +365,12 @@
           Click a rack to open its 4&times;4 grid of box slots, then a slot to open that box as a
           9&times;9 map of positions <code>A1</code>&ndash;<code>I9</code>. Click a position to see,
           edit, move or remove what is in it.</p>
-          <p><strong>A box can belong to someone.</strong> Open a box on the Freezer map and put a
-          name in <em>Belongs to</em> &mdash; that box then gets its own tab at the top of this page
-          showing just their boxes, so a student can go straight to their own material and edit it
-          without working through the whole freezer. Untagged boxes are shared lab stock.</p>
+          <p><strong>A box can belong to someone.</strong> Open a box on the Freezer map and pick a
+          name from the <em>Belongs to</em> list &mdash; that box then gets its own tab at the top of
+          this page showing just their boxes, so a student can go straight to their own material and
+          edit it without working through the whole freezer. Boxes left as
+          <em>shared lab stock</em> appear under no one's tab. The list is the lab roster; a tab
+          appears only once that person actually holds a box.</p>
           <p><strong>This page and <code>My Lab.xlsx</code> are two views of the same data.</strong>
           Edit either one. A job on the cluster reconciles them every 15 minutes, so a
           box you fill in here appears in the spreadsheet's <code>[Storage]</code> tabs, and a
@@ -889,13 +891,40 @@ function boxMeta(key) { return (DATA.boxes || {})[key] || {}; }
    it is page-only: the spreadsheet has no column for it, and the cluster sync
    deep-copies `boxes` through untouched.
 
-   Deliberately a free-text tag on the BOX, not a lookup against the Students
-   sheet's `Student` column. A box is a physical shelf address that one person
-   keeps, and it holds whatever they put in it — including rows filed on other
-   sheets, which have no Student column at all (8B3 has a Samples row in it).
-   Deriving ownership from the contents would make the tab flicker as items
-   move; tagging the box states the fact directly.
+   A tag on the BOX, not a lookup against the Students sheet's `Student`
+   column. A box is a physical shelf address that one person keeps, and it
+   holds whatever they put in it — including rows filed on other sheets, which
+   have no Student column at all (8B3 has a Samples row in it). Deriving
+   ownership from the contents would make the tab flicker as items move;
+   tagging the box states the fact directly.
+
+   FIXED LIST since 2026-11-18 (Albert: "i want it to be a fixed drop down list
+   (lab members)"). It was free text, which let "Riana" quietly open a second
+   tab next to "Rianna". Editing the roster is editing LAB_MEMBERS below and
+   nothing else — the tabs derive from whoever actually holds a box, so adding
+   a name here does NOT create an empty tab for them.
    ======================================================================== */
+
+/* The roster, in Albert's order (PI first). Anika Long is on the 2026-11-10
+   intro deck but was deliberately NOT included in the list he gave. */
+const LAB_MEMBERS = ['Albert', 'Julie', 'Rachel', 'Tanvi', 'Sam',
+                     'Adonai', 'Vedant', 'Rianna'];
+
+/* Options for the Belongs-to control. A value already on a box that is not on
+   the roster — somebody who has left, or a name typed before the list was
+   fixed — is kept as a selectable option and labelled, because dropping it
+   would silently blank that box's owner the moment anyone opened the box. */
+function ownerOptions(cur) {
+    cur = (cur || '').trim();
+    const names = LAB_MEMBERS.slice();
+    if (cur && names.indexOf(cur) === -1) names.push(cur);
+    return '<option value="">— shared lab stock —</option>'
+        + names.map(n => {
+            const off = LAB_MEMBERS.indexOf(n) === -1;
+            return '<option value="' + esc(n) + '"' + (n === cur ? ' selected' : '') + '>'
+                 + esc(n) + (off ? ' (not on the list)' : '') + '</option>';
+        }).join('');
+}
 
 function ownerOf(key) { return (boxMeta(key).owner || '').trim(); }
 
@@ -1241,9 +1270,6 @@ function renderBoxPanel() {
     });
     g += '</div>';
 
-    // Existing tags offered as a datalist so a second box of Adonai's is tagged
-    // "Adonai" and not "adonai" — a typo would silently start a second tab.
-    const tags = ownerTags();
     const tal = plasmidTally(list);
     let side = '<div class="boxside">'
         + '<h5>Box ' + SEL.slot + '</h5>'
@@ -1256,13 +1282,10 @@ function renderBoxPanel() {
           + '<span><i style="background:' + NOT_PLASMID + '"></i>'
           + (list.length - tal.plasmids) + ' not a plasmid</span>'
           + '</div>'
-        + '<div class="fld" style="margin-bottom:8px"><label>Belongs to (tag)</label>'
-        + '<input list="ownertags" value="' + esc(meta.owner || '') + '"'
-        + ' placeholder="e.g. a student’s name — leave blank for shared lab stock"'
-        + ' onchange="setBoxOwner(\'' + key + '\',this.value)">'
-        + '<datalist id="ownertags">'
-        + tags.map(t => '<option value="' + esc(t.name) + '">').join('')
-        + '</datalist>'
+        + '<div class="fld" style="margin-bottom:8px"><label>Belongs to</label>'
+        + '<select onchange="setBoxOwner(\'' + key + '\',this.value)">'
+        + ownerOptions(meta.owner)
+        + '</select>'
         + '<div style="font-size:.7em;color:#b6c4d4;margin-top:3px">'
         + 'Tagged boxes get their own tab at the top of this page.</div></div>'
         + '<div class="fld" style="margin-bottom:8px"><label>Box label</label>'
@@ -1523,13 +1546,15 @@ function setBoxMeta(key, field, val) {
 }
 
 /* Tagging a box adds, renames or removes a tab, so unlike a label or a note it
-   has to redraw the whole page rather than just the panel. Case and spacing are
-   normalised against the tags already in use so "adonai" joins Adonai's tab
-   instead of opening a second one next to it. */
+   has to redraw the whole page rather than just the panel. The control is a
+   fixed list now, so a value arriving here is already exact; the roster match
+   below is for the OLD free-text values still on disk — it folds a stored
+   "adonai" onto "Adonai" rather than letting it open a second tab. A value that
+   matches no one on the roster is kept as-is, never discarded. */
 function setBoxOwner(key, val) {
     let v = (val || '').trim();
-    const hit = ownerTags().find(t => t.name.toLowerCase() === v.toLowerCase());
-    if (hit) v = hit.name;
+    const hit = LAB_MEMBERS.find(n => n.toLowerCase() === v.toLowerCase());
+    if (hit) v = hit;
     DATA.boxes = DATA.boxes || {};
     DATA.boxes[key] = DATA.boxes[key] || {};
     if (v) DATA.boxes[key].owner = v;
