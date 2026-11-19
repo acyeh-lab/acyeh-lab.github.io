@@ -43,6 +43,51 @@
         .intro p:last-child { margin-bottom: 0; }
         .intro code { background: #dce8f6; padding: 1px 5px; border-radius: 3px; font-size: .95em; }
 
+        /* ---- sticky section rail (left) ---- */
+        .layout { display: flex; align-items: flex-start; gap: 18px;
+                  max-width: 1340px; margin: 20px auto; padding: 0 16px; box-sizing: border-box; }
+        .layout > .container { margin: 0; flex: 1 1 auto; min-width: 0; }
+        .sidetoc { position: sticky; top: 0; flex: 0 0 272px; width: 272px;
+                   height: 100vh; overflow-y: auto; box-sizing: border-box;
+                   margin: 0; padding: 20px 10px; text-align: left;
+                   background: #fff; border-radius: 5px;
+                   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .sidetoc-title { font-size: .95em; font-weight: 700; color: #0056b3;
+                         line-height: 1.25; padding: 0 10px 2px; }
+        .sidetoc-title span { display: block; font-weight: 400; font-size: .78em;
+                              color: #6b7785; margin-top: 4px; }
+        .sidetoc-group { font-size: .68em; letter-spacing: .09em; text-transform: uppercase;
+                         color: #8a97a4; font-weight: 600; margin: 18px 0 6px; padding: 0 10px; }
+        .sidetoc ul { list-style: none; margin: 0; padding: 0; }
+        .sidetoc a { display: flex; gap: 9px; align-items: baseline; text-decoration: none;
+                     color: #333; font-size: .85em; line-height: 1.35; padding: 6px 8px;
+                     margin: 0; font-weight: 500;
+                     border-radius: 6px; border-left: 3px solid transparent; }
+        .sidetoc a:hover { background: #eef4fb; color: #0056b3; text-decoration: none; }
+        .sidetoc a.active { background: #e8f0fb; color: #0056b3; font-weight: 600;
+                            border-left-color: #0056b3; }
+        .sidetoc a.empty { opacity: .34; }
+        .sidetoc .tnum { flex: 0 0 18px; text-align: right; color: #9aa7b5;
+                         font-size: .92em; font-variant-numeric: tabular-nums; }
+        .sidetoc a.active .tnum { color: #0056b3; }
+        .sidetoc .sl { flex: 1 1 auto; }
+        .sidetoc .sn { flex: 0 0 auto; color: #9aa7b5; font-size: .85em;
+                       font-variant-numeric: tabular-nums; }
+        @media (max-width: 900px) {
+            .layout { display: block; padding: 0; max-width: none; margin: 0; }
+            .sidetoc { position: static; width: auto; flex: none; height: auto;
+                       overflow: visible; padding: 14px 16px; border-radius: 0;
+                       box-shadow: none; border-bottom: 1px solid #e3e9f0; }
+            .sidetoc-title span { display: inline; margin-left: 6px; }
+            .sidetoc-group, .sidetoc-foot { display: none; }
+            .sidetoc ul { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+            .sidetoc a { border-left: none; border-radius: 20px; background: #eef4fb; padding: 5px 12px; }
+            .sidetoc a.active { border-left: none; }
+            .sidetoc .tnum { display: none; }
+        }
+        .sidetoc-foot { margin: 20px 10px 0; padding-top: 12px; border-top: 1px solid #e3e9f0;
+                        font-size: .72em; color: #8a97a4; line-height: 1.55; }
+        .sidetoc-foot code { font-size: .95em; word-break: break-all; }
         .secnav { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
             padding: 6px 0 14px; border-bottom: 1px solid #e0e0e0; margin-bottom: 6px; }
         .secnav a { border-radius: 20px; padding: 6px 14px; font-size: .82em; font-weight: 500;
@@ -255,6 +300,26 @@
         <a href="grants.html">Grants</a>
     </nav>
 
+    <div class="layout">
+    <nav class="sidetoc" id="sidetoc">
+      <div class="sidetoc-title">Methods &amp; Protocols<span>168 documents &middot; 11 sections</span></div>
+      <div class="sidetoc-group">Sections</div>
+      <ul>
+        <li><a href="#human" data-target="human"><span class="tnum">1</span><span class="sl">Human Sample Processing</span><span class="sn">13</span></a></li>
+        <li><a href="#mouse" data-target="mouse"><span class="tnum">2</span><span class="sl">Mouse Methods</span><span class="sn">32</span></a></li>
+        <li><a href="#molecular" data-target="molecular"><span class="tnum">3</span><span class="sl">Molecular Biology &amp; Cell Engineering</span><span class="sn">13</span></a></li>
+        <li><a href="#bacterial" data-target="bacterial"><span class="tnum">4</span><span class="sl">Bacterial &amp; Microbiome Methods</span><span class="sn">13</span></a></li>
+        <li><a href="#tcr" data-target="tcr"><span class="tnum">5</span><span class="sl">TCR Engineering &amp; Cell Therapy</span><span class="sn">15</span></a></li>
+        <li><a href="#flow" data-target="flow"><span class="tnum">6</span><span class="sl">Flow Cytometry, Staining &amp; Tetramers</span><span class="sn">11</span></a></li>
+        <li><a href="#comp" data-target="comp"><span class="tnum">7</span><span class="sl">Computational Pipelines &amp; Lab Computing</span><span class="sn">9</span></a></li>
+        <li><a href="#seq" data-target="seq"><span class="tnum">8</span><span class="sl">Single-Cell &amp; Sequencing</span><span class="sn">19</span></a></li>
+        <li><a href="#nucleic" data-target="nucleic"><span class="tnum">9</span><span class="sl">Nucleic Acid &amp; Plasmid Prep</span><span class="sn">16</span></a></li>
+        <li><a href="#invitro" data-target="invitro"><span class="tnum">10</span><span class="sl">In Vitro Assays &amp; Tissue Dissociation</span><span class="sn">10</span></a></li>
+        <li><a href="#ref" data-target="ref"><span class="tnum">11</span><span class="sl">Reference Material, Charts &amp; Templates</span><span class="sn">17</span></a></li>
+      </ul>
+      <div class="sidetoc-foot">155.1 MB on disk &middot; 109 downloadable<br>catalog built 2026-11-19<br><code>/fh/fast/yeh_a/grp/admin/yeh_methods</code></div>
+    </nav>
+
     <div class="container">
         <div class="intro">
           <p><strong>The lab methods library.</strong> Every entry below is a real file on
@@ -355,21 +420,7 @@
         <div class="stats" id="stats"><strong>168</strong> methods and reference documents
             across <strong>11</strong> sections &middot;
             155.1 MB on disk &middot; 109 downloadable
-            (45.4 MB) &middot; catalog built 2026-11-06</div>
-
-        <div class="secnav">
-            <a href="#human">Human Sample Processing<span class="n">13</span></a>
-            <a href="#mouse">Mouse Methods<span class="n">32</span></a>
-            <a href="#molecular">Molecular Biology &amp; Cell Engineering<span class="n">13</span></a>
-            <a href="#bacterial">Bacterial &amp; Microbiome Methods<span class="n">13</span></a>
-            <a href="#tcr">TCR Engineering &amp; Cell Therapy<span class="n">15</span></a>
-            <a href="#flow">Flow Cytometry, Staining &amp; Tetramers<span class="n">11</span></a>
-            <a href="#comp">Computational Pipelines &amp; Lab Computing<span class="n">9</span></a>
-            <a href="#seq">Single-Cell &amp; Sequencing<span class="n">19</span></a>
-            <a href="#nucleic">Nucleic Acid &amp; Plasmid Prep<span class="n">16</span></a>
-            <a href="#invitro">In Vitro Assays &amp; Tissue Dissociation<span class="n">10</span></a>
-            <a href="#ref">Reference Material, Charts &amp; Templates<span class="n">17</span></a>
-        </div>
+            (45.4 MB) &middot; catalog built 2026-11-19</div>
 
         <div class="no-results" id="no-results">No methods match that search.</div>
 
@@ -5829,6 +5880,7 @@
           </div>
         </div>
     </div>
+    </div>
 
     <footer>
         <p>Yeh Lab Internal Site &middot; Methods &amp; Protocols &middot; not indexed, not public</p>
@@ -6130,11 +6182,70 @@ function applySearch() {
     });
 
     document.getElementById('no-results').style.display = shown ? 'none' : 'block';
+    if (window.syncSideToc) window.syncSideToc();
 }
 
 searchBox.addEventListener('input', applySearch);
 
 function resetSearch() { searchBox.value = ''; applySearch(); searchBox.focus(); }
+
+// ---- sticky rail: highlight the section in view, follow the search
+(function () {
+    var rail  = document.getElementById('sidetoc');
+    var links = [].slice.call(document.querySelectorAll('.sidetoc a[data-target]'));
+    if (!rail || !links.length) return;
+
+    function live() {
+        return links.map(function (a) {
+            var el = document.getElementById(a.getAttribute('data-target'));
+            return (el && el.style.display !== 'none') ? { a: a, el: el } : null;
+        }).filter(Boolean);
+    }
+
+    var current = null;
+    function spy() {
+        var items = live();
+        if (!items.length) return;
+        var best = items[0];
+        items.forEach(function (it) {
+            if (it.el.getBoundingClientRect().top <= 120) best = it;
+        });
+        if (best.a === current) return;
+        links.forEach(function (a) { a.classList.remove('active'); });
+        best.a.classList.add('active');
+        current = best.a;
+        // keep the active entry inside the rail, but only while the rail scrolls
+        if (getComputedStyle(rail).position === 'sticky') {
+            var r = best.a.getBoundingClientRect(), b = rail.getBoundingClientRect();
+            if (r.top < b.top + 8 || r.bottom > b.bottom - 8) {
+                rail.scrollTop += (r.top - b.top) - rail.clientHeight / 3;
+            }
+        }
+    }
+
+    var queued = false;
+    window.addEventListener('scroll', function () {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(function () { queued = false; spy(); });
+    }, { passive: true });
+    window.addEventListener('resize', spy);
+
+    // called by applySearch: dim sections with no hits and show the hit count
+    window.syncSideToc = function () {
+        links.forEach(function (a) {
+            var el = document.getElementById(a.getAttribute('data-target'));
+            if (!el) return;
+            a.classList.toggle('empty', el.style.display === 'none');
+            var n = a.querySelector('.sn');
+            if (n) n.textContent = el.querySelectorAll('.card:not(.hidden)').length;
+        });
+        current = null;
+        spy();
+    };
+
+    spy();
+})();
 
 // deep link: methods.html#mouse-3 opens that card
 window.addEventListener('load', function () {
