@@ -124,13 +124,21 @@
   details.explain ol,details.explain ul{margin:4px 0 4px 18px;padding:0}
   details.explain li{margin:3px 0}
 
-  /* hover-explained column headings (native title, so it works everywhere and
-     needs no JS; keep the text short enough that a tooltip can hold it) */
-  .ico{display:inline-block;width:13px;height:13px;line-height:12px;border-radius:50%;
-       border:1px solid var(--muted);color:var(--muted);font:600 9px/12px var(--mono);
-       font-style:normal;text-align:center;margin-left:5px;cursor:help;
+  /* click-to-explain column headings. Native title= was tried first and did not
+     surface the text reliably, so this is a real element we control: click the
+     "i" to drop the panel, click it again (or anywhere else, or Esc) to close. */
+  .ico{display:inline-block;width:14px;height:14px;min-width:14px;padding:0;
+       line-height:12px;border-radius:50%;border:1px solid var(--muted);
+       background:#fff;color:var(--muted);font:600 9px/12px var(--mono);
+       font-style:normal;text-align:center;margin-left:5px;cursor:pointer;
        vertical-align:middle;text-transform:none;letter-spacing:0;user-select:none}
   .ico:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+  .ico[aria-expanded="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .pop{position:fixed;z-index:60;max-width:390px;background:var(--panel);
+       border:1px solid var(--border);border-radius:6px;padding:10px 12px;
+       box-shadow:0 8px 28px rgba(13,27,42,.20);font:12px/1.55 var(--sans);
+       color:var(--ink);white-space:pre-line}
+  .pop b{color:var(--accent)}
   .ok{background:#f2fbf4;border:1px solid #b7e0c0;border-left:3px solid var(--good);
       border-radius:5px;padding:9px 12px;font-size:12px;margin:10px 0}
   footer{color:var(--muted);font-size:11px;font-family:var(--mono);padding:16px 18px 26px;
@@ -433,6 +441,7 @@ Tumour: CA9, VEGFA"></textarea>
         <h4 style="margin-top:16px">Ranked interactions</h4>
         <div class="scroll" id="cpdbList"></div>
         <p class="hint" id="cpdbNote"></p>
+        <div id="cpdbPop" class="pop" hidden></div>
       </div>
     </section>
 
@@ -982,6 +991,68 @@ const CPDB_COLS = [
    "the database leaves it unclassified."],
 ];
 
+/** The clickable "i" beside a heading. A real <button>, so keyboard and
+    screen-reader users get it for free. The text rides in data-tip and is
+    rendered by #cpdbPop, which is white-space:pre-line so the \n survive. */
+const icoBtn = (key, tip) =>
+  `<button type="button" class="ico" aria-expanded="false" ` +
+  `aria-label="Explain this column" data-k="${esc(key)}" ` +
+  `data-tip="${esc(tip)}">i</button>`;
+
+function cpdbClosePop(){
+  const p = $("#cpdbPop");
+  if (!p) return;
+  p.hidden = true;
+  p.dataset.open = "";
+  $$('#p-cpdb .ico[aria-expanded="true"]').forEach(b => b.setAttribute("aria-expanded", "false"));
+}
+
+function cpdbOpenPop(btn){
+  const p = $("#cpdbPop");
+  if (!p) return;
+  const key = btn.dataset.k || "";
+  if (!p.hidden && p.dataset.open === key){ cpdbClosePop(); return; }  // second click closes
+  cpdbClosePop();
+  p.textContent = btn.dataset.tip || "";
+  p.dataset.open = key;
+  p.hidden = false;
+  btn.setAttribute("aria-expanded", "true");
+  /* measure while hidden from view but laid out, then clamp into the viewport
+     so a heading at the right-hand edge does not push the panel off screen */
+  p.style.visibility = "hidden";
+  p.style.left = "0px";
+  p.style.top = "0px";
+  const r = btn.getBoundingClientRect(), w = p.offsetWidth, h = p.offsetHeight;
+  const vw = window.innerWidth || 1200, vh = window.innerHeight || 800;
+  let x = r.left + r.width / 2 - w / 2;
+  x = Math.max(8, Math.min(x, vw - w - 8));
+  let y = r.bottom + 8;
+  if (y + h > vh - 8) y = Math.max(8, r.top - h - 8);
+  p.style.left = x + "px";
+  p.style.top = y + "px";
+  p.style.visibility = "";
+}
+
+function cpdbWirePop(){
+  const pane = $("#p-cpdb");
+  if (!pane || typeof pane.addEventListener !== "function") return;
+  pane.addEventListener("click", e => {
+    const t = e.target;
+    if (!t || typeof t.closest !== "function") return;
+    if (t.closest("#cpdbPop")) return;              // let the text be selected
+    const btn = t.closest(".ico");
+    if (btn){ e.preventDefault(); cpdbOpenPop(btn); }
+    else cpdbClosePop();
+  });
+  document.addEventListener("click", e => {
+    const t = e.target;
+    if (!t || typeof t.closest !== "function" || !t.closest("#p-cpdb")) cpdbClosePop();
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") cpdbClosePop(); });
+  window.addEventListener("resize", cpdbClosePop);
+  window.addEventListener("scroll", cpdbClosePop, true);
+}
+
 function cpdbPrepare(){
   CP = null;
   if (!CPDB || !S.geneIdx) return;
@@ -1059,6 +1130,7 @@ const cpdbLab = c => {
 };
 
 function renderCpdb(){
+  cpdbClosePop();   // the buttons it was anchored to are about to be replaced
   const cov = $("#cpdbCover"), mw = $("#cpdbMat"), lw = $("#cpdbList");
   if (!CPDB){
     cov.innerHTML = "This build carries no interaction database — run " +
@@ -1121,7 +1193,7 @@ function renderCpdb(){
     "purpose. Larger clusters with deeper detection clear the percentage filter more often, " +
     "so the counts partly track cluster size; hover a cell for its exact value.";
   let h = "<table><thead><tr><th class='nos'>sender ↓ / receiver →" +
-          `<i class="ico" title="${esc(matTip)}">i</i></th>`;
+          icoBtn("matrix", matTip) + "</th>";
   for (let Y = 0; Y < k; Y++)
     h += `<th class="nos" style="font-size:10px;text-transform:none;letter-spacing:0">${esc(S.clusters[Y])}</th>`;
   h += "</tr></thead><tbody>";
@@ -1143,7 +1215,7 @@ function renderCpdb(){
   // ---- ranked list
   const CAP = 300;
   let t = "<table><thead><tr>" + CPDB_COLS.map(
-    ([lab, tip]) => `<th>${lab}<i class="ico" title="${esc(tip)}">i</i></th>`).join("") +
+    ([lab, tip]) => `<th>${lab}${icoBtn(lab, tip)}</th>`).join("") +
     "</tr></thead><tbody>";
   for (const hit of shown.slice(0, CAP)){
     const p = CP.pairs[hit.i];
@@ -1667,6 +1739,7 @@ function wire(){
     if (b.dataset.p === "cpdb") renderCpdb();   // picks up labels typed since last view
   });
   ["#cpdbThr","#cpdbCls","#cpdbSelf","#cpdbTop"].forEach(s => $(s).onchange = renderCpdb);
+  cpdbWirePop();
   $$("#tbl th[data-s]").forEach(th=>th.onclick = () => {
     const k = th.dataset.s;
     S.sort = {k, dir: (S.sort.k === k ? -S.sort.dir : (k==="cl"?1:-1))};
