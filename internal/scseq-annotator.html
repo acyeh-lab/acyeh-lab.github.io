@@ -94,6 +94,13 @@
   th{background:#eef1f5;font-size:11px;text-transform:uppercase;letter-spacing:.4px;
      color:var(--muted);position:sticky;top:0;z-index:5;cursor:pointer;white-space:nowrap}
   th.nos{cursor:default}
+  /* Matrix-style tables (score heatmap, CellPhoneDB cluster pairs) size to their
+     content. With the default table{width:100%} every data cell is pinned at
+     26px, so the browser hands ALL the leftover width to the one flexible
+     column -- the label column -- which opened a wide empty gap between the
+     cluster name and the first coloured cell. .scroll still scrolls a wide one. */
+  table.hm{width:auto}
+  table.hm td:first-child,table.hm th:first-child{padding-right:10px}
   tbody tr:nth-child(even){background:var(--row)}
   tbody tr:hover{background:var(--hl)}
   td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12px}
@@ -781,7 +788,7 @@ function renderHeat(){
   if (!S.setNames.length){ w.innerHTML = "<p class='hint'>nothing to show</p>"; return; }
   const byRow = $("#hmRow").checked;
   const k = S.clusters.length;
-  let html = "<table><thead><tr><th class='nos'>Cluster</th>";
+  let html = "<table class='hm'><thead><tr><th class='nos'>Cluster</th>";
   S.setNames.forEach(n=>{
     html += `<th class="nos" style="writing-mode:vertical-rl;transform:rotate(180deg);`+
             `max-width:26px;font-size:10px;text-transform:none;letter-spacing:0">${esc(n)}</th>`;
@@ -1192,7 +1199,7 @@ function renderCpdb(){
     "Rows send (partner A), columns receive (partner B), so the matrix is asymmetric on " +
     "purpose. Larger clusters with deeper detection clear the percentage filter more often, " +
     "so the counts partly track cluster size; hover a cell for its exact value.";
-  let h = "<table><thead><tr><th class='nos'>sender ↓ / receiver →" +
+  let h = "<table class='hm'><thead><tr><th class='nos'>sender ↓ / receiver →" +
           icoBtn("matrix", matTip) + "</th>";
   for (let Y = 0; Y < k; Y++)
     h += `<th class="nos" style="font-size:10px;text-transform:none;letter-spacing:0">${esc(S.clusters[Y])}</th>`;
