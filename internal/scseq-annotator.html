@@ -123,6 +123,14 @@
   details.explain td{vertical-align:top;padding:3px 10px 3px 0}
   details.explain ol,details.explain ul{margin:4px 0 4px 18px;padding:0}
   details.explain li{margin:3px 0}
+
+  /* hover-explained column headings (native title, so it works everywhere and
+     needs no JS; keep the text short enough that a tooltip can hold it) */
+  .ico{display:inline-block;width:13px;height:13px;line-height:12px;border-radius:50%;
+       border:1px solid var(--muted);color:var(--muted);font:600 9px/12px var(--mono);
+       font-style:normal;text-align:center;margin-left:5px;cursor:help;
+       vertical-align:middle;text-transform:none;letter-spacing:0;user-select:none}
+  .ico:hover{background:var(--accent);border-color:var(--accent);color:#fff}
   .ok{background:#f2fbf4;border:1px solid #b7e0c0;border-left:3px solid var(--good);
       border-radius:5px;padding:9px 12px;font-size:12px;margin:10px 0}
   footer{color:var(--muted);font-size:11px;font-family:var(--mono);padding:16px 18px 26px;
@@ -930,6 +938,50 @@ function renderComp(){
 
 let CP = null;
 
+/* Ranked-table columns, each with the text behind its hover "i". Kept here
+   rather than inline in the markup so the wording lives in one place, next to
+   the code that produces the numbers it describes. */
+const CPDB_COLS = [
+  ["Interaction",
+   "The ligand-receptor pair, written as sender-side partner → receiver-side partner.\n" +
+   "A \"+\" joins the subunits of a heteromer. CellPhoneDB also encodes non-protein ligands " +
+   "as complexes of their biosynthetic enzymes, so a partner shown as an enzyme is standing " +
+   "in for the molecule it makes."],
+  ["Sender (partner A)",
+   "The cluster whose cells are read for partner A.\n" +
+   "Direction is a real claim: this column is not interchangeable with the receiver. " +
+   "A · after the cluster number is your own typed label."],
+  ["Receiver (partner B)",
+   "The cluster whose cells are read for partner B.\n" +
+   "The same pair can appear again with sender and receiver swapped, and it is then a " +
+   "different claim with a different number."],
+  ["Mean",
+   "Abundance of the pair: (x + y) / 2, where x is partner A's mean expression over the " +
+   "sender's cells and y is partner B's over the receiver's, on the log1p counts-per-10k " +
+   "scale. Zero if either side is zero; the minimum subunit is used for a heteromer.\n" +
+   "Not a probability, a rate or a fold-change — and NOT comparable between different " +
+   "interactions, because that compares two unrelated genes' abundance. Compare one " +
+   "interaction across cluster pairs instead."],
+  ["% A",
+   "Percentage of cells in the SENDER cluster with at least one detected transcript of " +
+   "partner A — a detection rate, not a level. The lowest subunit's, for a heteromer.\n" +
+   "This and % B are the only filter applied: both must exceed the threshold set above, so " +
+   "every row shown has already passed it."],
+  ["% B",
+   "The same for partner B in the RECEIVER cluster.\n" +
+   "Receptors are usually detected in far fewer cells than their ligands, so a low % B " +
+   "beside a high % A is the normal shape rather than a warning sign. A high Mean with a " +
+   "low percentage means a few cells, not the population."],
+  ["Direction",
+   "CellPhoneDB's curated annotation of what kind of pair this is — Ligand-Receptor, " +
+   "Adhesion-Adhesion, Receptor-Receptor, Ligand-Ligand or Gap-Gap.\n" +
+   "A property of the pair in the database, not a measurement from your data."],
+  ["Class",
+   "CellPhoneDB's curated pathway grouping for the pair, e.g. \"Signaling by Chemokines\".\n" +
+   "Use the Class selector above to restrict the whole tab to one grouping. A dash means " +
+   "the database leaves it unclassified."],
+];
+
 function cpdbPrepare(){
   CP = null;
   if (!CPDB || !S.geneIdx) return;
@@ -1062,7 +1114,14 @@ function renderCpdb(){
     if (!self && X === Y) continue;
     if (mat[X * k + Y] > hi) hi = mat[X * k + Y];
   }
-  let h = "<table><thead><tr><th class='nos'>sender ↓ / receiver →</th>";
+  const matTip =
+    "Each cell is a COUNT of interactions passing the threshold in that direction — " +
+    "not a strength and not a score.\n" +
+    "Rows send (partner A), columns receive (partner B), so the matrix is asymmetric on " +
+    "purpose. Larger clusters with deeper detection clear the percentage filter more often, " +
+    "so the counts partly track cluster size; hover a cell for its exact value.";
+  let h = "<table><thead><tr><th class='nos'>sender ↓ / receiver →" +
+          `<i class="ico" title="${esc(matTip)}">i</i></th>`;
   for (let Y = 0; Y < k; Y++)
     h += `<th class="nos" style="font-size:10px;text-transform:none;letter-spacing:0">${esc(S.clusters[Y])}</th>`;
   h += "</tr></thead><tbody>";
@@ -1083,9 +1142,9 @@ function renderCpdb(){
 
   // ---- ranked list
   const CAP = 300;
-  let t = `<table><thead><tr><th>Interaction</th><th>Sender (partner A)</th>` +
-          `<th>Receiver (partner B)</th><th>Mean</th><th>% A</th><th>% B</th>` +
-          `<th>Direction</th><th>Class</th></tr></thead><tbody>`;
+  let t = "<table><thead><tr>" + CPDB_COLS.map(
+    ([lab, tip]) => `<th>${lab}<i class="ico" title="${esc(tip)}">i</i></th>`).join("") +
+    "</tr></thead><tbody>";
   for (const hit of shown.slice(0, CAP)){
     const p = CP.pairs[hit.i];
     t += `<tr><td style="white-space:nowrap"><b>${esc(p.an)}</b> → <b>${esc(p.bn)}</b></td>` +
