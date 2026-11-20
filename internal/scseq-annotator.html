@@ -113,6 +113,16 @@
   .legend span.i{display:flex;align-items:center;gap:5px}
   .note{background:#fff8f0;border:1px solid #f0c9a0;border-left:3px solid var(--warn);
         border-radius:5px;padding:9px 12px;font-size:12px;margin:10px 0}
+  details.explain{border:1px solid var(--border);border-radius:5px;padding:8px 12px;
+                  font-size:12px;margin:10px 0;background:var(--hl)}
+  details.explain summary{cursor:pointer;font-size:12px;line-height:1.5}
+  details.explain summary::marker{color:var(--muted)}
+  details.explain h5{margin:12px 0 4px;font-size:12px;text-transform:uppercase;
+                     letter-spacing:.04em;color:var(--muted)}
+  details.explain table{font-size:12px;margin:4px 0}
+  details.explain td{vertical-align:top;padding:3px 10px 3px 0}
+  details.explain ol,details.explain ul{margin:4px 0 4px 18px;padding:0}
+  details.explain li{margin:3px 0}
   .ok{background:#f2fbf4;border:1px solid #b7e0c0;border-left:3px solid var(--good);
       border-radius:5px;padding:9px 12px;font-size:12px;margin:10px 0}
   footer{color:var(--muted);font-size:11px;font-family:var(--mono);padding:16px 18px 26px;
@@ -328,6 +338,75 @@ Tumour: CA9, VEGFA"></textarea>
       <div class="wrap">
         <h4>CellPhoneDB — ligand–receptor interactions</h4>
         <div class="note" id="cpdbCover"></div>
+
+        <details class="explain">
+          <summary><b>There are no p-values in this tab</b> — every number here is an
+            expression level, not a probability. Click for what each one means and how
+            to read it without fooling yourself.</summary>
+
+          <h5>What each number is</h5>
+          <table>
+            <tr><td><b>Mean</b></td>
+                <td>The interaction's <i>abundance</i>: <code>(x + y) / 2</code>, where
+                  <code>x</code> is partner A's mean expression across the sender's cells and
+                  <code>y</code> is partner B's across the receiver's. Set to 0 if either side
+                  is 0. Units are the dataset's log-normalised scale (log1p of counts per 10k),
+                  so it is <b>not</b> a fold-change, a rate, or a probability — a bigger number
+                  means the pair is more abundantly expressed, nothing more.</td></tr>
+            <tr><td><b>% A</b>, <b>% B</b></td>
+                <td>Fraction of cells in that cluster with any detected transcript of the
+                  partner — the detection rate. For a heteromer it is the <i>lowest</i> subunit's.
+                  These two are the only filter applied: both must exceed the threshold above.</td></tr>
+            <tr><td><b>Direction</b></td>
+                <td>CellPhoneDB's own annotation of the pair — Ligand–Receptor,
+                  Adhesion–Adhesion, Receptor–Receptor, and so on. It describes the
+                  <i>pair</i>, not evidence about your data.</td></tr>
+            <tr><td><b>Class</b></td>
+                <td>CellPhoneDB's curated pathway grouping, e.g. "Signaling by Chemokines".</td></tr>
+            <tr><td><b>Matrix cell</b></td>
+                <td>A <b>count</b> of interactions passing in that direction — not a strength
+                  and not a score. Big clusters with deeper detection pass more filters, so the
+                  matrix partly tracks cluster size.</td></tr>
+          </table>
+
+          <h5>Why there are no p-values</h5>
+          <p style="margin:4px 0">CellPhoneDB's significance comes from a permutation test:
+            shuffle the cell-type labels across <i>cells</i> 1,000 times, and the p-value is the
+            proportion of shuffles whose mean is at least the observed one. That needs per-cell
+            data. This page has per-cell expression for only the 25,000-cell UMAP subsample, and
+            that subsample is drawn uniformly at random, whereas CellPhoneDB's own subsampler is
+            deliberately heterogeneity-preserving. The <b>Mean</b> column, meanwhile, is computed
+            over <i>every</i> cell in the cluster — so a null built from 25,000 cells would not be
+            comparable to it, and pairing the two would inflate significance.</p>
+          <p style="margin:4px 0">So this tab runs CellPhoneDB's <b>simple-threshold mode</b>,
+            which its authors offer explicitly for a more permissive analysis. The thing you give
+            up is precisely what the permutation test buys: <b>cell-type specificity is not
+            assessed here.</b> A pair can top this list simply by being broadly and highly
+            expressed in both clusters.</p>
+
+          <h5>Reading it without fooling yourself</h5>
+          <ol>
+            <li><b>Don't rank different interactions against each other.</b> Comparing
+              <code>VEGFA→KDR</code> to <code>CSF1→CSF1R</code> compares how abundant two
+              unrelated genes are, not which matters more. The comparison that <i>is</i>
+              meaningful is one interaction across cluster pairs — the same genes, different
+              cells.</li>
+            <li><b>Check % A and % B before believing a mean.</b> A high mean at 12% expressing
+              is a handful of cells; at 90% it is the population.</li>
+            <li><b>Direction is real.</b> X→Y is a different claim from Y→X, which is why the
+              matrix is asymmetric. Read the sender and receiver columns, not just the pair.</li>
+            <li><b>Absence proves nothing.</b> Only interactions whose every subunit sits on this
+              panel can be evaluated — see the coverage line above. A pair missing here is
+              invisible to the panel, not absent from the tissue.</li>
+            <li><b>Co-expression is not contact.</b> Nothing here uses spatial coordinates; two
+              clusters can score highly and never touch. Treat a hit as a hypothesis to check in
+              the dot plot, the UMAP, or the image — not as a result.</li>
+            <li><b>For a figure, run the real thing.</b> CellPhoneDB upstream on the
+              <code>.h5ad</code> gives you all cells, its own subsampling and the full database,
+              with p-values.</li>
+          </ol>
+        </details>
+
         <div class="row">
           <span>Min fraction expressing</span>
           <input type="number" id="cpdbThr" value="0.10" min="0" max="1" step="0.01"
