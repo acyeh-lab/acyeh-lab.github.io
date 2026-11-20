@@ -101,6 +101,14 @@
      cluster name and the first coloured cell. .scroll still scrolls a wide one. */
   table.hm{width:auto}
   table.hm td:first-child,table.hm th:first-child{padding-right:10px}
+  /* The score heatmap is bounded -- at most ~33 gene sets x 26px -- so it does
+     not need a scrollport of its own, and a nested one meant scrolling the
+     heatmap separately from the page. Dropping it lets the PAGE scroll. The
+     sticky th then resolves against the viewport instead of this box, so it
+     needs top:42px to clear the 42px page header (which has z-index 20 and so
+     still passes over it). Border comes off too: .wrap already frames it. */
+  .scroll.grow{max-height:none;overflow:visible;border:0;border-radius:0}
+  .scroll.grow th{top:42px}
   tbody tr:nth-child(even){background:var(--row)}
   tbody tr:hover{background:var(--hl)}
   td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12px}
@@ -310,7 +318,7 @@ Tumour: CA9, VEGFA"></textarea>
           <label style="font-size:12px"><input type="checkbox" id="hmRow" checked>
             scale each row to its own max</label>
         </div>
-        <div class="scroll" id="hmWrap"></div>
+        <div class="scroll grow" id="hmWrap"></div>
       </div>
     </section>
 
@@ -867,13 +875,17 @@ function renderDot(){
   if (nAbs === cols.length)
     html += `<p class="hint" style="padding:8px 10px;margin:0">No gene of this set is in `+
             `this dataset's ${G}-gene panel — the columns below are reference only.</p>`;
-  html += "<table><thead><tr><th class='nos'>Cluster</th>";
+  /* Gene names run vertically and the cells are pinned narrow, the same idiom
+     the score heatmap uses. Horizontal names made every column as wide as its
+     label, which with table{width:100%} also stretched the cluster column. */
+  const VTH = "writing-mode:vertical-rl;transform:rotate(180deg);max-width:26px;" +
+              "font-size:10px;text-transform:none;letter-spacing:0";
+  html += "<table class='hm'><thead><tr><th class='nos'>Cluster</th>";
   for (const {g,i} of cols){
     html += (i === undefined)
-      ? `<th class="nos gabs" title="${esc(g)} is not in this dataset's ${G}-gene panel `+
-        `— shown for reference, not measured">${esc(g)}</th>`
-      : `<th class="nos" style="font-size:10px;text-transform:none;letter-spacing:0;`+
-        `text-align:center">${esc(g)}</th>`;
+      ? `<th class="nos gabs" style="${VTH}" title="${esc(g)} is not in this dataset's `+
+        `${G}-gene panel — shown for reference, not measured">${esc(g)}</th>`
+      : `<th class="nos" style="${VTH}">${esc(g)}</th>`;
   }
   html += "</tr></thead><tbody>";
   for (let c=0;c<k;c++){
@@ -881,13 +893,14 @@ function renderDot(){
             `<b>${esc(S.clusters[c])}</b></td>`;
     for (const {g,i} of cols){
       if (i === undefined){
-        html += `<td class="gabs" title="${esc(g)} not on this panel">&nbsp;</td>`;
+        html += `<td class="gabs" style="width:26px;padding:0" `+
+                `title="${esc(g)} not on this panel">&nbsp;</td>`;
         continue;
       }
       const m = (S.mean[c*G+i]-lo.get(i))/(hi.get(i)-lo.get(i));
       const f = S.frac[c*G+i];
       const d = Math.max(2, Math.round(3 + f*15));
-      html += `<td style="text-align:center;padding:2px" title="${esc(S.clusters[c])} · `+
+      html += `<td style="text-align:center;padding:2px;width:26px" title="${esc(S.clusters[c])} · `+
         `${esc(g)}\nmean ${fmt(S.mean[c*G+i],3)} (scaled ${fmt(m)})\n`+
         `${(f*100).toFixed(1)}% expressing">`+
         `<span style="display:inline-block;width:${d}px;height:${d}px;border-radius:50%;`+
