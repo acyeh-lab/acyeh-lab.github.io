@@ -303,12 +303,19 @@ Tumour: CA9, VEGFA"></textarea>
           <th data-s="cl">Cluster</th><th data-s="n">Cells</th><th data-s="pct">%</th>
           <th data-s="arg">Argmax gene set</th><th data-s="score">Score</th>
           <th data-s="runner">Runner-up</th><th data-s="margin">Margin</th>
-          <th data-s="gpc">Genes/cell</th><th class="nos">Your label</th>
+          <th data-s="gpc">Genes/cell</th><th data-s="tpc">Transcripts/cell</th>
+          <th class="nos">Your label</th>
         </tr></thead><tbody></tbody>
       </table></div>
       <p class="hint">Click a header to sort. <b>Margin</b> is the gap to the runner-up —
         a small margin means the call is ambiguous and deserves a look.
-        <b>Genes/cell</b> is a transcript-content proxy; low values flag junk clusters.</p>
+        <b>Genes/cell</b> is how many of the panel's genes a cell detects on average
+        (the sum of the expressing fractions, as in <code>core.py</code>);
+        <b>Transcripts/cell</b> is the mean <code>total_counts</code> per cell. The first
+        is breadth, the second is content — a cluster low on both is usually junk,
+        while low breadth with normal content is a genuinely focused transcriptome.
+        Both show a 15th-percentile flag. Transcripts/cell reads <code>—</code> if the
+        bundle carries no <code>total_counts</code> channel.</p>
     </section>
 
     <section class="pane" id="p-scores">
@@ -612,6 +619,12 @@ function setRes(){
   S.sizes = blk.sizes;
   S.mean = unb64(blk.mean);
   S.frac = unb64(blk.frac);
+  /* Per-cluster means of the numeric obs channels the converter carried over.
+     Which channels exist varies by dataset: the RCC and gut bundles have
+     total_counts + n_genes, the melanoma one only has volume. So every reader
+     must look the channel up by NAME and cope with it being absent. */
+  S.numNames = S.B.numeric_names || [];
+  S.numeric = blk.numeric ? unb64(blk.numeric) : null;
   if (!S.labels[S.res]) S.labels[S.res] = {};
   const tot = S.sizes.reduce((a,b)=>a+b,0);
   $("#resInfo").textContent =
@@ -730,6 +743,22 @@ function genesPerCell(c){            // = sum over genes of frac (core.py)
   return s;
 }
 
+/** Per-cluster mean of one numeric obs channel, or null if this dataset has none.
+    Looked up by name because the channel set differs between bundles. */
+function numChan(c, name){
+  if (!S.numeric || !S.numNames.length) return null;
+  const j = S.numNames.indexOf(name);
+  if (j < 0) return null;
+  const v = S.numeric[c * S.numNames.length + j];
+  return isFinite(v) ? v : null;
+}
+
+/** Mean transcripts per cell in a cluster — the `total_counts` obs channel.
+    NOT derivable from `mean`, which is in log1p space, so when the converter
+    did not carry total_counts (e.g. the melanoma bundle) this is genuinely
+    unavailable rather than merely uncomputed. */
+const transcriptsPerCell = c => numChan(c, "total_counts");
+
 function renderTable(){
   const tb = $("#tbl tbody"); tb.innerHTML = "";
   const tot = S.sizes.reduce((a,b)=>a+b,0) || 1;
@@ -737,7 +766,7 @@ function renderTable(){
     i, cl, n:S.sizes[i], pct:100*S.sizes[i]/tot,
     arg:S.argmax[i].label, score:S.argmax[i].score,
     runner:S.argmax[i].runner, margin:S.argmax[i].margin,
-    gpc:genesPerCell(i),
+    gpc:genesPerCell(i), tpc:transcriptsPerCell(i),
   }));
   const k = S.sort.k, dir = S.sort.dir;
   rows.sort((a,b)=>{
@@ -745,7 +774,10 @@ function renderTable(){
     if (k==="cl"){ const nx=+a.cl, ny=+b.cl;
       if (isFinite(nx)&&isFinite(ny)) return (nx-ny)*dir; }
     if (typeof x === "string") return x.localeCompare(y)*dir;
-    if (!isFinite(x)) x = -Infinity; if (!isFinite(y)) y = -Infinity;
+    /* null = this dataset has no such channel; sort it to the bottom rather
+       than letting it coerce to 0 and masquerade as a real low value */
+    if (x == null || !isFinite(x)) x = -Infinity;
+    if (y == null || !isFinite(y)) y = -Infinity;
     return (x-y)*dir;
   });
 
@@ -757,6 +789,8 @@ function renderTable(){
 
   const gpcVals = rows.map(r=>r.gpc).sort((a,b)=>a-b);
   const gpcLo = gpcVals[Math.floor(gpcVals.length*0.15)] ?? 0;
+  const tpcVals = rows.map(r=>r.tpc).filter(v=>v!=null&&isFinite(v)).sort((a,b)=>a-b);
+  const tpcLo = tpcVals.length ? tpcVals[Math.floor(tpcVals.length*0.15)] : -Infinity;
 
   for (const r of rows){
     const tr = document.createElement("tr");
@@ -768,6 +802,13 @@ function renderTable(){
         ? `<span class="chip lo" title="exact tie with ${esc(r.runner)} — the panel cannot separate these two gene sets">tie</span>`
         : `<span class="chip ${r.margin < 0.25 ? "lo" : ""}">${fmt(r.margin)}</span>`;
     const gp = `<span class="chip ${r.gpc <= gpcLo ? "lo" : ""}">${fmt(r.gpc,1)}</span>`;
+    /* total_counts is absent from some bundles (melanoma carries only volume),
+       so say "not in this bundle" rather than drawing a misleading 0. */
+    const tp = (r.tpc == null)
+      ? `<span style="color:var(--muted)" title="this bundle carries no `+
+        `total_counts channel — re-run the converter if you need it">—</span>`
+      : `<span class="chip ${r.tpc <= tpcLo ? "lo" : ""}" title="mean transcripts `+
+        `per cell in cluster ${esc(r.cl)}">${fmt(r.tpc,0)}</span>`;
     tr.innerHTML =
       `<td><span class="sw" style="background:${col(r.i)}"></span><b>${esc(r.cl)}</b></td>`+
       `<td class="n">${r.n.toLocaleString()}</td>`+
@@ -777,6 +818,7 @@ function renderTable(){
       `<td style="color:var(--muted)">${esc(r.runner)}</td>`+
       `<td class="n">${mg}</td>`+
       `<td class="n">${gp}</td>`+
+      `<td class="n">${tp}</td>`+
       `<td class="lab"><input type="text" list="sugg" data-cl="${esc(r.cl)}" `+
         `value="${esc(S.labels[S.res][r.cl]||"")}" placeholder="type a label…"></td>`;
     tb.appendChild(tr);
