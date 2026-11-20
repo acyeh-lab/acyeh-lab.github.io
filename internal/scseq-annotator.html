@@ -125,6 +125,24 @@
   .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
   canvas{max-width:100%;border-radius:6px;background:#fff}
   .legend{display:flex;flex-wrap:wrap;gap:3px 13px;margin-top:9px;font-size:12px}
+  /* Continuous-scale key for the four ramp()-coloured views, plus the dot-size
+     key beside it on the two dot plots. Sits ABOVE its plot: these tables are
+     taller than the viewport and a key below the fold is a key nobody reads. */
+  .scaleleg{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 22px;
+            margin:0 0 9px;font-size:11px;color:var(--muted)}
+  .scaleleg:empty{display:none}
+  .scaleleg .k{display:flex;flex-direction:column;gap:3px}
+  .scaleleg .kt{font-weight:700;color:var(--ink)}
+  .scaleleg .bar{height:10px;width:150px;border:1px solid var(--border);border-radius:2px}
+  .scaleleg .ends{display:flex;justify-content:space-between;width:150px;
+                  font:10px var(--mono)}
+  .scaleleg .dots{display:flex;align-items:flex-end;gap:10px;padding-top:2px}
+  .scaleleg .dots .d{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .scaleleg .dots .d i{display:block;border-radius:50%;background:var(--muted)}
+  .scaleleg .dots .d em{font:10px var(--mono);font-style:normal}
+  .scaleleg .sw{margin-right:0}
+  .scaleleg .nb{align-self:center;max-width:460px;line-height:1.45}
+  .scaleleg .nb b{color:var(--ink)}
   .legend span.i{display:flex;align-items:center;gap:5px}
   .note{background:#fff8f0;border:1px solid #f0c9a0;border-left:3px solid var(--warn);
         border-radius:5px;padding:9px 12px;font-size:12px;margin:10px 0}
@@ -202,6 +220,19 @@
      away from their grid column. The assignment table DOES need width:auto: its
      cells are fixed little radio buttons, so width:100% would dump all the slack
      into the label column (the same trap as the score heatmap). */
+  /* Always-visible tab preamble. Deliberately NOT .note (which is the orange
+     warn box) -- this is orientation, not a caveat, and the two must not look
+     alike or the real warning stops registering. */
+  .intro{background:var(--row);border:1px solid var(--border);border-left:3px solid var(--accent);
+         border-radius:5px;padding:9px 13px;margin:0 0 10px;font-size:12px;line-height:1.55}
+  .intro p{margin:0 0 6px}
+  .intro p:last-child{margin-bottom:0}
+  .intro b{color:var(--ink)}
+  .intro code{font:11px var(--mono);background:#fff;border:1px solid var(--border);
+              border-radius:3px;padding:0 3px}
+  .intro .steps{margin:5px 0 6px;padding-left:17px}
+  .intro .steps li{margin:2px 0}
+  .intro .cite{color:var(--muted);font-size:11px}
   .degcols{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
   @media (max-width:1150px){ .degcols{grid-template-columns:1fr} }
   .degcols h5{margin:0 0 6px;font-size:12px;text-transform:none;letter-spacing:0}
@@ -371,6 +402,7 @@ Tumour: CA9, VEGFA"></textarea>
           <label style="font-size:12px"><input type="checkbox" id="hmRow" checked>
             scale each row to its own max</label>
         </div>
+        <div class="scaleleg" id="hmLeg"></div>
         <div class="scroll grow" id="hmWrap"></div>
       </div>
     </section>
@@ -404,10 +436,9 @@ Tumour: CA9, VEGFA"></textarea>
             </div>
           </details>
           <button id="geneClear">Clear all</button>
-          <span class="hint">dot size = % of cells expressing · colour = mean,
-            min–max scaled per gene</span>
         </div>
         <div class="row" id="geneChips" style="margin-bottom:9px"></div>
+        <div class="scaleleg" id="geneLeg"></div>
         <div class="scroll" id="geneWrap"></div>
         <p class="hint">Every gene in this dataset's panel, alphabetical — tick as many
           as you like and they appear above, in alphabetical order. Scaling is per gene
@@ -576,9 +607,9 @@ Tumour: CA9, VEGFA"></textarea>
         <div class="row">
           <span>Gene set</span>
           <select id="dotSet" style="width:auto;min-width:240px"></select>
-          <span class="hint">dot size = % of cells expressing · colour = mean, min–max scaled per gene</span>
           <span class="hint" id="dotMiss"></span>
         </div>
+        <div class="scaleleg" id="dotLeg"></div>
         <div class="scroll" id="dotWrap"></div>
       </div>
     </section>
@@ -599,6 +630,50 @@ Tumour: CA9, VEGFA"></textarea>
     <section class="pane" id="p-cpdb">
       <div class="wrap">
         <h4>CellPhoneDB — ligand–receptor interactions</h4>
+
+        <div class="intro">
+          <p><b>What this is.</b> CellPhoneDB is a curated database of
+            ligand–receptor, adhesion and other cell–cell interactions, many of them
+            multi-subunit complexes. This tab takes each interaction in turn and asks,
+            for every <i>ordered</i> pair of your clusters: is one side expressed in the
+            sending cluster and the other side in the receiving cluster? It is answered
+            from the per-cluster expression already in your bundle — nothing is sent
+            anywhere and nothing is re-run.</p>
+
+          <p><b>How the score is built.</b> For a sender X and receiver Y, with
+            interaction partners A and B:</p>
+          <ol class="steps">
+            <li>Each partner's value in a cluster is the <b>mean expression</b> of its
+              gene. For a complex it is the <b>lowest</b> of its subunits — a heteromer
+              cannot work better than its scarcest part.</li>
+            <li>The pair is kept only if <b>both</b> partners are detected in more than
+              the <i>Min fraction expressing</i> set below (default 10%): A in X, and
+              B in Y.</li>
+            <li>The score is the <b>average of the two sides</b>,
+              <code>(x + y) / 2</code>, and is zero if either side is zero.</li>
+            <li><b>Direction is part of the claim.</b> X→Y reads A in X and B in Y;
+              Y→X is a different test with a different number, which is why the matrix
+              is asymmetric rather than mirrored.</li>
+          </ol>
+
+          <p><b>How to read it.</b> The matrix counts how many interactions pass in each
+            direction — a count, not a strength. The ranked table below lists them, best
+            first. The comparison that means something is <b>one interaction across
+            different cluster pairs</b>; ranking unrelated interactions against each
+            other just compares how abundant two different genes are. Always glance at
+            % A and % B before believing a mean, and remember that co-expression is not
+            contact — nothing here uses spatial coordinates.</p>
+
+          <p class="cite">This is CellPhoneDB's <b>simple-threshold (non-statistical)
+            mode</b>, which its authors offer explicitly as the more permissive
+            alternative to their permutation test — so <b>cell-type specificity is not
+            assessed and there are no p-values</b>. Open the panel below for what each
+            column means and the six ways this view can mislead you. Method: Efremova
+            <i>et al.</i>, <i>Nat Protoc</i> 2020;15:1484–1506 (PMID 32103204);
+            database v5: Troulé <i>et al.</i>, <i>Nat Protoc</i> 2025;20:3412–3440
+            (PMID 40133495).</p>
+        </div>
+
         <div class="note" id="cpdbCover"></div>
 
         <details class="explain">
@@ -681,6 +756,7 @@ Tumour: CA9, VEGFA"></textarea>
             one row per interaction (its best cluster pair)</label>
         </div>
         <h4 style="margin-top:16px">Interactions per cluster pair</h4>
+        <div class="scaleleg" id="cpdbMatLeg"></div>
         <div class="scroll" id="cpdbMat"></div>
         <p class="hint">Rows send (partner A), columns receive (partner B). Interactions are
           directed, so this matrix is deliberately asymmetric.</p>
@@ -787,6 +863,44 @@ function ramp(t){
   const a = RAMP[i], b = RAMP[Math.min(i+1, RAMP.length-1)];
   return `rgb(${Math.round(a[0]+(b[0]-a[0])*f)},${Math.round(a[1]+(b[1]-a[1])*f)},${Math.round(a[2]+(b[2]-a[2])*f)})`;
 }
+/* ---------- scale legends ----------
+   Built from the SAME RAMP stops ramp() interpolates between, so the bar is the
+   colour sequence itself rather than a hand-made copy of it that can go stale.
+   A 10-stop CSS gradient interpolates exactly as ramp() does between the same
+   stops. */
+const RAMP_CSS = "linear-gradient(to right," + RAMP.map((c, i) =>
+  `rgb(${c[0]},${c[1]},${c[2]}) ${(100 * i / (RAMP.length - 1)).toFixed(1)}%`
+).join(",") + ")";
+
+/** A colour bar under a title, with 2-3 tick labels spread across it. */
+function rampKey(title, ticks){
+  return `<div class="k"><span class="kt">${esc(title)}</span>` +
+    `<span class="bar" style="background:${RAMP_CSS}"></span>` +
+    `<span class="ends">${ticks.map(t => `<span>${esc(t)}</span>`).join("")}</span></div>`;
+}
+
+/** The dot-size key, drawn at the pixel sizes dotPx() gives the plot itself. */
+function dotSizeKey(title){
+  return `<div class="k"><span class="kt">${esc(title)}</span><span class="dots">` +
+    [0, .25, .5, .75, 1].map(f => {
+      const d = dotPx(f);
+      return `<span class="d"><i style="width:${d}px;height:${d}px"></i>` +
+             `<em>${Math.round(f * 100)}${f === 1 ? "%" : ""}</em></span>`;
+    }).join("") + "</span></div>";
+}
+
+/** Trailing prose. Takes trusted literal HTML, never user or bundle text. */
+const legNote = h => `<span class="nb">${h}</span>`;
+
+/** Shared by both dot plots -- they are the same picture over different columns. */
+function dotLegendHTML(){
+  return rampKey("mean expression, scaled per gene", ["0 low", "0.5", "1 high"]) +
+    dotSizeKey("% of cells expressing") +
+    legNote("Colour is scaled <b>within each gene column</b>, between that gene\u2019s " +
+      "lowest and highest cluster mean \u2014 so it compares clusters, never one gene " +
+      "against another. Dot size is an absolute percentage and is comparable everywhere.");
+}
+
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt = (v,d=2) => (v==null || !isFinite(v)) ? "—" : v.toFixed(d);
 
@@ -1070,8 +1184,11 @@ function renderTable(){
 
 /* ---------- score heatmap ---------- */
 function renderHeat(){
-  const w = $("#hmWrap");
-  if (!S.setNames.length){ w.innerHTML = "<p class='hint'>nothing to show</p>"; return; }
+  const w = $("#hmWrap"), lg = $("#hmLeg");
+  if (!S.setNames.length){
+    w.innerHTML = "<p class='hint'>nothing to show</p>";
+    if (lg) lg.innerHTML = ""; return;
+  }
   const byRow = $("#hmRow").checked;
   const k = S.clusters.length;
   let html = "<table class='hm'><thead><tr><th class='nos'>Cluster</th>";
@@ -1107,6 +1224,18 @@ function renderHeat(){
     html += "</tr>";
   }
   w.innerHTML = html + "</tbody></table>";
+  /* The legend is written AFTER the loop because the global range is only known
+     by then, and because what the scale means flips with the checkbox. */
+  if (lg) lg.innerHTML = byRow
+    ? rampKey("score, each row scaled to itself", ["row min", "row max"]) +
+      legNote("Colour is relative <b>within one cluster row</b>: the brightest cell in a " +
+        "row is that cluster\u2019s best-scoring set, whatever its absolute score. " +
+        "Rows are therefore <b>not comparable to each other</b> \u2014 untick the box " +
+        "above for one scale across the whole table.")
+    : rampKey("gene-set score (z-scored cluster mean)",
+              [fmt(g0, 2), fmt((g0 + g1) / 2, 2), fmt(g1, 2)]) +
+      legNote("One scale across the whole table, so any two cells are comparable. " +
+        "Grey means the set could not be scored on that cluster.");
 }
 
 /* ---------- dot plot ---------- */
@@ -1166,7 +1295,7 @@ function dotPlotHTML(cols){
       }
       const m = (S.mean[c*G+i]-lo.get(i))/(hi.get(i)-lo.get(i));
       const f = S.frac[c*G+i];
-      const d = Math.max(2, Math.round(3 + f*15));
+      const d = dotPx(f);
       html += `<td style="text-align:center;padding:2px;width:26px" title="${esc(S.clusters[c])} · `+
         `${esc(g)}\nmean ${fmt(S.mean[c*G+i],3)} (scaled ${fmt(m)})\n`+
         `${(f*100).toFixed(1)}% expressing">`+
@@ -1177,6 +1306,10 @@ function dotPlotHTML(cols){
   }
   return html + "</tbody></table>";
 }
+
+/** Dot diameter in px for a detected fraction. Factored out of the plot so the
+    size legend is drawn by the same function and cannot disagree with it. */
+function dotPx(f){ return Math.max(2, Math.round(3 + f*15)); }
 
 /** "· n of m genes not on this panel" note shared by both tabs */
 function dotMissNote(cols){
@@ -1191,7 +1324,8 @@ function dotMissNote(cols){
 function renderDot(){
   const w = $("#dotWrap"), miss = $("#dotMiss"), name = $("#dotSet").value;
   if (!name || !S.lib[name]){
-    w.innerHTML = "<p class='hint'>pick a gene set</p>"; miss.textContent = ""; return;
+    w.innerHTML = "<p class='hint'>pick a gene set</p>"; miss.textContent = "";
+    $("#dotLeg").innerHTML = ""; return;
   }
   /* Every gene of the set, in the library's own order, flagged by whether this
      dataset's panel carries it. Absent genes are NOT dropped -- they render as
@@ -1202,6 +1336,9 @@ function renderDot(){
   const cols = S.lib[name].map(g => ({ g, i: S.geneIdx.get(g) }));
   miss.textContent = dotMissNote(cols);
   w.innerHTML = dotPlotHTML(cols);
+  /* No key when nothing in the set is measurable here -- the plot is then all
+     hatched reference columns and a key would describe dots that do not exist. */
+  $("#dotLeg").innerHTML = cols.some(x => x.i !== undefined) ? dotLegendHTML() : "";
 }
 
 /* ---------- Gene dot plot (any genes the user ticks) ---------- */
@@ -1242,9 +1379,11 @@ function renderGeneDot(){
   if (!picked.length){
     w.innerHTML = "<p class='hint' style='padding:8px 10px;margin:0'>No genes selected — "+
       "open <b>Choose genes…</b> and tick any number of them.</p>";
+    $("#geneLeg").innerHTML = "";
     return;
   }
   w.innerHTML = dotPlotHTML(picked.map(g => ({ g, i: S.geneIdx.get(g) })));
+  $("#geneLeg").innerHTML = dotLegendHTML();
 }
 
 function wireGenePick(){
@@ -1806,7 +1945,8 @@ function renderCpdb(){
   if (!CPDB){
     cov.innerHTML = "This build carries no interaction database — run " +
       "<code>bin/build_cellphonedb.py</code>, then <code>bin/embed_bundle.py</code>.";
-    mw.innerHTML = ""; lw.innerHTML = ""; return;
+    mw.innerHTML = ""; lw.innerHTML = "";
+    $("#cpdbMatLeg").innerHTML = ""; return;
   }
   if (!S.clusters.length){ cov.textContent = "Load a dataset first."; return; }
   if (!CP) cpdbPrepare();
@@ -1882,6 +2022,19 @@ function renderCpdb(){
     h += "</tr>";
   }
   mw.innerHTML = h + "</tbody></table>";
+  /* `hi` is this matrix's own maximum, so the scale moves with the threshold and
+     the class filter. Say so, and point the reader at the printed counts. */
+  const mlg = $("#cpdbMatLeg");
+  if (mlg) mlg.innerHTML =
+    rampKey("interactions passing, per direction",
+            hi ? ["0", String(Math.round(hi / 2)), String(hi)] : ["0", "none pass"]) +
+    (self ? "" :
+      `<div class="k"><span class="kt">diagonal</span>` +
+      `<span style="display:flex;align-items:center;gap:5px;padding-bottom:1px">` +
+      `<span class="sw" style="background:#eee"></span>self\u2192self, not evaluated</span></div>`) +
+    legNote("Each cell is a <b>count</b> of interactions, not a strength. The scale is " +
+      "stretched to this matrix\u2019s own maximum, so it shifts whenever you change the " +
+      "threshold or the class filter \u2014 compare the printed numbers, not the shades.");
 
   // ---- ranked list
   const CAP = 300;
